@@ -1,0 +1,18 @@
+.paper {
+  height: auto;
+  width: 300px;
+}
+
+.form {
+  height: auto;
+  width: 100%;
+  margin: 10px 0
+}
+
+.button {
+  margin-top: 20px;
+}
+
+.text-field {
+  margin: 15px 0;
+}

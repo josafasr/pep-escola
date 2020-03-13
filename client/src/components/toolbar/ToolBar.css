@@ -1,0 +1,27 @@
+.root {
+  flex-grow: 1;
+}
+
+.tool-bar {
+  background-color: purple;
+}
+
+/* .menu-button {
+  margin-right: 10px;
+} */
+
+.logo {
+  width: 40px;
+  height: 55px;
+  margin: 0 20px;
+}
+
+.MuiAvatar-img {
+  height: 100%;
+  width: auto;
+}
+
+.title {
+  flex-grow: 1;
+  /* margin-left: 10px; */
+}
