@@ -62,21 +62,21 @@ class Consulta extends React.Component {
         <TextField
           className="form-field full-width"
           name="nomePaciente"
-          label="Nome:"
+          label="Nome"
           value={this.state.nomePaciente}
           onChange={this.handleInputChange} />
 
         <TextField
           className="form-field full-width"
           name="queixaPrincipal"
-          label="Queixa Principal:"
+          label="Queixa Principal"
           value={this.state.queixaPrincipal}
           onChange={this.handleInputChange} />
 
         <TextField
           className="form-field full-width"
           name="historiaDoencaAtual"
-          label="História da Doença Atual:"
+          label="História da Doença Atual"
           multiline
           rows="4"
           variant="filled"

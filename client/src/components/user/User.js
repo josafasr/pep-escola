@@ -107,4 +107,4 @@ class User extends React.Component {
 
 const createUserMutation = api.createMutation
 
-export default graphql(createUserMutation)(Users)
+export default graphql(createUserMutation)(User)

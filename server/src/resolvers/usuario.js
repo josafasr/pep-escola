@@ -45,24 +45,23 @@ export default {
   Mutation: {
 
     // cria um novo usuario
-    createUsuario: async (parent, args, { models }) => {
-      try {
-        const usuario = await models.Usuario.create(args)
-        //   ...args,
-        //   createdAt: new Date(),
-        //   updatedAt: new Date()
-        // })
-        if (args.grupos && args.grupos.length > 0) {
-          usuario.setGrupos(args.grupos)
-        }
-        return {
-          ok: true,
-          user: usuario
-        }
-      } catch (err) {
-        return {
-          ok: false,
-          errors: formatErrors(err, models)
+    createUsuario: async (parent, args, { models, user }) => {
+      if (user) {
+        try {
+            const usuario = await models.Usuario.create(args)
+
+            if (args.grupos && args.grupos.length > 0) {
+              usuario.setGrupos(args.grupos)
+            }
+            return {
+              ok: true,
+              user: usuario
+            }
+        } catch (err) {
+          return {
+            ok: false,
+            errors: formatErrors(err, models)
+          }
         }
       }
     },

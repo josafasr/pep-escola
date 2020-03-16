@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 
@@ -6,6 +6,7 @@ import path from 'path'
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
 
 import models from './models'
+import { refreshTokens } from './auth'
 // import typeDefs from './schema'
 // import resolvers from './resolvers'
 
@@ -20,27 +21,57 @@ const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers'))
 const app = express()
 const url = '/api'
 
-// const getUser = (token, secret) => {
-//   console.log(jwt.verify(token, secret))
+// const getUser = async (req, res, next) => {
+//   const token = req.headers['x-token']
+//   if (token) {
+//     try {
+//       const { user } = jwt.verify(token, SECRET)
+//       req.user = user
+//     } catch (err) {
+//       const reloadToken = req.headers['x-reload-token']
+//       const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
+//       if (newTokens && newTokens.reloadToken) {
+//         res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
+//         res.set('x-token', newTokens.token)
+//         res.set('x-reload-token', newTokens.reloadToken)
+//       }
+//       req.user = newTokens.user
+//     }
+//   }
+//   next()
 // }
+
+// app.use(getUser)
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    
-    // Get the user token from the headers
-    // const token = req.headers.authorization || ''
-    
-    // try to retrieve a user with the token
-    // const { user } = getUser(token, SECRET)
-    
-    // add the user to the context
+  context: async ({ req, res }) => {
+    //const token = req.headers['x-token'] || ''
+    // const { user } = token ? jwt.verify(token, SECRET) : ''
+    //const { user } = getUser(req, res, next)
+
+    const token = req.headers['x-token']
+    if (token) {
+      try {
+        const { user } = jwt.verify(token, SECRET)
+        req.user = user
+      } catch (err) {
+        const reloadToken = req.headers['x-reload-token']
+        const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
+        if (newTokens && newTokens.reloadToken) {
+          res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
+          res.set('x-token', newTokens.token)
+          res.set('x-reload-token', newTokens.reloadToken)
+        }
+        req.user = newTokens.user
+      }
+    }
     return {
       models,
       SECRET,
       SECRET2,
-      // user
+      user: req.user
     }
   }
 })

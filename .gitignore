@@ -3,3 +3,5 @@
 */dist/
 
 */out/
+
+./server/src/config/config.json

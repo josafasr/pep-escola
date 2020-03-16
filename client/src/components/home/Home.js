@@ -12,7 +12,7 @@ function Home() {
   return (
     <div className="home">
       <Space link="/agenda" imageLink="/images/agenda.png" name="Agenda" />
-      <Space link="/consultas" imageLink="/images/prancheta.png" name="Consultas" />
+      <Space link="/consulta" imageLink="/images/prancheta.png" name="Consultas" />
       <Space link="/cadastro" imageLink="/images/pagina.png" name="Cadastro" />
     </div>
   )

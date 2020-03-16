@@ -33,6 +33,11 @@ class Login extends React.Component {
     }
   }
 
+  componentDidMount() {
+    localStorage.removeItem('token')
+    localStorage.removeItem('reloadToken')
+  }
+
   handleChange = event => {
     const { name, value } = event.target
     this.setState({ [name]: value })
@@ -102,6 +107,7 @@ class Login extends React.Component {
               helperText={errors.nameError} />
 
             <TextField
+              type="password"
               className="text-field"
               name="password"
               label="Senha"

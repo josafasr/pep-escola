@@ -1,6 +1,6 @@
-.root {
+/* .root {
   flex-grow: 1;
-}
+} */
 
 .tool-bar {
   background-color: purple;
@@ -24,4 +24,8 @@
 .title {
   flex-grow: 1;
   /* margin-left: 10px; */
+}
+
+.logout-button {
+  text-transform: none;
 }

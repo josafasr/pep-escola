@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -20,11 +21,17 @@ export default function ToolBar(props) {
 
   const isLoggedin = props.isLoggedin
 
+  const history = useHistory()
+
+  const logout = () => {
+    history.push('/login')
+  }
+
   return (
     <div>
       { isLoggedin && 
         <div className="root">
-          <AppBar position="static">
+          <AppBar position="fixed">
             <Toolbar className="tool-bar">
               <IconButton edge="start" className="menu-button" color="inherit" aria-label="menu">
                 <MenuIcon />
@@ -33,7 +40,7 @@ export default function ToolBar(props) {
               <Typography variant="h6" className="title">
                 Prontuário Eletrônico CEUAS
               </Typography>
-              <Button color="inherit">Logout</Button>
+              <Button className="logout-button" color="inherit" onClick={logout}>Sair</Button>
             </Toolbar>
           </AppBar>
         </div>
