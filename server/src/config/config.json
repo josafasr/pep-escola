@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "postgres",
-    "password": "password",
+    "password": "rednose",
     "database": "prontuario_ceuas",
     "host": "127.0.0.1",
     "dialect": "postgres",

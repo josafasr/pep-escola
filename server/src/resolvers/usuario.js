@@ -46,7 +46,7 @@ export default {
 
     // cria um novo usuario
     createUsuario: async (parent, args, { models, user }) => {
-      if (user) {
+    //  if (user) {
         try {
             const usuario = await models.Usuario.create(args)
 
@@ -63,7 +63,7 @@ export default {
             errors: formatErrors(err, models)
           }
         }
-      }
+     // }
     },
 
     // atualiza dados do usuário
