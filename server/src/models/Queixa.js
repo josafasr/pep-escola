@@ -4,13 +4,14 @@
  * @author Marcos Porto
  */
 
- export default (sequelize, DataTypes) =>{
+export default (sequelize, DataTypes) =>{
     const Queixa = sequelize.define('Queixa',{
         nome: {
             type: DataTypes.STRING
         },
-        tipo_queixa_id: {
-            type: DataTypes.INTEGER
+        tipoQueixaId: {
+            type: DataTypes.INTEGER,
+            field: 'tipo_queixa_id'
         }
     },
     {

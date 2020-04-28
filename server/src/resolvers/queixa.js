@@ -40,7 +40,7 @@ const formatErrors = (e, models) => {
         createQueixa: async(parent, args, {models}) =>{
             const Queixa = await models.Queixa.create({
                 nome: args.nome,
-                tipo_queixa_id: args.tipo_queixa_id,
+                tipoQueixaId: args.tipoQueixaId,
                 createdAt: new Date(),
                 updatedAt: new Date()
             })
@@ -50,7 +50,7 @@ const formatErrors = (e, models) => {
         // atualiza dados da Queixa
         updateQueixa: (parent, args, {models}) => models.Queixa.update({
             nome: args.nome,
-            tipo_queixa_id: args.tipo_queixa_id,
+            tipoQueixaId: args.tipoQueixaId,
             updatedAt: new Date()
         }, {
             where: {

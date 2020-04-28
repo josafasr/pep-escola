@@ -17,8 +17,8 @@ type Query {
 }
 
 type Mutation{
-    createQueixa(nome: String, tipo_queixa_id: Int): Queixa
-    updateQueixa(id: ID!, nome: String, tipo_queixa_id: Int): Queixa
+    createQueixa(nome: String, tipoQueixaId: Int): Queixa
+    updateQueixa(id: ID!, nome: String, tipoQueixaId: Int): Queixa
     deleteQueixa(id: ID!): Int
 }
 `
