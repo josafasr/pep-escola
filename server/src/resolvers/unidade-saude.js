@@ -14,26 +14,26 @@ const formatErrors = (e, models) => {
  export default {
 
     // retorna todos as Unidades de saúde
-    // Query: {
-    //         UnidadeSaude: ( parents, args, {models}) => models.UnidadeSaude.findAll({
-    //             include: [
-    //                 {
-    //                     as: 'paciente',
-    //                     model: models.Paciente
-    //                 }
-    //             ]
-    //         }),
+     Query: {
+             unidadesSaude: ( parents, args, {models}) => models.UnidadeSaude.findAll({
+                 include: [
+                     {
+                         as: 'paciente',
+                        model: models.Paciente
+                     }
+                 ]
+            }),
 
-    //  // busca unidadeSaude pelo código
-    //  UnidadeSaude: (parent, { id }, { models }) => models.UnidadeSaude.findByPk(id, {
-    //      include: [
-    //          {
-    //             as: 'paciente',
-    //             model: models.Paciente 
-    //          }
-    //      ]
-    //  })
-    // },
+     // busca unidadeSaude pelo código
+      unidadeSaude: (parent, { id }, { models }) => models.UnidadeSaude.findByPk(id, {
+          include: [
+              {
+                 as: 'paciente',
+                model: models.Paciente 
+              }
+          ]
+      })
+     },
 
     Mutation: {
         // cria um novo unidadeSaude

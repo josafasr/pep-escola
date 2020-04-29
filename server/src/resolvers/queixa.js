@@ -14,26 +14,26 @@ const formatErrors = (e, models) => {
   export default{
 
     // retorna todos as Queixa
-    // Query: {
-    //         Queixa: ( parents, args, {models}) => models.Queixa.findAll({
-    //             include: [
-    //                 {
-    //                     as: 'consulta_queixa',
-    //                     model: models.ConsultaQueixa
-    //                 }
-    //             ]
-    //         }),
+     Query: {
+             queixas: ( parents, args, {models}) => models.Queixa.findAll({
+                 include: [
+                     {
+                         as: 'consulta_queixa',
+                         model: models.ConsultaQueixa
+                    }
+                ]
+            }),
 
-    //  // busca queixa pelo código
-    //  Queixa: (parent, { id }, { models }) => models.Queixa.findByPk(id, {
-    //      include: [
-    //          {
-    //             as: 'consulta_queixa',
-    //             model: models.ConsultaQueixa 
-    //          }
-    //      ]
-    //  })
-    // },
+     // busca queixa pelo código
+     queixa: (parent, { id }, { models }) => models.Queixa.findByPk(id, {
+         include: [
+             {
+                as: 'consulta_queixa',
+                 model: models.ConsultaQueixa 
+              }
+          ]
+      })
+     },
 
     Mutation: {
         // cria uma nova Queixa
