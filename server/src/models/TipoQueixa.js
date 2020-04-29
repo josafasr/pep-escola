@@ -19,15 +19,15 @@ export default (sequelize, DataTypes) => {
         
     });
 
-// TipoQueixa.associate = (models) => {
-//     /**
-//      * Relacionamento com a tabela de queixa 
-//      * @see module:models/Queixa
-//      */
-//     TipoLogradouro.hasMany(models.Queixa, {
-//         as: 'queixa',
-//         foreignKey: 'tipoQueixaId'
-//     })
-//    };
+ TipoQueixa.associate = (models) => {
+     /**
+      * Relacionamento com a tabela de queixa 
+      * @see module:models/Queixa
+     */
+    TipoQueixa.hasMany(models.Queixa, {
+         as: 'queixa',
+         foreignKey: 'tipoQueixaId'
+     })
+    };
      return TipoQueixa;
  };
