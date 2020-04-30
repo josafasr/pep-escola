@@ -12,7 +12,7 @@ const formatErrors = (e, models) => {
   }
 
   export default {
-    // Query: {
+     Query: {
 
          /**
           * retorna todos os registros de tipo de queixa
