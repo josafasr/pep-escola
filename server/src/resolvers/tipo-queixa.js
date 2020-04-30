@@ -14,16 +14,16 @@ const formatErrors = (e, models) => {
   export default {
     // Query: {
 
-    //     /**
-    //      * retorna todos os registros de tipo de queixa
-    //      */
-    //     tiposQueixa: (parent, args, { models }) => models.TipoQueixa.findAll(),
+         /**
+          * retorna todos os registros de tipo de queixa
+          */
+         tiposQueixa: (parent, args, { models }) => models.TipoQueixa.findAll(),
     
-    //     /**
-    //      * restorna um registro de tipo de queixa pelo id
-    //      */
-    //     tipoQueixa: (parent, { id }, { models }) => models.TipoQueixa.findByPk(id)
-    //   },
+         /**
+          * restorna um registro de tipo de queixa pelo id
+          */
+         tipoQueixa: (parent, { id }, { models }) => models.TipoQueixa.findByPk(id)
+       },
 
       Mutation: {
 
