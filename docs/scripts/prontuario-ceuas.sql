@@ -517,6 +517,37 @@ CREATE TABLE seguranca.usuario (
 	nome character varying NOT NULL,
 	hash_senha character varying NOT NULL,
 	pessoa_id bigint NOT NULL,
+	created_at timestamp,
+	updated_at timestamp,
+	CONSTRAINT usuario_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE seguranca.usuario OWNER TO postgres;
+-- ddl-end --
+
+-- object: seguranca.permissao | type: TABLE --
+-- DROP TABLE IF EXISTS seguranca.permissao CASCADE;
+CREATE TABLE seguranca.permissao (
+	id smallint NOT NULL DEFAULT nextval('seguranca.permissao_id_seq'::regclass),
+	nome character varying NOT NULL,
+	descricao text,
+	created_at timestamp,
+	updated_at timestamp,
+	CONSTRAINT pais_pk PRIMARY KEY (id)
+
+);
+-- ddl-end --
+-- ALTER TABLE dados_gerais.pais OWNER TO postgres;
+-- ddl-end --
+
+-- object: seguranca.usuario | type: TABLE --
+-- DROP TABLE IF EXISTS seguranca.usuario CASCADE;
+CREATE TABLE seguranca.usuario (
+	id smallint NOT NULL DEFAULT nextval('seguranca.usuario_id_seq'::regclass),
+	nome character varying NOT NULL,
+	hash_senha character varying NOT NULL,
+	pessoa_id bigint NOT NULL,
 	CONSTRAINT usuario_pk PRIMARY KEY (id)
 
 );
@@ -670,6 +701,8 @@ CREATE TABLE seguranca.grupo (
 	id smallint NOT NULL DEFAULT nextval('seguranca.grupo_id_seq'::regclass),
 	nome character varying NOT NULL,
 	descricao text,
+	created_at timestamp,
+	updated_at timestamp,
 	CONSTRAINT grupo_pk PRIMARY KEY (id)
 
 );
@@ -819,6 +852,8 @@ CREATE TABLE ceuas.avaliacao_atendimento (
 CREATE TABLE ceuas.tipo_refeicao (
 	id smallint NOT NULL DEFAULT nextval('ceuas.tipo_refeicao_id_seq'::regclass),
 	nome character varying NOT NULL,
+	created_at timestamp,
+	updated_at timestamp,
 	CONSTRAINT tipo_refeicao_pk PRIMARY KEY (id)
 
 );
