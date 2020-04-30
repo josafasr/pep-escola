@@ -1,20 +1,20 @@
 /**
  * @file Descritores GraphQL para as operações sobre a tabela de endereços
- * @module schemas/endereco
+ * @module src/schemas/endereco
  * @author Josafá Santos
  */
 export default `
 
   type Endereco {
     id: ID
-    nome: String
+    tipoLogradouro: TipoLogradouro
+    logradouro: String
+    numero: String
     bairro: String
     complemento: String
     cep: String
-    telefone: String
-    telefoneOutro: String
-    tipoLogradouro: TipoLogradouro
     cidade: Cidade
+    ativo: Boolean
   }
 
   type Query {
@@ -22,30 +22,36 @@ export default `
     endereco(id: ID!): Endereco
   }
 
+  type EnderecoResponse {
+    ok: Boolean
+    endereco: Endereco
+    errors: [Error]
+  }
+
   type Mutation {
     createEndereco(
-      nome: String!,
+      tipoLogradouroId: Int,
+      logradouro: String,
+      numero: Int,
       bairro: String,
       complemento: String,
       cep: String,
-      telefone: String,
-      telefoneOutro: String,
-      tipoLogradouroId: Int,
-      cidadeId: Int
-    ): Endereco
+      cidadeId: Int,
+      ativo: Boolean
+    ): EnderecoResponse
 
     updateEndereco(
       id: ID!,
-      nome: String,
+      tipoLogradouroId: Int,
+      logradouro: String,
+      numero: Int,
       bairro: String,
       complemento: String,
       cep: String,
-      telefone: String,
-      telefoneOutro: String,
-      tipoLogradouroId: Int,
-      cidadeId: Int
-    ): Endereco
+      cidadeId: Int,
+      ativo: Boolean
+    ): EnderecoResponse
 
-    deleteEndereco(id: ID!): Int
+    deleteEndereco(id: ID!): Boolean
   }
 `

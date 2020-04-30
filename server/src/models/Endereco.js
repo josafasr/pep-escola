@@ -1,11 +1,11 @@
 /**
  * @file Mapeamento da tabela de endereços
- * @module models/Endereco
+ * @module src/models/Endereco
  * @author Josafá Santos
  */
 export default (sequelize, DataTypes) => {
   const Endereco = sequelize.define('Endereco', {
-    nome: {
+    logradouro: {
       type: DataTypes.STRING
     },
     numero: {
@@ -24,12 +24,8 @@ export default (sequelize, DataTypes) => {
         is: ['[0-9]', 'i']
       }
     },
-    telefone: {
-      type: DataTypes.STRING
-    },
-    telefoneOutro: {
-      type: DataTypes.STRING,
-      field: 'telefone_outro'
+    ativo: {
+      type: DataTypes.BOOLEAN
     },
     tipoLogradouroId: {
       type: DataTypes.STRING,
@@ -45,13 +41,34 @@ export default (sequelize, DataTypes) => {
   });
 
   Endereco.associate = (models) => {
+
+    /**
+     * Relacionamento com a tabela de tipos de logradouro
+     * @see module:models/TipoLogradouro
+     */
+    Endereco.belongsTo(models.TipoLogradouro, {
+      as: 'tipoLogradouro',
+      foreignKey: 'tipoLogradouroId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de cidades
+     * @see module:models/Cidade
+     */
+    Endereco.belongsTo(models.Cidade, {
+      as: 'cidade',
+      foreignKey: 'cidadeId'
+    }),
+
     /**
      * Relacionamento com a tabela de pessoas
      * @see module:models/Pessoa
      */
-    Endereco.hasMany(models.Pessoa, {
+    Endereco.belongsToMany(models.Pessoa, {
+      through: models.PessoaEndereco,
       as: 'pessoas',
-      foreignKey: 'enderecoId'
+      foreignKey: 'enderecoId',
+      otherKey: 'pessoaId'
     })
   };
   return Endereco;

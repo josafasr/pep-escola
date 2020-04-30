@@ -1,8 +1,11 @@
 /**
  * @file Operações sobre a tabela de endereços
- * @module resolvers/endereco
+ * @module src/resolvers/endereco
  * @author Josafá Santos
  */
+
+import { formatErrors } from '../format-errors';
+
 export default {
 
   Query: {
@@ -23,39 +26,54 @@ export default {
     /**
      * cria um novo registro de endereço
      */
-    createEndereco: (parent, args, { models }) => models.Endereco.create({
-      nome: args.nome,
-      numero: args.numero,
-      bairro: args.bairro,
-      complemento: args.complemento,
-      cep: args.cep,
-      telefone: args.telefone,
-      telefoneOutro: args.telefoneOutro,
-      tipoLogradouroId: args.tipoLogradouroId,
-      cidadeId: args.cidadeId,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }),
+    createEndereco: async (parent, args, { models }) => {
+      console.log(args)
+      try {
+        const endereco = await models.Endereco.create(args)
+        return {
+          ok: true,
+          endereco
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
+    },
 
     /**
      * atualiza um registro de endereço, dado o id
      */
-    updateEndereco: (parent, args, { models }) => models.Endereco.update({
-      nome: args.nome,
-      numero: args.numero,
-      bairro: args.bairro,
-      complemento: args.complemento,
-      cep: args.cep,
-      telefone: args.telefone,
-      telefoneOutro: args.telefoneOutro,
-      tipoLogradouroId: args.tipoLogradouroId,
-      cidadeId: args.cidadeId,
-      updatedAt: new Date(),
-    }, {
-      where: { id: args.id },
-      returning: true,
-      plain: true
-    }).then((result) => { result[1] }),
+    updateEndereco: async (parent, args, { models }) => {
+      try {
+        const result = await models.Endereco.update({
+          tipoLogradouroId: args.tipoLogradouroId,
+          logradouro: args.logradouro,
+          numero: args.numero,
+          bairro: args.bairro,
+          complemento: args.complemento,
+          cep: args.cep,
+          cidadeId: args.cidadeId,
+          ativo: args.ativo,
+          updatedAt: new Date(),
+        }, {
+          where: { id: args.id },
+          returning: true,
+          plain: true
+        })
+        const endereco = result[1]
+        return {
+          ok: true,
+          endereco
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
+    },
 
     /**
      * exclui exclui um registro de endereço, dado o id
