@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
         key: 'id'
       },
       onUpdate: 'cascade',
-      onDelete: 'cascade'
+      // onDelete: 'cascade'
     },
     enderecoId: {
       type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ export default (sequelize, DataTypes) => {
         key: 'id'
       },
       onUpdate: 'cascade',
-      onDelete: 'cascade'
+      // onDelete: 'cascade'
     }
   }, {
     schema: 'dados_gerais',

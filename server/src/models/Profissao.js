@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de profissões
- * @module models/Profissao
- * @author Josafá Santos
+ * @module src/models/Profissao
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Profissao = sequelize.define('Profissao', {
@@ -15,11 +15,11 @@ export default (sequelize, DataTypes) => {
 
   Profissao.associate = (models) => {
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    Profissao.hasMany(models.Pessoa, {
-      as: 'pessoas',
+    Profissao.hasMany(models.Paciente, {
+      as: 'paciente',
       foreignKey: 'profissaoId'
     })
   };

@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de escolaridades
- * @module models/Escolaridade
- * @author Josafá Santos
+ * @module src/models/Escolaridade
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Escolaridade = sequelize.define('Escolaridade', {
@@ -15,11 +15,11 @@ export default (sequelize, DataTypes) => {
 
   Escolaridade.associate = (models) => {
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    Escolaridade.hasMany(models.Pessoa, {
-      as: 'pessoas',
+    Escolaridade.hasMany(models.Paciente, {
+      as: 'pacientes',
       foreignKey: 'escolaridadeId'
     })
   };

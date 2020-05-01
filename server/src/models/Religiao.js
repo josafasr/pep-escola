@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de religiões
- * @module models/Religiao
- * @author Josafá Santos
+ * @module src/models/Religiao
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Religiao = sequelize.define('Religiao', {
@@ -15,11 +15,11 @@ export default (sequelize, DataTypes) => {
 
   Religiao.associate = (models) => {
     /**
-     * Relacionamento com a tabela de pesssoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    Religiao.hasMany(models.Pessoa, {
-      as: 'pessoas',
+    Religiao.hasMany(models.Paciente, {
+      as: 'pacientes',
       foreignKey: 'religiaoId'
     })
   };
