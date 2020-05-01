@@ -37,7 +37,7 @@ export default (sequelize, DataTypes) => {
      */
     Contato.hasOne(models.Pessoa, {
       as: 'pessoa',
-      foreignKey: 'pessoaId'
+      foreignKey: 'contatoId'
     })
   };
   return Contato;

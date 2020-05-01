@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de cor da pele
- * @module models/CorPele
- * @author Josafá Santos
+ * @module src/models/CorPele
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const CorPele = sequelize.define('CorPele', {
@@ -15,11 +15,11 @@ export default (sequelize, DataTypes) => {
 
   CorPele.associate = (models) => {
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    CorPele.hasMany(models.Pessoa, {
-      as: 'pessoas',
+    CorPele.hasMany(models.Paciente, {
+      as: 'pacientes',
       foreignKey: 'corPeleId'
     })
   };

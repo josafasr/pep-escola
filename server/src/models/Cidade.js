@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de cidades
- * @module models/Cidade
- * @author Josafá Santos
+ * @module src/models/Cidade
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Cidade = sequelize.define('Cidade', {
@@ -32,10 +32,10 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    Cidade.hasMany(models.Pessoa, {
+    Cidade.hasMany(models.Paciente, {
       as: 'naturais',
       foreignKey: 'naturalidadeId'
     })

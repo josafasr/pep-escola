@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de estados civis
- * @module models/EstadoCivil
- * @author Josafá Santos
+ * @module src/models/EstadoCivil
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const EstadoCivil = sequelize.define('EstadoCivil', {
@@ -15,11 +15,11 @@ export default (sequelize, DataTypes) => {
 
   EstadoCivil.associate = (models) => {
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    EstadoCivil.hasMany(models.Pessoa, {
-      as: 'pessoas',
+    EstadoCivil.hasMany(models.Paciente, {
+      as: 'pacientes',
       foreignKey: 'estadoCivilId'
     })
   };

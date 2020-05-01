@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de países
- * @module models/Pais
- * @author Josafá Santos
+ * @module src/models/Pais
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Pais = sequelize.define('Pais', {
@@ -31,10 +31,10 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
-     * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * Relacionamento com a tabela de pacientes
+     * @see module:models/Paciente
      */
-    Pais.hasMany(models.Pessoa, {
+    Pais.hasMany(models.Paciente, {
       as: 'nascidos',
       foreignKey: 'nacionalidadeId'
     })
