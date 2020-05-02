@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de usuários
- * @module models/Usuario
- * @author Josafá Santos
+ * @module src/models/Usuario
+ * @author Josafá Santos dos Reis
  */
 
 import bcrypt from 'bcrypt'
@@ -17,38 +17,44 @@ export default (sequelize, DataTypes) => {
         }
       }
     },
-    email: {
-      type: DataTypes.STRING,
-      validate: {
-        isEmail: {
-          args: true,
-          msg: 'E-mail inválido'
-        }
-      }
-    },
     senha: {
       type: DataTypes.STRING,
       validate: {
         len: {
-          args: [6, 100],
+          args: 6,
           msg: 'A senha deve ter no mínimo 6 carateres'
         }
       },
       field: 'hash_senha'
+    },
+    pessoaId: {
+      type: DataTypes.INTEGER,
+      field: 'pessoa_id'
     }
   }, {
     tableName: 'usuario',
     schema: 'seguranca',
     hooks: {
       afterValidate: async (usuario) => {
-        const hashSenha = await bcrypt.hash(usuario.senha, 12)
-        // eslint-disable-next-line no-param-reassign
-        usuario.senha = hashSenha
+        if (usuario.senha != null && usuario.senha != '') {
+          const hashSenha = await bcrypt.hash(usuario.senha, 12)
+          // eslint-disable-next-line no-param-reassign
+          usuario.senha = hashSenha
+        }
       }
     }
   });
 
   Usuario.associate = (models) => {
+    /**
+     * Relacionamento com a tabela de pessoas
+     * @see module:models/Pessoa
+     */
+    Usuario.belongsTo(models.Pessoa, {
+      as: 'pessoa',
+      foreignKey: 'pessoaId'
+    }),
+
     /**
      * Relacionamento com a tabela de grupos
      * @see module:models/Grupo

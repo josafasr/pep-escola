@@ -1,20 +1,20 @@
 /**
  * @file Descritores GraphQL para as operações sobre a tabela de usuários
- * @module schemas/usuario
- * @author Josafá Santos
+ * @module src/schemas/usuario
+ * @author Josafá Santos dos Reis
  */
 export default `
   type Usuario {
     id: ID
     nome: String
-    email: String
     senha: String
+    pessoa: Pessoa
     grupos: [Grupo]
   }
 
   type CreateUsuarioResponse {
     ok: Boolean
-    user: Usuario
+    usuario: Usuario
     errors: [Error]
   }
 
@@ -31,9 +31,23 @@ export default `
   }
 
   type Mutation {
-    createUsuario(nome: String, email: String, senha: String, grupos: [Int]): CreateUsuarioResponse
-    updateUsuario(id: ID!, nome: String, senha: String, grupos: [Int]): Usuario
+    createUsuario(
+      nome: String!,
+      senha: String!,
+      pessoaId: Int!,
+      grupos: [Int]
+    ): CreateUsuarioResponse
+
+    updateUsuario(
+      id: ID!,
+      nome: String,
+      senha: String,
+      pessoaId: Int,
+      grupos: [Int]
+    ): CreateUsuarioResponse
+
     deleteUsuario(id: ID!): Boolean
-    login(nome: String, senha: String): LoginResponse
+
+    login(nome: String!, senha: String!): LoginResponse
   }
 `

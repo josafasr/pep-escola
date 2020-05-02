@@ -55,7 +55,6 @@ export default {
     /**
      * cria um novo registro de pessoa
      */
-    // createPessoa: async (parent, { endereco, otherArgs }, { models }) => {
     createPessoa: async (parent, args, { models }) => {
       try {
         const pessoa = await models.Pessoa.create({
@@ -112,7 +111,7 @@ export default {
     },
 
     /**
-     * atualiza um registro de pessoa, dado o id
+     * exclui um registro de pessoa, dado o id
      */
     deletePessoa: (parent, { id }, { models }) => models.Pessoa.destroy({
       where: {
