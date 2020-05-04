@@ -4,12 +4,7 @@
  * @author Marcos Porto 
  */
 
-const formatErrors = (e, models) => {
-  if (e instanceof models.Sequelize.ValidationError) {
-    return e.errors.map((x) => _.pick(x, ['path', 'message']))
-  }
-  return [{ path: 'erro', message: 'Algo deu errado!' }]
-}
+import { formatErrors } from '../format-errors';
 
 export default {
    Query: {

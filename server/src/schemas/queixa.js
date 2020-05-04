@@ -8,8 +8,14 @@ export default `
 type Queixa {
     id: ID
     nome: String
-    tipoQueixaId: Int
+    tipoQueixa: TipoQueixa
 }
+
+type CreateQueixaResponse {
+    ok: Boolean
+    queixa: Queixa
+    errors: [Error]
+  }
 
 type Query {
     queixa(id: ID!): Queixa
@@ -17,8 +23,8 @@ type Query {
 }
 
 type Mutation{
-    createQueixa(nome: String, tipoQueixaId: Int): Queixa
-    updateQueixa(id: ID!, nome: String, tipoQueixaId: Int): Queixa
-    deleteQueixa(id: ID!): Int
+    createQueixa(nome: String, tipoQueixaId: Int): CreateQueixaResponse
+    updateQueixa(id: ID!, nome: String, tipoQueixaId: Int): CreateQueixaResponse
+    deleteQueixa(id: ID!): Boolean
 }
 `

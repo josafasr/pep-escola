@@ -4,12 +4,7 @@
  * @author Marcos Porto 
  */
 
-const formatErrors = (e, models) => {
-    if (e instanceof models.Sequelize.ValidationError) {
-      return e.errors.map((x) => _.pick(x, ['path', 'message']))
-    }
-    return [{ path: 'erro', message: 'Algo deu errado!' }]
-  }
+  import { formatErrors } from '../format-errors';
 
   export default{
 
@@ -37,15 +32,25 @@ const formatErrors = (e, models) => {
 
     Mutation: {
         // cria uma nova Queixa
-        createQueixa: async(parent, args, {models}) =>{
-            const Queixa = await models.Queixa.create({
+        createQueixa: async (parent, args, { models }) => {
+            try {
+              const queixa = await models.Queixa.create({
                 nome: args.nome,
                 tipoQueixaId: args.tipoQueixaId,
                 createdAt: new Date(),
-                updatedAt: new Date()
-            })
-            return Queixa;
-        },
+              })
+              return {
+                ok: true,
+                queixa
+              }
+            } catch (err) {
+              return {
+                ok: false,
+                errors: formatErrors(err, models)
+                }
+            }
+            
+          },
 
         // atualiza dados da Queixa
         updateQueixa: (parent, args, {models}) => models.Queixa.update({
