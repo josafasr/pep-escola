@@ -16,15 +16,15 @@ export default (sequelize, DataTypes) => {
         
     });
 
-//  TipoRefeicao.associate = (models) => {
-//      /**
-//       * Relacionamento com a tabela de recordatorio_alimentar 
-//       * @see module:models/RecordatorioAlimentar
-//      */
-//     TipoQueixa.hasMany(models.Queixa, {
-//          as: 'recordatorio_alimentar',
-//          foreignKey: 'tipoRefeicaoId'
-//      })
-//     };
+      TipoRefeicao.associate = (models) => {
+      /**
+       * Relacionamento com a tabela de recordatorio_alimentar 
+       * @see module:models/RecordatorioAlimentar
+      */
+        TipoQueixa.hasMany(models.RecordatorioAlimentar, {
+         as: 'recordatorio_alimentar',
+          foreignKey: 'tipoRefeicaoId'
+        })
+        };
      return TipoRefeicao;
  };
