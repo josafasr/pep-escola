@@ -27,10 +27,13 @@ import { formatErrors } from '../format-errors';
          */
         createTipoRefeicao: async (parent, args, { models }) => {
           try {
-            const TipoRefeicao = await models.TipoRefeicao.create(args)
+            const tipoRefeicao = await models.TipoRefeicao.create({
+              nome: args.nome,
+              createdAt: new Date(),
+            })
             return {
               ok: true,
-              TipoRefeicao
+              tipoRefeicao
             }
           } catch (err) {
             return {

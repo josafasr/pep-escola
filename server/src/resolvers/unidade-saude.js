@@ -4,12 +4,7 @@
  * @author Marcos Porto 
  */
 
-const formatErrors = (e, models) => {
-  if (e instanceof models.Sequelize.ValidationError) {
-    return e.errors.map((x) => _.pick(x, ['path', 'message']))
-  }
-  return [{ path: 'erro', message: 'Algo deu errado!' }]
-}
+import { formatErrors } from '../format-errors';
 
  export default {
 
@@ -38,13 +33,24 @@ const formatErrors = (e, models) => {
     Mutation: {
         // cria um novo unidadeSaude
         createUnidadeSaude: async (parent, args, { models }) => {
-          const unidadeSaude = await models.UnidadeSaude.create({
-            nome: args.nome,
-            cnes: args.cnes,
-            createdAt: new Date(),
-            updatedAt: new Date()
-          })
-          return unidadeSaude;
+          try {
+            const unidadeSaude = await models.UnidadeSaude.create({
+              nome: args.nome,
+              cnes: args.cnes,
+              createdAt: new Date(),
+              updatedAt: new Date()
+            })
+            return {
+              ok: true,
+              unidadeSaude
+            }
+          } catch (err) {
+            return {
+              ok: false,
+              errors: formatErrors(err, models)
+              }
+          }
+          
         },
 
         // atualiza dados do UnidadeSaude

@@ -28,10 +28,13 @@ export default {
      */
     createRecordatorioAlimentar: async (parent, args, { models }) => {
       try {
-        const RecordatorioAlimentar = await models.RecordatorioAlimentar.create(args)
+        const recordatorioAlimentar = await models.RecordatorioAlimentar.create({
+          nome: args.nome,
+          tipoRefeicaoId: args.tipoRefeicaoId,
+        })
         return {
           ok: true,
-          RecordatorioAlimentar
+          recordatorioAlimentar
         }
       } catch (err) {
         return {
@@ -46,7 +49,7 @@ export default {
      * atualiza um registro de contato, dado o id
      */
     updateRecordatorioAlimentar: async (parent, args, { models }) => {
-      const result = await models.RecordatorioAlimentar.update({
+      const result = await models.Contato.update({
         nome: args.nome,
         tipoRefeicaoId: args.tipoRefeicaoId,
         updatedAt: new Date(),
@@ -60,9 +63,9 @@ export default {
     },
 
     /**
-     * exclui um registro de recordatorio alimentar, dado o id
+     * exclui um registro de Recordatorio alimentar, dado o id
      */
-    deleteRecordatorioAlimentar: (parent, { id }, { models }) => models.RecordatorioAlimentar.destroy({
+    deleteContato: (parent, { id }, { models }) => models.RecordatorioAlimentar.destroy({
       where: {
         id
       }

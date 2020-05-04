@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
        * Relacionamento com a tabela de recordatorio_alimentar 
        * @see module:models/RecordatorioAlimentar
       */
-        TipoQueixa.hasMany(models.RecordatorioAlimentar, {
+     TipoRefeicao.hasMany(models.RecordatorioAlimentar, {
          as: 'recordatorio_alimentar',
           foreignKey: 'tipoRefeicaoId'
         })

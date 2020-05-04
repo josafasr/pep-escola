@@ -10,14 +10,20 @@ type TipoRefeicao {
     nome: String
 }
 
+type CreateTipoRefeicaoResponse {
+    ok: Boolean
+    tipoRefeicao: TipoRefeicao
+    errors: [Error]
+  }
+
 type Query {
     tipoRefeicao(id: ID!): TipoRefeicao
     tiposRefeicao: [TipoRefeicao]
 }
 
 type Mutation{
-    createTipoRefeicao(nome: String): TipoRefeicao
-    updateTipoRefeicao(id: ID!, nome: String): TipoRefeicao
-    deleteTipoRefeicao(id: ID!): Int
+    createTipoRefeicao(nome: String): CreateTipoRefeicaoResponse
+    updateTipoRefeicao(id: ID!, nome: String): CreateTipoRefeicaoResponse
+    deleteTipoRefeicao(id: ID!): Boolean
 }
 `

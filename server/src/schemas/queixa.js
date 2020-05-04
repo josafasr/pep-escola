@@ -8,7 +8,7 @@ export default `
 type Queixa {
     id: ID
     nome: String
-    tipo_queixa_id: Int
+    tipoQueixaId: Int
 }
 
 type Query {

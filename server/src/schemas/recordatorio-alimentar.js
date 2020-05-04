@@ -7,8 +7,14 @@ export default `
 type RecordatorioAlimentar {
     id: ID
     nome: String
-    tipoRefeicaoId: Int
+    tipoRefeicao: TipoRefeicao
 }
+
+type CreateRecordatorioAlimentarResponse {
+    ok: Boolean
+    recordatorioAlimentar: RecordatorioAlimentar
+    errors: [Error]
+  }
 
 type Query {
     recordatorioAlimentar(id: ID!): RecordatorioAlimentar
@@ -16,8 +22,8 @@ type Query {
 }
 
 type Mutation{
-    createRecordatorioAlimentar(nome: String, tipoRefeicaoId: Int): RecordatorioAlimentar
+   createRecordatorioAlimentar(nome: String, tipoRefeicaoId: Int): CreateRecordatorioAlimentarResponse
     updateRecordatorioAlimentar(id: ID!, nome: String, tipoRefeicaoId: Int): RecordatorioAlimentar
-    deleteRecordatorioAlimentar(id: ID!): Int
+    deleteRecordatorioAlimentar(id: ID!): Boolean
 }
 `

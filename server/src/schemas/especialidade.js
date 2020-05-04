@@ -10,14 +10,20 @@ export default `
     descricao: String
   }
 
+  type CreateEspecialidadeResponse {
+    ok: Boolean
+    especialidade: Especialidade
+    errors: [Error]
+  }
+
   type Query {
     especialidades: [Especialidade]
     especialidade(id: ID!): Especialidade
   }
 
   type Mutation {
-    createEspecialidade(nome: String, descricao: String): Especialidade
-    updateEspecialidade(id: ID!, nome: String, descricao: String): Especialidade
-    deleteEspecialidade(id: ID!): Int
+    createEspecialidade(nome: String, descricao: String): CreateEspecialidadeResponse
+    updateEspecialidade(id: ID!, nome: String, descricao: String): CreateEspecialidadeResponse
+    deleteEspecialidade(id: ID!): Boolean
   }
 `

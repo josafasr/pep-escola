@@ -11,14 +11,20 @@ type TipoQueixa {
   descricao: String
 }
 
+type CreateTipoQueixaResponse {
+  ok: Boolean
+  tipoQueixa: TipoQueixa
+  errors: [Error]
+}
+
 type Query {
   tiposQueixa: [TipoQueixa]
   tipoQueixa(id: ID!): TipoQueixa
 }
 
 type Mutation {
-  createTipoQueixa(nome: String, descricao: String): TipoQueixa
-  updateTipoQueixa(id: ID!, nome: String, descricao: String): TipoQueixa
-  deleteTipoQueixa(id: ID!): Int
+  createTipoQueixa(nome: String, descricao: String): CreateTipoQueixaResponse
+  updateTipoQueixa(id: ID!, nome: String, descricao: String): CreateTipoQueixaResponse
+  deleteTipoQueixa(id: ID!): Boolean
 }
 `

@@ -30,14 +30,26 @@ export default {
       /**
        * cria um novo registro de especialidade
        */
-      createEspecialidade: async(parent, args, {models}) =>{
-          const Especialidade = await models.Especialidade.create({
-              nome: args.nome,
+
+      createEspecialidade: async (parent, args, { models }) => {
+        try {
+          const especialidade = await models.Especialidade.create({
+            nome: args.nome,
               descricao: args.descricao,
               createdAt: new Date(),
               updatedAt: new Date()
           })
-          return Especialidade;
+          return {
+            ok: true,
+            especialidade
+          }
+        } catch (err) {
+          return {
+            ok: false,
+            errors: formatErrors(err, models)
+            }
+        }
+        
       },
       /**
        * atualiza um registro de especialidade, dado o id

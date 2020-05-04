@@ -4,12 +4,7 @@
  * @author Marcos Porto 
  */
 
-const formatErrors = (e, models) => {
-    if (e instanceof models.Sequelize.ValidationError) {
-      return e.errors.map((x) => _.pick(x, ['path', 'message']))
-    }
-    return [{ path: 'erro', message: 'Algo deu errado!' }]
-  }
+import { formatErrors } from '../format-errors';
 
   export default {
      Query: {
@@ -30,14 +25,25 @@ const formatErrors = (e, models) => {
         /**
          * cria um novo registro de tipo de queixa
          */
-        createTipoQueixa: async(parent, args, {models}) =>{
-            const TipoQueixa = await models.TipoQueixa.create({
-                nome: args.nome,
-                descricao: args.descricao,
-                createdAt: new Date(),
-                updatedAt: new Date()
+
+        createTipoQueixa: async (parent, args, { models }) => {
+          try {
+            const tipoQueixa = await models.TipoQueixa.create({
+              nome: args.nome,
+              descricao: args.descricao,
+              createdAt: new Date(),
             })
-            return TipoQueixa;
+            return {
+              ok: true,
+              tipoQueixa
+            }
+          } catch (err) {
+            return {
+              ok: false,
+              errors: formatErrors(err, models)
+              }
+          }
+          
         },
         /**
          * atualiza um registro de tipo de queixa, dado o id
