@@ -24,7 +24,7 @@ export default (sequelize, DataTypes) =>{
     //  * Relacionamento com a tabela de Queixa
     //  * @see {@link Queixa}
     //  */
-    //     Queixa.belongsTo(models.Paciente, {
+    //     Queixa.belongsTo(models.ConsultaQueixa, {
     //         as:'consulta_queixa',
     //         foreignKey: 'queixaId'
     //     })
