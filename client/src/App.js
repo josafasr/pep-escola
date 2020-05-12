@@ -1,8 +1,8 @@
 /**
- * Componente principal da aplicação
- * @author Josafá Santos
+ * Componente principal da aplicação cliente
+ * @author Josafá Santos dos Reis
  */
-import React , { useState, useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
@@ -12,34 +12,25 @@ import { ApolloLink, from } from 'apollo-link'
 
 import { StylesProvider } from '@material-ui/styles'
 
-import './App.css'
-import ToolBar from './components/toolbar/ToolBar'
 import Login from './components/login/Login'
-import Home from './components/home'
-import Consulta from './components/consulta'
-import User from './components/user/User'
+import SideNav from './layout/side-nav'
 
 function App(props) {
-  const [isLoggedin, setIsLoggedin] = useState(() => {
-    const token = localStorage.getItem('token')
-    if (token != null) {
-      return true
-    } else {
-      return false
-    }
-  })
+  // const [isLoggedin, setIsLoggedin] = useState(false)
 
-  useEffect (() => {
-    const token = localStorage.getItem('token')
-    if (token != null) {
-      setIsLoggedin(true)
-    } else {
-      setIsLoggedin(false)
-    }
-  }, [])
+  // useEffect (() => {
+  //   const token = localStorage.getItem('token')
+  //   if (token != null) {
+  //     setIsLoggedin(true)
+  //   } else {
+  //     setIsLoggedin(false)
+  //   }
+  // }, [])
 
   const httpLink = new HttpLink({
-    uri: 'http://localhost:4000/api'
+    // uri: 'http://localhost:4000/api'
+    // uri: `https://${window.location.hostname}/apiceuas`
+    uri: `http://${window.location.hostname}:4000/api`
   })
 
   const authMiddleware = new ApolloLink((operation, forward) => {
@@ -90,26 +81,14 @@ function App(props) {
 
   return (
     <ApolloProvider client={client}>
-      <Router>
+      <Router basename="/appceuas">
         <StylesProvider injectFirst>
           <div className="App">
-            <ToolBar isLoggedin={isLoggedin} />
             <Switch>
-              <Route exact path="/">
+              <Route exact path="/login">
                 <Login />
               </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/home">
-                <Home />
-              </Route>
-              <Route path="/user">
-                <User />
-              </Route>
-              <Route path="/consulta">
-                <Consulta />
-              </Route>
+              <Route path="/" component={SideNav} />
             </Switch>
           </div>
         </StylesProvider>

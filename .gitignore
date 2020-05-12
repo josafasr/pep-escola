@@ -4,4 +4,6 @@
 
 */out/
 
-./server/src/config/config.json
+*/build/
+
+server/src/config/config.json

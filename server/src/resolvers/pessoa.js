@@ -82,21 +82,19 @@ export default {
     /**
      * atualiza um registro de pessoa, dado o id
      */
-    updatePessoa: async (parent, args, { models }) => {
+    updatePessoa: async (parent, { id, enderecos, ...rest }, { models }) => {
       try {
-        const result = await models.Pessoa.update({
-          nome: args.nome,
-          dataNascimento: args.dataNascimento,
-          sexo: args.sexo,
-          contatoId: args.contatoId
-        }, {
-          where: { id: args.id },
-          returning: true,
-          plain: true
-        })
-        const pessoa = result[1]
-        if (args.enderecos) {
-          pessoa.addEnderecos(args.enderecos)
+        const pessoa = await models.Pessoa.findByPk(id)
+        if ({ ...rest }) {
+          await pessoa.update({ ...rest }, {
+            where: { id },
+            returning: true,
+            plain: true
+          })
+        }
+
+        if (enderecos) {
+          await pessoa.addEnderecos(enderecos)
         }
         return {
           ok: true,

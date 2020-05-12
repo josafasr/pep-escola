@@ -1,3 +1,8 @@
+/**
+ * Ponto de partida da aplicação servidora
+ * @author Josafá Santos dos Reis
+ */
+
 import jwt from 'jsonwebtoken'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
@@ -7,11 +12,8 @@ import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
 
 import models from './models'
 import { refreshTokens } from './auth'
-// import typeDefs from './schema'
-// import resolvers from './resolvers'
 
-// const models = fileLoader(path.join(__dirname, './models'))
-
+/***** trocar por chaves de verdade *****/
 const SECRET = 'kwvowudvj33739fnq9cn9938'
 const SECRET2 = 'kwvowudvj33739fnq9cn9938sjg9w73'
 
@@ -21,52 +23,33 @@ const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers'))
 const app = express()
 const url = '/api'
 
-// const getUser = async (req, res, next) => {
-//   const token = req.headers['x-token']
-//   if (token) {
-//     try {
-//       const { user } = jwt.verify(token, SECRET)
-//       req.user = user
-//     } catch (err) {
-//       const reloadToken = req.headers['x-reload-token']
-//       const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
-//       if (newTokens && newTokens.reloadToken) {
-//         res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
-//         res.set('x-token', newTokens.token)
-//         res.set('x-reload-token', newTokens.reloadToken)
-//       }
-//       req.user = newTokens.user
-//     }
-//   }
-//   next()
-// }
+const getUser = async (req, res, next) => {
+  const token = req.headers['x-token']
+  if (token) {
+    try {
+      const { user } = jwt.verify(token, SECRET)
+      req.user = user
+    } catch (err) {
+      const reloadToken = req.headers['x-reload-token']
+      const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
+      if (newTokens && newTokens.reloadToken) {
+        res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
+        res.set('x-token', newTokens.token)
+        res.set('x-reload-token', newTokens.reloadToken)
+      }
+      req.user = newTokens.user
+    }
+  }
+  next()
+}
 
-// app.use(getUser)
+app.use(getUser)
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req, res }) => {
-    //const token = req.headers['x-token'] || ''
-    // const { user } = token ? jwt.verify(token, SECRET) : ''
-    //const { user } = getUser(req, res, next)
 
-    const token = req.headers['x-token']
-    if (token) {
-      try {
-        const { user } = jwt.verify(token, SECRET)
-        req.user = user
-      } catch (err) {
-        const reloadToken = req.headers['x-reload-token']
-        const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
-        if (newTokens && newTokens.reloadToken) {
-          res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
-          res.set('x-token', newTokens.token)
-          res.set('x-reload-token', newTokens.reloadToken)
-        }
-        req.user = newTokens.user
-      }
-    }
     return {
       models,
       SECRET,

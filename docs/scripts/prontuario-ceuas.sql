@@ -82,7 +82,7 @@ CREATE SEQUENCE dados_gerais.endereco_id_seq
 -- DROP TABLE IF EXISTS dados_gerais.endereco CASCADE;
 CREATE TABLE dados_gerais.endereco (
 	id integer NOT NULL DEFAULT nextval('dados_gerais.endereco_id_seq'::regclass),
-	nome character varying NOT NULL,
+	logradouro character varying NOT NULL,
 	numero integer,
 	bairro character varying,
 	complemento character varying,
@@ -539,20 +539,6 @@ CREATE TABLE seguranca.permissao (
 );
 -- ddl-end --
 -- ALTER TABLE dados_gerais.pais OWNER TO postgres;
--- ddl-end --
-
--- object: seguranca.usuario | type: TABLE --
--- DROP TABLE IF EXISTS seguranca.usuario CASCADE;
-CREATE TABLE seguranca.usuario (
-	id smallint NOT NULL DEFAULT nextval('seguranca.usuario_id_seq'::regclass),
-	nome character varying NOT NULL,
-	hash_senha character varying NOT NULL,
-	pessoa_id bigint NOT NULL,
-	CONSTRAINT usuario_pk PRIMARY KEY (id)
-
-);
--- ddl-end --
--- ALTER TABLE seguranca.usuario OWNER TO postgres;
 -- ddl-end --
 
 -- object: seguranca.permissao | type: TABLE --

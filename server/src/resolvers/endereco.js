@@ -27,7 +27,6 @@ export default {
      * cria um novo registro de endereço
      */
     createEndereco: async (parent, args, { models }) => {
-      console.log(args)
       try {
         const endereco = await models.Endereco.create(args)
         return {
@@ -45,20 +44,10 @@ export default {
     /**
      * atualiza um registro de endereço, dado o id
      */
-    updateEndereco: async (parent, args, { models }) => {
+    updateEndereco: async (parent, { id, ...otherArgs }, { models }) => {
       try {
-        const result = await models.Endereco.update({
-          tipoLogradouroId: args.tipoLogradouroId,
-          logradouro: args.logradouro,
-          numero: args.numero,
-          bairro: args.bairro,
-          complemento: args.complemento,
-          cep: args.cep,
-          cidadeId: args.cidadeId,
-          ativo: args.ativo,
-          updatedAt: new Date(),
-        }, {
-          where: { id: args.id },
+        const result = await models.Endereco.update(...otherArgs, {
+          where: { id },
           returning: true,
           plain: true
         })
