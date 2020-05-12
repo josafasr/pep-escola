@@ -28,6 +28,7 @@ export default `
   type Query {
     usuario(id: ID!): Usuario
     usuarios: [Usuario]
+    findAllFields(id: ID!): Usuario
   }
 
   type Mutation {

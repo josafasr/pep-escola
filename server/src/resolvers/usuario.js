@@ -18,19 +18,32 @@ export default {
     usuarios: async (parent, args, { models }) => {
       const usuarios = await models.Usuario.findAll({
         include: [
+        {
+          association: 'pessoa',
+          attributes: ['nome', 'dataNascimento', 'sexo'],
+          include: [
           {
-            association: 'grupos',
-            attributes: ['nome']
+            association: 'contato',
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
           },
           {
-            association: 'pessoa',
-            attributes: ['nome'],
-            include: [{
-              association: 'contato',
-              attributes: ['email']
+            association: 'enderecos',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [
+            {
+              association: 'tipoLogradouro',
+              attributes: ['nome']
+            },
+            {
+              association: 'cidade',
+              attributes: ['nome']
             }]
-          }
-        ],
+          }]
+        },
+        {
+          association: 'grupos',
+          attributes: ['nome']
+        }],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuarios
@@ -42,19 +55,32 @@ export default {
     usuario: async (parent, { id }, { models }) => {
       const usuario = await models.Usuario.findByPk(id, {
         include: [
+        {
+          association: 'pessoa',
+          attributes: ['nome', 'dataNascimento', 'sexo'],
+          include: [
           {
-            association: 'pessoa',
-            attributes: ['nome'],
-            include: [{
-              association: 'contato',
-              attributes: ['email']
-            }]
+            association: 'contato',
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
           },
           {
-            association: 'grupos',
-            attributes: ['nome']
-          }
-        ],
+            association: 'enderecos',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [
+            {
+              association: 'tipoLogradouro',
+              attributes: ['nome']
+            },
+            {
+              association: 'cidade',
+              attributes: ['nome']
+            }]
+          }]
+        },
+        {
+          association: 'grupos',
+          attributes: ['nome']
+        }],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuario
@@ -94,20 +120,19 @@ export default {
     /**
      * atualiza um registro de usuário, dado o id
      */
-    updateUsuario: async (parent, args, { models }) => {
+    updateUsuario: async (parent, { id, grupos, ...rest }, { models }) => {
       try {
-        const result = await models.Usuario.update({
-          nome: args.nome,
-          senha: args.senha,
-          pessoaId: args.pessoaId
-        }, {
-          where: { id: args.id },
-          returning: true,
-          plain: true
-        })
-        const usuario = result[1]
-        if (args.grupos) {
-          usuario.addGrupos(args.grupos)
+        const usuario = await models.Usuario.findByPk(id)
+        if ({ ...rest }) {
+          await usuario.update({ ...rest }, {
+            where: { id },
+            returning: true,
+            plain: true
+          })
+        }
+
+        if (grupos) {
+          await usuario.addGrupos(grupos)
         }
         return {
           ok: true,

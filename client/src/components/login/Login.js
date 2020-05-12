@@ -1,10 +1,10 @@
 /**
  * Página para login no sistema
- * @author Josafá Santos
+ * @author Josafá Santos dos Reis
  */
 
 import React from 'react'
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -44,7 +44,7 @@ class Login extends React.Component {
   }
 
   handleSubmit = async (event) => {
-    // event.preventDefault()
+    event.preventDefault()
     this.setState({ errors: {} })
 
     const response = await this.props.mutate({
@@ -53,14 +53,13 @@ class Login extends React.Component {
         senha: this.state.password,
       }
     })
-    console.log(response)
 
     const { ok, token, reloadToken, errors } = response.data.login
 
     if (ok) {
       localStorage.setItem('token', token)
       localStorage.setItem('reloadToken', reloadToken)
-      this.props.history.push('/home')
+      this.props.history.push('/')
     } else {
       const err = {}
       errors.forEach(({ path, message }) => {
@@ -77,6 +76,7 @@ class Login extends React.Component {
     const { errors } = this.state
 
     return (
+      <div className="root">
       <Card className="card">
         <CardHeader
           className="header"
@@ -87,7 +87,7 @@ class Login extends React.Component {
           }
           subheader="Centro Universitário de Atenção à Saúde"
           avatar={
-            <Avatar src="uesb.png" variant="square" aria-label="recipe" className="media" />
+            <Avatar src="/uesb.png" alt="Logo Uesb" variant="square" aria-label="recipe" className="media" />
           }
         />
 
@@ -114,7 +114,7 @@ class Login extends React.Component {
               id="password-text-field"
               variant="outlined"
               size="small"
-              placeholder="123456"
+              placeholder="usuario"
               value={this.state.password}
               onChange={this.handleChange}
               error={!!errors.passwordError}
@@ -123,15 +123,17 @@ class Login extends React.Component {
         </CardContent>
         <CardActions className="card-actions">
           <Button className="btn-login" variant="contained" color="secondary" size="small" onClick={this.handleSubmit}>Entrar</Button>
+          <Link className="forget-link" to="#">Esqueceu a senha?</Link>
         </CardActions>
-        {/* <Link to="#">Esqueceu a senha?</Link> */}
       </Card>
+      <div className="copy">© 2020 - Universidade Estadual do Sudoeste da Bahia</div>
+      </div>
     )
   }
 }
 
 const loginMutation = gql`
-  mutation($nome: String, $senha: String) {
+  mutation($nome: String!, $senha: String!) {
     login(nome: $nome, senha: $senha) {
       ok
       token
