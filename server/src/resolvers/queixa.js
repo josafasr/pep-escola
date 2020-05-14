@@ -1,6 +1,6 @@
 /**
- * @file Operações sobre a tabela de apresentações de Unidades de saúde
- * @module resolvers/unidade-saude
+ * @file Operações sobre a tabela de apresentações de queixa
+ * @module resolvers/queixa
  * @author Marcos Porto 
  */
 
