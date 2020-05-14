@@ -20,10 +20,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       field: 'encaminhado_por'
     },
-    // pessoaId: {
-    //   type: DataTypes.INTEGER,
-    //   field: 'pessoa_id'
-    // },
+    pessoaId: {
+      type: DataTypes.INTEGER,
+      field: 'pessoa_id'
+    },
+    unidadeSaudeId: {
+      type: DataTypes.INTEGER,
+      field: 'unidade_saude_id'
+    },
     nacionalidadeId: {
       type: DataTypes.INTEGER,
       field: 'nacionalidade_id'
@@ -65,16 +69,25 @@ export default (sequelize, DataTypes) => {
     
     /**
      * Relacionamento com a tabela de pessoas
-     * @see {@link Pessoa}
+     * @see module:models/Pessoa
      */
-    // Paciente.belongsTo(models.Pessoa, {
-    //   as: 'pessoa',
-    //   foreignKey: 'pessoaId'
-    // }),
+    Paciente.belongsTo(models.Pessoa, {
+      as: 'pessoa',
+      foreignKey: 'pessoaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de unidades de saúde
+     * @see module:models/UnidadeSaude
+     */
+    Paciente.belongsTo(models.UnidadeSaude, {
+      as: 'unidadeSaude',
+      foreignKey: 'unidadeSaudeId'
+    }),
     
     /**
      * Relacionamento com a tabela de países
-     * @see {@link Pais}
+     * @see module:models/Pais
      */
     Paciente.belongsTo(models.Pais, {
       as: 'nacionalidade',
@@ -133,7 +146,18 @@ export default (sequelize, DataTypes) => {
     Paciente.belongsTo(models.SituacaoProfissional, {
       as: 'situacaoProfissional',
       foreignKey: 'situacaoProfissionalId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de especialidades
+     * @see module:models/Especialidade
+     */
+    Paciente.belongsToMany(models.Especialidade, {
+      through: models.PacienteEspecialidade,
+      as: 'especialidades',
+      foreignKey: 'pacienteId',
+      otherKey: 'especialidadeId'
     })
-  };
-  return Paciente;
-};
+  }
+  return Paciente
+}
