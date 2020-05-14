@@ -19,15 +19,15 @@ export default (sequelize, DataTypes) => {
         tableName: 'recordatorio_alimentar'
       });
 
-    //   RecordatorioAlimentar.associate = (models) => {
-    //         /**
-    //  * Relacionamento com a tabela de consulta_recordatorio_alimentar
-    //  * @see {@link Paciente}
-    //  */
-    //     UnidadeSaude.belongsTo(models.ConsultaRecordatorioAlimentar, {
-    //         as:'consulta_recordatorio_alimentar',
-    //         foreignKey: 'recordatorioAlimentarId'
-    //     })
-    // }; 
+     RecordatorioAlimentar.associate = (models) => {
+             /**
+      * Relacionamento com a tabela de consulta_recordatorio_alimentar
+      * @see {@link Paciente}
+      */
+     RecordatorioAlimentar.belongsTo(models.ConsultaRecordatorioAlimentar, {
+             as:'consulta_recordatorio_alimentar',
+             foreignKey: 'recordatorioAlimentarId'
+         })
+     }; 
     return RecordatorioAlimentar;
  };
