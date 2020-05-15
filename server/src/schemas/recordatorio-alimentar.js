@@ -1,13 +1,15 @@
 /**
  * @file Descritores GraphQL para as operações sobre a tabela de recordatorio alimentar
+ * @module src/schemas/recordatorio-alimentar
  * @author Marcos Porto 
  */
 
 export default `
 type RecordatorioAlimentar {
     id: ID
-    nome: String
+    quantidade: Int
     tipoRefeicao: TipoRefeicao
+    alimento: Alimento
 }
 
 type CreateRecordatorioAlimentarResponse {
@@ -18,12 +20,26 @@ type CreateRecordatorioAlimentarResponse {
 
 type Query {
     recordatorioAlimentar(id: ID!): RecordatorioAlimentar
+
     recordatoriosAlimentar: [RecordatorioAlimentar]
 }
 
-type Mutation{
-   createRecordatorioAlimentar(nome: String, tipoRefeicaoId: Int): CreateRecordatorioAlimentarResponse
-    updateRecordatorioAlimentar(id: ID!, nome: String, tipoRefeicaoId: Int): RecordatorioAlimentar
+type Mutation {
+  createRecordatorioAlimentar(
+    quantidade: Int,
+    consultaId: ID!,
+    tipoRefeicaoId: ID!,
+    alimentoId: ID!
+  ): CreateRecordatorioAlimentarResponse
+
+  updateRecordatorioAlimentar(
+    id: ID!,
+    quantidade: Int,
+    consultaId: ID,
+    tipoRefeicaoId: ID,
+    alimentoId: ID
+  ): RecordatorioAlimentar
+
     deleteRecordatorioAlimentar(id: ID!): Boolean
 }
 `
