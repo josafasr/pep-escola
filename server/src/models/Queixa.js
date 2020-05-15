@@ -1,7 +1,7 @@
 /**
  * @file Mapeamento da tabela de Queixa
- * @module models/Queixa
- * @author Marcos Porto
+ * @module src/models/Queixa
+ * @author Marcos Porto, Josafá Santos dos Reis
  */
 
 export default (sequelize, DataTypes) =>{
@@ -19,15 +19,26 @@ export default (sequelize, DataTypes) =>{
         tableName: 'queixa'
     });
 
-    //   Queixa.associate = (models) => {
-    //         /**
-    //  * Relacionamento com a tabela de Queixa
-    //  * @see {@link Queixa}
-    //  */
-    //     Queixa.belongsTo(models.ConsultaQueixa, {
-    //         as:'consulta_queixa',
-    //         foreignKey: 'queixaId'
-    //     })
-    // }; 
+      Queixa.associate = (models) => {
+      /**
+      * Relacionamento com a tabela de tipos de queixa
+      * @see module:models/TipoQueixa
+      */
+      Queixa.belongsTo(models.TipoQueixa, {
+          as:'tipoQueixa',
+          foreignKey: 'tipoQueixaId'
+      }),
+
+      /**
+      * Relacionamento (M:M) com a tabela de consultas
+      * @see module:models/Consulta
+      */
+      Queixa.belongsToMany(models.Consulta, {
+        through: models.ConsultaQueixa,
+        as:'consulta',
+        foreignKey: 'queixaId',
+        otherKey: 'consultaId'
+      })
+    };
     return Queixa;
  };
