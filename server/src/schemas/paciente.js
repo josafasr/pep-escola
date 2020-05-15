@@ -12,7 +12,7 @@ export default `
     cns: String
     agenteComunitario: String
     encaminhadoPor: String
-    passoa: Pessoa
+    pessoa: Pessoa
     nacionalidade: Pais
     naturalidade: Cidade
     estadoCivil: EstadoCivil

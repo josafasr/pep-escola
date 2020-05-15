@@ -14,6 +14,12 @@ export default {
      * retorna todos os registros de paciente
      */
     pacientes: (parent, args, { models }) => models.Paciente.findAll({
+      include: [
+        {
+          association: 'pessoa',
+          attributes: ['id', 'nome']
+        }
+      ],
       attributes: { exclude: ['createdAt', 'updatedAt'] }
     }),
 
@@ -21,6 +27,12 @@ export default {
      * restorna um registro de paciente pelo id
      */
     paciente: (parent, { id }, { models }) => models.Paciente.findByPk(id, {
+      include: [
+        {
+          association: 'pessoa',
+          attributes: ['id', 'nome']
+        }
+      ],
       attributes: { exclude: ['createdAt', 'updatedAt'] }
     })
 
