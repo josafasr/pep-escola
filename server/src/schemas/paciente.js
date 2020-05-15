@@ -1,7 +1,7 @@
 /**
  * @file Descritores GraphQL para as operações sobre a tabela de pacientes
- * @module schemas/paciente
- * @author Josafá Santos
+ * @module src/schemas/paciente
+ * @author Josafá Santos dos Reis
  */
 export default `
   type Paciente {
@@ -11,7 +11,8 @@ export default `
     cartaoFamilia: String
     cns: String
     agenteComunitario: String
-    passoa: Pessoa
+    encaminhadoPor: String
+    pessoa: Pessoa
     nacionalidade: Pais
     naturalidade: Cidade
     estadoCivil: EstadoCivil
@@ -20,11 +21,18 @@ export default `
     escolaridade: Escolaridade
     profissao: Profissao
     situacaoProfissional: SituacaoProfissional
+    especialidades: Especialidade
   }
 
   type Query {
     pacientes: [Paciente]
     paciente(id: ID!): Paciente
+  }
+
+  type PacienteResponse {
+    ok: Boolean
+    paciente: Paciente
+    errors: [Error]
   }
 
   type Mutation {
@@ -34,7 +42,9 @@ export default `
       cartaoFamilia: String,
       cns: String,
       agenteComunitario: String,
-      passoaId: Int,
+      encaminhadoPor: String,
+      pessoaId: ID!,
+      unidadeSaudeId: ID,
       nacionalidadeId: Int,
       naturalidadeId: Int,
       estadoCivilId: Int,
@@ -42,8 +52,9 @@ export default `
       corPeleId: Int,
       escolaridadeId: Int,
       profissaoId: Int,
-      situacaoProfissionalId: Int
-    ): Paciente
+      situacaoProfissionalId: Int,
+      especialidades: [ID]
+    ): PacienteResponse
 
     updatePaciente(
       id: ID!,
@@ -52,7 +63,9 @@ export default `
       cartaoFamilia: String,
       cns: String,
       agenteComunitario: String,
-      passoaId: Int,
+      encaminhadoPor: String,
+      pessoaId: ID,
+      unidadeSaudeId: ID,
       nacionalidadeId: Int,
       naturalidadeId: Int,
       estadoCivilId: Int,
@@ -60,8 +73,9 @@ export default `
       corPeleId: Int,
       escolaridadeId: Int,
       profissaoId: Int,
-      situacaoProfissionalId: Int
-    ): Paciente
+      situacaoProfissionalId: Int,
+      especialidades: [ID]
+    ): PacienteResponse
 
     deletePaciente(id: ID!): Int
   }

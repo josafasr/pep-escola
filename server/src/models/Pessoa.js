@@ -34,6 +34,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'contatoId'
     }),
 
+    /**
+     * Relacionamento com a tabela de enderecos
+     * @see module:models/Endereco
+     */
     Pessoa.belongsToMany(models.Endereco, {
       through: models.PessoaEndereco,
       as: 'enderecos',
@@ -41,10 +45,14 @@ export default (sequelize, DataTypes) => {
       otherKey: 'enderecoId'
     }),
 
+    /**
+     * Relacionamento com a tabela de usuários
+     * @see {@link Usuario}
+     */
     Pessoa.hasOne(models.Usuario, {
       as: 'usuario',
       foreignKey: 'pessoaId'
     })
-  };
-  return Pessoa;
-};
+  }
+  return Pessoa
+}

@@ -23,7 +23,7 @@ type Query {
 }
 
 type Mutation{
-    createQueixa(nome: String, tipoQueixaId: Int): CreateQueixaResponse
+    createQueixa(nome: String, tipoQueixaId: ID!): CreateQueixaResponse
     updateQueixa(id: ID!, nome: String, tipoQueixaId: Int): CreateQueixaResponse
     deleteQueixa(id: ID!): Boolean
 }

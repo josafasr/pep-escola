@@ -1,6 +1,6 @@
 /**
  * @file Mapeamento da tabela de tipos de queixa
- * @module models/UnidadeSaude
+ * @module src/models/TipoQueixa
  * @author Marcos Porto
  */
 

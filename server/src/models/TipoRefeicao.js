@@ -1,6 +1,6 @@
 /**
  * @file Mapeamento da tabela de tipos de refeição
- * @module models/TipoRefeicao
+ * @module src/models/TipoRefeicao
  * @author Marcos Porto
  */
 
@@ -22,8 +22,8 @@ export default (sequelize, DataTypes) => {
        * @see module:models/RecordatorioAlimentar
       */
      TipoRefeicao.hasMany(models.RecordatorioAlimentar, {
-         as: 'recordatorio_alimentar',
-          foreignKey: 'tipoRefeicaoId'
+        as: 'recordatorioAlimentar',
+        foreignKey: 'tipoRefeicaoId'
         })
         };
      return TipoRefeicao;

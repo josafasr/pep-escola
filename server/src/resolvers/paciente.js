@@ -1,8 +1,11 @@
 /**
  * @file Operações sobre a tabela de pacientes
- * @module resolvers/paciente
- * @author Josafá Santos
+ * @module src/resolvers/paciente
+ * @author Josafá Santos dos Reis
  */
+
+import { formatErrors } from '../format-errors';
+
 export default {
 
   Query: {
@@ -11,6 +14,12 @@ export default {
      * retorna todos os registros de paciente
      */
     pacientes: (parent, args, { models }) => models.Paciente.findAll({
+      include: [
+        {
+          association: 'pessoa',
+          attributes: ['id', 'nome']
+        }
+      ],
       attributes: { exclude: ['createdAt', 'updatedAt'] }
     }),
 
@@ -18,6 +27,12 @@ export default {
      * restorna um registro de paciente pelo id
      */
     paciente: (parent, { id }, { models }) => models.Paciente.findByPk(id, {
+      include: [
+        {
+          association: 'pessoa',
+          attributes: ['id', 'nome']
+        }
+      ],
       attributes: { exclude: ['createdAt', 'updatedAt'] }
     })
 
@@ -28,22 +43,52 @@ export default {
     /**
      * cria um novo registro de paciente
      */
-    createPaciente: async (parent, args, { models }) => {
-      const paciente = await models.Paciente.create(args)
-      return paciente
+    createPaciente: async (parent, { especialidades, ...otherArgs }, { models }) => {
+      try {
+        const paciente = await models.Paciente.create({ ...otherArgs })
+
+        if (especialidades) {
+          paciente.addEspecialidades(especialidades)
+        }
+        return {
+          ok: true,
+          paciente
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
     },
 
     /**
      * atualiza um registro de paciente, dado o id
      */
-    updatePaciente: async (parent, args, { models }) => {
-      const result = await models.Paciente.update(args, {
-        where: { id: args.id },
-        returning: true,
-        plain: true
-      })
-      const paciente = result[1]
-      return paciente
+    updatePaciente: async (parent, { id, especialidades, ...otherArgs }, { models }) => {
+      try {
+        const paciente = await models.Paciente.findByPk(id)
+        if ({ ...otherArgs }) {
+          await paciente.update({ ...otherArgs }, {
+            // where: { id },
+            returning: true,
+            plain: true
+          })
+        }
+
+        if (especialidades) {
+          paciente.addEspecialidades(especialidades)
+        }
+        return {
+          ok: true,
+          paciente
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
     },
 
     /**

@@ -13,12 +13,16 @@ export default {
     /**
      * retorna todos os registros de recordatorio alimentar
      */
-    recordatoriosAlimentar: (parent, args, { models }) => models.Contato.findAll(),
+    recordatoriosAlimentar: (parent, args, { models }) => models.RecordatorioAlimentar.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    }),
 
     /**
      * retorna um registro de recordatorio alimentar pelo id
      */
-    recordatorioAlimentar: (parent, { id }, { models }) => models.Contato.findByPk(id)
+    recordatorioAlimentar: (parent, { id }, { models }) => models.RecordatorioAlimentar.findByPk(id, {
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    })
   },
 
   Mutation: {
@@ -28,10 +32,7 @@ export default {
      */
     createRecordatorioAlimentar: async (parent, args, { models }) => {
       try {
-        const recordatorioAlimentar = await models.RecordatorioAlimentar.create({
-          nome: args.nome,
-          tipoRefeicaoId: args.tipoRefeicaoId,
-        })
+        const recordatorioAlimentar = await models.RecordatorioAlimentar.create(args)
         return {
           ok: true,
           recordatorioAlimentar
@@ -42,30 +43,25 @@ export default {
           errors: formatErrors(err, models)
           }
       }
-      
     },
 
     /**
      * atualiza um registro de contato, dado o id
      */
     updateRecordatorioAlimentar: async (parent, args, { models }) => {
-      const result = await models.Contato.update({
-        nome: args.nome,
-        tipoRefeicaoId: args.tipoRefeicaoId,
-        updatedAt: new Date(),
-      }, {
+      const result = await models.RecordatorioAlimentar.update(args, {
         where: { id: args.id },
         returning: true,
         plain: true
       })
-      const RecordatorioAlimentar = result[1]
-      return RecordatorioAlimentar
+      const recordatorioAlimentar = result[1]
+      return recordatorioAlimentar
     },
 
     /**
      * exclui um registro de Recordatorio alimentar, dado o id
      */
-    deleteContato: (parent, { id }, { models }) => models.RecordatorioAlimentar.destroy({
+    deleteRecordatorioAlimentar: (parent, { id }, { models }) => models.RecordatorioAlimentar.destroy({
       where: {
         id
       }
