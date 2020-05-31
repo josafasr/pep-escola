@@ -39,7 +39,9 @@ export default {
       where: { id: args.id },
       returning: true,
       plain: true
-    }).then((result) => { result[1] }),
+    }).then((result) => {
+      return result[1]
+    }),
 
     /**
      * exclui exclui um registro de religião, dado o id

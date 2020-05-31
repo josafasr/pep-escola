@@ -1,6 +1,6 @@
 /**
  * @file Operações sobre a tabela de apresentações de Unidades de saúde
- * @module resolvers/unidade-saude
+ * @module src/resolvers/unidade-saude
  * @author Marcos Porto 
  */
 
@@ -13,7 +13,7 @@ import { formatErrors } from '../format-errors';
              unidadesSaude: ( parents, args, {models}) => models.UnidadeSaude.findAll({
                  include: [
                      {
-                         as: 'paciente',
+                         as: 'pacientes',
                         model: models.Paciente
                      }
                  ]
@@ -23,7 +23,7 @@ import { formatErrors } from '../format-errors';
       unidadeSaude: (parent, { id }, { models }) => models.UnidadeSaude.findByPk(id, {
           include: [
               {
-                 as: 'paciente',
+                 as: 'pacientes',
                 model: models.Paciente 
               }
           ]

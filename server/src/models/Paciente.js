@@ -5,6 +5,7 @@
  */
 export default (sequelize, DataTypes) => {
   const Paciente = sequelize.define('Paciente', {
+    prontuario: DataTypes.STRING,
     rg: DataTypes.STRING,
     cpf: DataTypes.STRING,
     cartaoFamilia: {
@@ -69,7 +70,7 @@ export default (sequelize, DataTypes) => {
     
     /**
      * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * @see module: src/models/Pessoa
      */
     Paciente.belongsTo(models.Pessoa, {
       as: 'pessoa',
@@ -110,6 +111,15 @@ export default (sequelize, DataTypes) => {
     Paciente.belongsTo(models.EstadoCivil, {
       as: 'estadoCivil',
       foreignKey: 'estadoCivilId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de religioes
+     * @see module:models/Religiao
+     */
+    Paciente.belongsTo(models.Religiao, {
+      as: 'religiao',
+      foreignKey: 'religiaoId'
     }),
 
     /**

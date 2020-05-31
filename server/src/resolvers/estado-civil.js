@@ -10,7 +10,7 @@ export default {
     /**
      * retorna todos os registros de estado civil
      */
-    estadosCivil: (parent, args, { models }) => models.EstadoCivil.findAll(),
+    estadosCivis: (parent, args, { models }) => models.EstadoCivil.findAll(),
 
     /**
      * restorna um registro de estado civil pelo id

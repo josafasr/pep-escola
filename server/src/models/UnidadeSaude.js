@@ -30,15 +30,15 @@
         tableName: 'unidade_saude'
       });
 
-    //   UnidadeSaude.associate = (models) => {
-    //         /**
-    //  * Relacionamento com a tabela de paciente
-    //  * @see {@link Paciente}
-    //  */
-    //     UnidadeSaude.belongsTo(models.Paciente, {
-    //         as:'paciente',
-    //         foreignKey: 'unidadeSaudeId'
-    //     })
-    // }; 
-    return UnidadeSaude;
- };
+    UnidadeSaude.associate = (models) => {
+          /**
+    * Relacionamento com a tabela de paciente
+    * @see {@link Paciente}
+    */
+      UnidadeSaude.hasMany(models.Paciente, {
+          as:'pacientes',
+          foreignKey: 'unidadeSaudeId'
+      })
+    }
+    return UnidadeSaude
+ }

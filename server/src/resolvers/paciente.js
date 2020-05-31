@@ -13,15 +13,24 @@ export default {
     /**
      * retorna todos os registros de paciente
      */
-    pacientes: (parent, args, { models }) => models.Paciente.findAll({
-      include: [
-        {
-          association: 'pessoa',
-          attributes: ['id', 'nome']
-        }
-      ],
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    }),
+    pacientes: async (parent, args, { sequelize, models }) => {   
+      return await models.Paciente.findAll({
+        include: [
+          {
+            association: 'pessoa',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [{
+              association: 'contato',
+              attributes: { exclude: ['createdAt', 'updatedAt'] }
+            }, {
+              association: 'enderecos',
+              attributes: ['logradouro', 'numero']
+            }]
+          }
+        ],
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
+    },
 
     /**
      * restorna um registro de paciente pelo id
@@ -30,6 +39,47 @@ export default {
       include: [
         {
           association: 'pessoa',
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [{
+            association: 'contato',
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+          }, {
+            association: 'enderecos',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [{
+              association: 'tipoLogradouro',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'cidade',
+              attributes: ['id', 'nome']
+            }]
+          }]
+        }, {
+          association: 'unidadeSaude',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'naturalidade',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'estadoCivil',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'religiao',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'corPele',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'escolaridade',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'profissao',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'situacaoProfissional',
+          attributes: ['id', 'nome']
+        }, {
+          association: 'especialidades',
           attributes: ['id', 'nome']
         }
       ],
@@ -53,6 +103,44 @@ export default {
         return {
           ok: true,
           paciente
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
+    },
+
+    /**
+     * cria um novo registro de paciente, incluindo novas dependências
+     */
+    createWithIncludes: async (parent, { pessoa, especialidades, ...otherArgs }, { sequelize, models }) => {
+      try {
+        const result = await sequelize.transaction(async (tx) => {
+          const paciente = await models.Paciente.create({
+            ...otherArgs,
+            pessoa
+          }, {
+            include: [{
+              association: 'pessoa',
+              include: [{
+                association: 'contato'
+              }, {
+                association: 'enderecos'
+              }]
+            }]
+          }, { transaction: tx })
+
+          if (especialidades) {
+            await paciente.addEspecialidades(especialidades, { transaction: tx })
+          }
+          return paciente // para 'result' receber 'paciente'
+        }) // tx.commit
+        // 'paciente' ('result') fica disponível apenas após o commit
+        return {
+          ok: true,
+          paciente: result
         }
       } catch (err) {
         return {
@@ -91,8 +179,10 @@ export default {
       }
     },
 
+
+
     /**
-     * atualiza um registro de paciente, dado o id
+     * exclui um registro de paciente, dado o id
      */
     deletePaciente: (parent, { id }, { models }) => models.Paciente.destroy({
       where: {

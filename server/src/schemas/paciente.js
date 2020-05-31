@@ -6,6 +6,7 @@
 export default `
   type Paciente {
     id: ID
+    prontuario: String
     rg: String
     cpf: String
     cartaoFamilia: String
@@ -13,6 +14,7 @@ export default `
     agenteComunitario: String
     encaminhadoPor: String
     pessoa: Pessoa
+    unidadeSaude: UnidadeSaude
     nacionalidade: Pais
     naturalidade: Cidade
     estadoCivil: EstadoCivil
@@ -21,7 +23,7 @@ export default `
     escolaridade: Escolaridade
     profissao: Profissao
     situacaoProfissional: SituacaoProfissional
-    especialidades: Especialidade
+    especialidades: [Especialidade]
   }
 
   type Query {
@@ -37,6 +39,7 @@ export default `
 
   type Mutation {
     createPaciente(
+      prontuario: String,
       rg: String,
       cpf: String,
       cartaoFamilia: String,
@@ -45,19 +48,41 @@ export default `
       encaminhadoPor: String,
       pessoaId: ID!,
       unidadeSaudeId: ID,
-      nacionalidadeId: Int,
-      naturalidadeId: Int,
-      estadoCivilId: Int,
-      religiaoId: Int,
-      corPeleId: Int,
-      escolaridadeId: Int,
-      profissaoId: Int,
-      situacaoProfissionalId: Int,
+      nacionalidadeId: ID,
+      naturalidadeId: ID,
+      estadoCivilId: ID,
+      religiaoId: ID,
+      corPeleId: ID,
+      escolaridadeId: ID,
+      profissaoId: ID,
+      situacaoProfissionalId: ID,
+      especialidades: [ID]
+    ): PacienteResponse
+
+    createWithIncludes(
+      prontuario: String,
+      rg: String,
+      cpf: String,
+      cartaoFamilia: String,
+      cns: String,
+      agenteComunitario: String,
+      encaminhadoPor: String,
+      pessoa: PessoaInput,
+      unidadeSaudeId: ID,
+      nacionalidadeId: ID,
+      naturalidadeId: ID,
+      estadoCivilId: ID,
+      religiaoId: ID,
+      corPeleId: ID,
+      escolaridadeId: ID,
+      profissaoId: ID,
+      situacaoProfissionalId: ID,
       especialidades: [ID]
     ): PacienteResponse
 
     updatePaciente(
       id: ID!,
+      prontuario: String,
       rg: String,
       cpf: String,
       cartaoFamilia: String,
@@ -66,17 +91,17 @@ export default `
       encaminhadoPor: String,
       pessoaId: ID,
       unidadeSaudeId: ID,
-      nacionalidadeId: Int,
-      naturalidadeId: Int,
-      estadoCivilId: Int,
-      religiaoId: Int,
-      corPeleId: Int,
-      escolaridadeId: Int,
-      profissaoId: Int,
-      situacaoProfissionalId: Int,
+      nacionalidadeId: ID,
+      naturalidadeId: ID,
+      estadoCivilId: ID,
+      religiaoId: ID,
+      corPeleId: ID,
+      escolaridadeId: ID,
+      profissaoId: ID,
+      situacaoProfissionalId: ID,
       especialidades: [ID]
     ): PacienteResponse
 
-    deletePaciente(id: ID!): Int
+    deletePaciente(id: ID!): Boolean
   }
 `

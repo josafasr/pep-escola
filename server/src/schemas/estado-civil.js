@@ -10,7 +10,7 @@ export default `
   }
 
   type Query {
-    estadosCivil: [EstadoCivil]
+    estadosCivis: [EstadoCivil]
     estadoCivil(id: ID!): EstadoCivil
   }
 
