@@ -13,6 +13,14 @@ export default `
     homePage: String
   }
 
+  input ContatoInput {
+    id: ID
+    celular: String
+    telefone: String
+    email: String
+    homePage: String
+  }
+
   type CreateContatoResponse {
     ok: Boolean
     contato: Contato
