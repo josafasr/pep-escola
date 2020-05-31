@@ -13,6 +13,15 @@ export default `
     enderecos: [Endereco]
   }
 
+  input PessoaInput {
+    id: ID
+    nome: String
+    dataNascimento: String
+    sexo: String
+    contato: ContatoInput
+    enderecos: [EnderecoInput]
+  }
+
   type PessoaResponse {
     ok: Boolean
     pessoa: Pessoa
