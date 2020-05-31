@@ -87,7 +87,7 @@ class Login extends React.Component {
           }
           subheader="Centro Universitário de Atenção à Saúde"
           avatar={
-            <Avatar src="/uesb.png" alt="Logo Uesb" variant="square" aria-label="recipe" className="media" />
+            <Avatar src="/images/logo-uesb.png" alt="Logo Uesb" variant="square" aria-label="recipe" className="media" />
           }
         />
 

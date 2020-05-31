@@ -57,14 +57,10 @@ export default function UsuarioList(props) {
     setPage(0);
   };
 
-  // useEffect(() => {
-  //   console.log(data)
-  // })
-
   const { loading, error, data } = useQuery(usuarioApi.findAllQuery)
 
-  if (loading) return 'Loading...'
-  // if (error) return error.message
+  if (loading) return 'Carregando...'
+  if (error) return 'Erro :('
 
   return (
     <Paper className={classes.root}>

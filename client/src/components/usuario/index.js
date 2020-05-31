@@ -201,7 +201,8 @@ export default function Usuario() {
         cep: data.usuario.pessoa?.enderecos[0]?.cep,
         cidade: data.usuario.pessoa?.enderecos[0]?.cidade?.nome
       })
-    }
+    },
+    skip: !id
   })
 
   return (
@@ -211,46 +212,48 @@ export default function Usuario() {
         <div className={classes.fieldsContainer}>
           <Paper className={classes.paper} elevation={2}>
             <Box className={classes.boxFieldset} component="fieldset">
-              <TextField
-                className={clsx(classes.formFields, classes.grow2)}
-                // error={!!errors["nomeError"]}
-                name="nome"
-                value={pessoa.nome || ''}
-                onChange={handleChangePessoa}
-                label="Nome"
-                // helperText={errors["nomeError"]}
-              />
+              <div className={classes.fields}>
+                <TextField
+                  className={clsx(classes.formFields, classes.grow2)}
+                  // error={!!errors["nomeError"]}
+                  name="nome"
+                  value={pessoa.nome || ''}
+                  onChange={handleChangePessoa}
+                  label="Nome"
+                  // helperText={errors["nomeError"]}
+                />
 
-              <TextField
-                // type="date"
-                format={'DD/MM/YYYY'}
-                placeholder="data"
-                className={classes.formFields}
-                // error={!!errors["nascimentoError"]}
-                name="nascimento"
-                value={pessoa.nascimento || ''}
-                onChange={handleChangePessoa}
-                label="Data de nascimento"
-                // helperText={errors["nascimentoError"]}
-                // format="DD/MM/YYYY"
-                placeholder="dd/mm/aaaa"
-                InputLabelProps={{ shrink: true }}
-              />
+                <TextField
+                  // type="date"
+                  format={'DD/MM/YYYY'}
+                  placeholder="data"
+                  className={classes.formFields}
+                  // error={!!errors["nascimentoError"]}
+                  name="nascimento"
+                  value={pessoa.nascimento || ''}
+                  onChange={handleChangePessoa}
+                  label="Data de nascimento"
+                  // helperText={errors["nascimentoError"]}
+                  // format="DD/MM/YYYY"
+                  placeholder="dd/mm/aaaa"
+                  InputLabelProps={{ shrink: true }}
+                />
 
-              <TextField
-                className={clsx(classes.formFields, classes.selectField)}
-                // error={!!errors["sexoError"]}
-                name="sexo"
-                value={pessoa.sexo || ''}
-                onChange={handleChangePessoa}
-                label="Sexo"
-                // helperText={errors["sexoError"]}
-                select
-              >
-                <MenuItem value=""></MenuItem>
-                <MenuItem value="Feminino">Feminino</MenuItem>
-                <MenuItem value="Masculino">Masculino</MenuItem>
-              </TextField>
+                <TextField
+                  className={clsx(classes.formFields, classes.selectField)}
+                  // error={!!errors["sexoError"]}
+                  name="sexo"
+                  value={pessoa.sexo || ''}
+                  onChange={handleChangePessoa}
+                  label="Sexo"
+                  // helperText={errors["sexoError"]}
+                  select
+                >
+                  <MenuItem value=""></MenuItem>
+                  <MenuItem value="Feminino">Feminino</MenuItem>
+                  <MenuItem value="Masculino">Masculino</MenuItem>
+                </TextField>
+              </div>
             </Box>
           </Paper>
 
@@ -259,78 +262,79 @@ export default function Usuario() {
               <legend className={classes.boxTitle}>
                 <Typography>Endereço</Typography>
               </legend>
+              <div className={classes.fields}>
+                <TextField
+                  // className="text-field select-field"
+                  className={clsx(classes.formFields, classes.selectField)}
+                  name="tipoLogradouro"
+                  value={endereco.tipoLogradouro || ''}
+                  onChange={handleChangeEndereco}
+                  label="Tipo de Logradouro"
+                  select
+                >
+                  <MenuItem value={0}></MenuItem>
+                  <MenuItem value={1}>Alameda</MenuItem>
+                  <MenuItem value={2}>Avenida</MenuItem>
+                  <MenuItem value={3}>Praça</MenuItem>
+                  <MenuItem value={4}>Rua</MenuItem>
+                  <MenuItem value={5}>Travessa</MenuItem>
+                </TextField>
 
-              <TextField
-                // className="text-field select-field"
-                className={clsx(classes.formFields, classes.selectField)}
-                name="tipoLogradouro"
-                value={endereco.tipoLogradouro || ''}
-                onChange={handleChangeEndereco}
-                label="Tipo de Logradouro"
-                select
-              >
-                <MenuItem value={0}></MenuItem>
-                <MenuItem value={1}>Alameda</MenuItem>
-                <MenuItem value={2}>Avenida</MenuItem>
-                <MenuItem value={3}>Praça</MenuItem>
-                <MenuItem value={4}>Rua</MenuItem>
-                <MenuItem value={5}>Travessa</MenuItem>
-              </TextField>
+                <TextField
+                  className={clsx(classes.formFields, classes.grow2)}
+                  name="logradouro"
+                  value={endereco.logradouro || ''}
+                  onChange={handleChangeEndereco}
+                  label="Logradouro"
+                />
 
-              <TextField
-                className={clsx(classes.formFields, classes.grow2)}
-                name="logradouro"
-                value={endereco.logradouro || ''}
-                onChange={handleChangeEndereco}
-                label="Logradouro"
-              />
+                <TextField
+                  className={classes.formFields}
+                  type="number"
+                  name="numero"
+                  value={endereco.numero || ''}
+                  onChange={handleChangeEndereco}
+                  label="Número"
+                />
 
-              <TextField
-                className={classes.formFields}
-                type="number"
-                name="numero"
-                value={endereco.numero || ''}
-                onChange={handleChangeEndereco}
-                label="Número"
-              />
+                <TextField
+                  className={classes.formFields}
+                  name="bairro"
+                  value={endereco.bairro || ''}
+                  onChange={handleChangeEndereco}
+                  label="Bairro"
+                />
 
-              <TextField
-                className={classes.formFields}
-                name="bairro"
-                value={endereco.bairro || ''}
-                onChange={handleChangeEndereco}
-                label="Bairro"
-              />
+                <TextField
+                  className={classes.formFields}
+                  name="complemento"
+                  value={endereco.complemento || ''}
+                  onChange={handleChangeEndereco}
+                  label="Complemento"
+                />
 
-              <TextField
-                className={classes.formFields}
-                name="complemento"
-                value={endereco.complemento || ''}
-                onChange={handleChangeEndereco}
-                label="Complemento"
-              />
+                <TextField
+                  className={classes.formFields}
+                  name="cep"
+                  value={endereco.cep || ''}
+                  onChange={handleChangeEndereco}
+                  label="CEP"
+                />
 
-              <TextField
-                className={classes.formFields}
-                name="cep"
-                value={endereco.cep || ''}
-                onChange={handleChangeEndereco}
-                label="CEP"
-              />
-
-              <TextField
-                className={clsx(classes.formFields, classes.selectField)}
-                name="cidade"
-                value={endereco.cidade || ''}
-                onChange={handleChangeEndereco}
-                label="Cidade"
-                select
-              >
-                <MenuItem value=""></MenuItem>
-                <MenuItem value={1}>Itapetinga</MenuItem>
-                <MenuItem value={2}>Jequié</MenuItem>
-                <MenuItem value={3}>Vitória da Conquista</MenuItem>
-              </TextField>
+                <TextField
+                  className={clsx(classes.formFields, classes.selectField)}
+                  name="cidade"
+                  value={endereco.cidade || ''}
+                  onChange={handleChangeEndereco}
+                  label="Cidade"
+                  select
+                >
+                  <MenuItem value=""></MenuItem>
+                  <MenuItem value={1}>Itapetinga</MenuItem>
+                  <MenuItem value={2}>Jequié</MenuItem>
+                  <MenuItem value={3}>Vitória da Conquista</MenuItem>
+                </TextField>
+              </div>
             </Box>
           </Paper>
 
@@ -339,40 +343,41 @@ export default function Usuario() {
               <legend>
                 <Typography>Contato</Typography>
               </legend>
+              <div className={classes.fields}>
+                <TextField
+                  className={classes.formFields}
+                  name="celular"
+                  value={contato.celular || ''}
+                  onChange={handleChangeContato}
+                  label="Celular"
+                  // ref={field}
+                />
 
-              <TextField
-                className={classes.formFields}
-                name="celular"
-                value={contato.celular || ''}
-                onChange={handleChangeContato}
-                label="Celular"
-                // ref={field}
-              />
+                <TextField
+                  className={classes.formFields}
+                  name="telefone"
+                  value={contato.telefone || ''}
+                  onChange={handleChangeContato}
+                  label="Telefone"
+                />
 
-              <TextField
-                className={classes.formFields}
-                name="telefone"
-                value={contato.telefone || ''}
-                onChange={handleChangeContato}
-                label="Telefone"
-              />
+                <TextField
+                  className={classes.formFields}
+                  type="email"
+                  name="email"
+                  value={contato.email || ''}
+                  onChange={handleChangeContato}
+                  label="E-mail"
+                />
 
-              <TextField
-                className={classes.formFields}
-                type="email"
-                name="email"
-                value={contato.email || ''}
-                onChange={handleChangeContato}
-                label="E-mail"
-              />
-
-              <TextField
-                className={classes.formFields}
-                name="homePage"
-                value={contato.homePage || ''}
-                onChange={handleChangeContato}
-                label="Home Page"
-              />
+                <TextField
+                  className={classes.formFields}
+                  name="homePage"
+                  value={contato.homePage || ''}
+                  onChange={handleChangeContato}
+                  label="Home Page"
+                />
+              </div>
             </Box>
           </Paper>
 
@@ -381,45 +386,46 @@ export default function Usuario() {
               <legend>
                 <Typography>Dados de Usuário</Typography>
               </legend>
+              <div className={classes.fields}>
+                <TextField
+                  className={classes.formFields}
+                  // error={!!errors["nomeUsuarioError"]}
+                  name="nome"
+                  value={usuario.nome || ''}
+                  onChange={handleChangeUsuario}
+                  label="Nome de usuário"
+                  // helperText={errors["nomeUsuarioError"]}
+                />
 
-              <TextField
-                className={classes.formFields}
-                // error={!!errors["nomeUsuarioError"]}
-                name="nome"
-                value={usuario.nome || ''}
-                onChange={handleChangeUsuario}
-                label="Nome de usuário"
-                // helperText={errors["nomeUsuarioError"]}
-              />
+                <TextField
+                  className={classes.formFields}
+                  // error={!!errors["senhaError"]}
+                  type="password"
+                  name="senha"
+                  value={usuario.senha || ''}
+                  onChange={handleChangeUsuario}
+                  label="Senha"
+                  // helperText={errors["senhaError"]}
+                />
 
-              <TextField
-                className={classes.formFields}
-                // error={!!errors["senhaError"]}
-                type="password"
-                name="senha"
-                value={usuario.senha || ''}
-                onChange={handleChangeUsuario}
-                label="Senha"
-                // helperText={errors["senhaError"]}
-              />
+                {/* <TextField
+                  className={classes.formFields}
+                  // error={!!errors["pessoaIdError"]}
+                  name="pessoa"
+                  value={usuario.pessoa}
+                  onChange={handleChangeUsuario}
+                  label="Pessoa"
+                  // helperText={errors["pessoaIdError"]}
+                /> */}
 
-              {/* <TextField
-                className={classes.formFields}
-                // error={!!errors["pessoaIdError"]}
-                name="pessoa"
-                value={usuario.pessoa}
-                onChange={handleChangeUsuario}
-                label="Pessoa"
-                // helperText={errors["pessoaIdError"]}
-              /> */}
-
-              {/* <TextField
-                className="text-field"
-                name="grupos"
-                value={usuario.grupos}
-                onChange={this.handleChangeUsuario}
-                label="Grupos"
-              /> */}
+                {/* <TextField
+                  className="text-field"
+                  name="grupos"
+                  value={usuario.grupos}
+                  onChange={this.handleChangeUsuario}
+                  label="Grupos"
+                /> */}
+              </div>
             </Box>
           </Paper>
         </div>  

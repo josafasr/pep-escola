@@ -4,6 +4,8 @@
   align-items: center;
   justify-content: center;
   overflow-y: auto;
+  background: url('/images/pexels-photo-48604.webp') no-repeat;
+  background-size: 100% auto;
 }
 
 .card {
@@ -72,7 +74,7 @@
 
 .copy, .card-copy {
   text-align: center;
-  color: gray;
+  /* color: gray; */
   font-size: small;
   padding: 10px;
 }
@@ -88,5 +90,11 @@
 @media (min-height: 456px) {
   .root {
     height: 100vh;
+  }
+}
+
+@media (max-width: 1062px) {
+  .root {
+    background-size: auto 100%;
   }
 }

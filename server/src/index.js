@@ -11,6 +11,7 @@ import path from 'path'
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
 
 import models from './models'
+import db from './models/index'
 import { refreshTokens } from './auth'
 
 /***** trocar por chaves de verdade *****/
@@ -52,6 +53,7 @@ const server = new ApolloServer({
 
     return {
       models,
+      sequelize: db.sequelize,
       SECRET,
       SECRET2,
       user: req.user

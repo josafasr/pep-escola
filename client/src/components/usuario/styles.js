@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
 
   boxFieldset: {
     borderStyle: 'none',
+    margin: theme.spacing(2, 0)
+  },
+
+  fields: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

@@ -82,6 +82,7 @@ function App(props) {
   return (
     <ApolloProvider client={client}>
       <Router basename="/appceuas">
+      {/* <Router> */}
         <StylesProvider injectFirst>
           <div className="App">
             <Switch>

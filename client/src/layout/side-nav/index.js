@@ -20,6 +20,7 @@ import {
   Menu,
   MenuItem
 } from '@material-ui/core'
+import HomeIcon from '@material-ui/icons/Home'
 import GroupIcon from '@material-ui/icons/Group'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -29,6 +30,8 @@ import { deepPurple } from '@material-ui/core/colors'
 
 import Usuario from '../../components/usuario'
 import UsuarioList from '../../components/usuario/UsuarioList'
+import EditPaciente from '../../pages/EditPaciente'
+import PacienteList from '../../pages/PacienteList'
 
 const drawerWidth = 240
 
@@ -71,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   appBar: {
-    backgroundColor: 'red',
+    backgroundColor: '#ff4c4c',
     zIndex: theme.zIndex.drawer + 1,
   },
 
@@ -106,9 +109,9 @@ const useStyles = makeStyles((theme) => ({
     color: 'white'
   },
 
-  linkList: {
+  link: {
     textDecoration: 'none',
-    color: 'black',
+    color: 'inherit',
   },
 
   content: {
@@ -120,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SideNav(props) {
 
-  const { window, match } = props
+  const { window } = props
 
   const history = useHistory()
 
@@ -160,7 +163,7 @@ export default function SideNav(props) {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    localStorage.removeItem('reloadtoken')
+    localStorage.removeItem('reloadToken')
     history.push('/login')
   }
 
@@ -198,29 +201,35 @@ export default function SideNav(props) {
               <ListItemText primary={text} />
             </ListItem>
           ))} */}
-          
-          <Link to={`${match.url}prontuarios`} className={classes.linkList}>
+          <Link to="/" className={classes.link}>
+            <ListItem button>
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Início" />
+            </ListItem>
+          </Link>
+
+          <Link to="/pacientes" className={classes.link}>
             <ListItem button>
               <ListItemIcon><FolderIcon /></ListItemIcon>
               <ListItemText primary="Prontuários" />
             </ListItem>
           </Link>
 
-          <Link to={`${match.url}agendamentos`} className={classes.linkList}>
+          <Link to="/agendamentos" className={classes.link}>
             <ListItem button>
               <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
               <ListItemText primary="Agendamento" />
             </ListItem>
           </Link>
 
-          <Link to={`${match.url}cadastros`} className={classes.linkList}>
+          <Link to="/cadastros" className={classes.link}>
             <ListItem button>
               <ListItemIcon><ViewListIcon /></ListItemIcon>
               <ListItemText primary="Cadastro" />
             </ListItem>
           </Link>
 
-          <Link to="/usuarios" className={classes.linkList}>
+          <Link to="/usuarios" className={classes.link}>
             <ListItem button>
               <ListItemIcon><GroupIcon /></ListItemIcon>
               <ListItemText primary="Usuários" />
@@ -265,9 +274,13 @@ export default function SideNav(props) {
             </IconButton>
           </Hidden>
           {/* <Avatar className={classes.logo} alt="Logo Uesb" src="/images/uesb.png" variant="square" /> */}
-          <Typography className={classes.titleBar} variant="h6" noWrap>
-            Prontuário Eletrônico CEUAS
-          </Typography>
+          
+            <Link to="/" className={classes.link}>
+              <Typography className={classes.titleBar} variant="h6" title="Início" noWrap>
+                Prontuário Eletrônico CEUAS
+              </Typography>
+            </Link>
+          
           <div className={classes.toobar}>
             <Avatar className={classes.avatar} children="JS">
               <Button className={classes.avatarBtn} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -325,14 +338,18 @@ export default function SideNav(props) {
       </Hidden>
       <main className={classes.content}>
         <Toolbar />
+        
         <Switch>
-          <Route path={`${match.path}prontuarios`} render={() => (<div>Em desenvolvimento...</div>)} />
-          <Route path={`${match.path}agendamentos`} render={() => (<div>Em desenvolvimento....</div>)} />
-          <Route path={`${match.path}cadastros`} render={() => (<div>Em desenvolvimento.....</div>)} />
-          <Route exact path="/usuarios/criar" render={() => (<Usuario />)} />
-          <Route path="/usuarios/:id" children={<Usuario />} />
-          <Route path={`${match.path}usuarios`} component={UsuarioList} />
-          <Route path={`${match.path}`} render={() => (<div>Bem vind@!</div>)} />
+          <Route exact path="/pacientes/criar" component={EditPaciente} />
+          <Route exact path="/pacientes/:id" children={<EditPaciente />} />
+          <Route exact path="/pacientes" component={PacienteList} />
+          <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />
+          <Route exact path="/cadastros" render={() => (<div>Em desenvolvimento.....</div>)} />
+          <Route exact path="/usuarios/criar" component={Usuario} />
+          <Route exact path="/usuarios/:id" children={<Usuario />} />
+          <Route exact path="/usuarios" component={UsuarioList} />
+          <Route exact path="/" render={() => (<div>Bem vind@!</div>)} />
+          {/* <Route path={`${match.path}`} component={EditPaciente} /> */}
         </Switch>
       </main>
     </div>

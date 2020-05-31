@@ -12,14 +12,17 @@ const usuarioApi = {
       usuario(id: $id) {
         id
         pessoa {
+          id
           nome
           contato {
+            id
             email
           }
         }
         nome
         senha
         grupos {
+          id
           nome
         }
       }
@@ -31,13 +34,16 @@ const usuarioApi = {
         id
         nome
         pessoa {
+          id
           nome
           contato {
+            id
             email
           }
         }
         senha
         grupos {
+          id
           nome
         }
       }
@@ -49,6 +55,7 @@ const usuarioApi = {
         id
         nome
         pessoa {
+          id
           nome
           dataNascimento
           sexo
@@ -60,7 +67,9 @@ const usuarioApi = {
             homePage
           }
           enderecos {
+            id
             tipoLogradouro {
+              id
               nome
             }
             logradouro
@@ -69,9 +78,14 @@ const usuarioApi = {
             complemento
             cep
             cidade {
+              id
               nome
             }
           }
+        }
+        grupos {
+          id
+          nome
         }
       }
     }
