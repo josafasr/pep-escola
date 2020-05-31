@@ -9,11 +9,23 @@ export default `
     id: ID
     tipoLogradouro: TipoLogradouro
     logradouro: String
-    numero: String
+    numero: Int
     bairro: String
     complemento: String
     cep: String
     cidade: Cidade
+    ativo: Boolean
+  }
+
+  input EnderecoInput {
+    id: ID
+    tipoLogradouroId: ID
+    logradouro: String
+    numero: Int
+    bairro: String
+    complemento: String
+    cep: String
+    cidadeId: ID
     ativo: Boolean
   }
 

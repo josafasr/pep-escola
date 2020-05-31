@@ -3,13 +3,17 @@
  * @module resolvers/cidade
  * @author Josafá Santos
  */
+
+import { Op } from 'sequelize'
+
 export default {
 
   Query: {
 
     // restorna todas as cidades
     cidades: (parent, args, { models }) => models.Cidade.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      where: { id: { [Op.in]: ['10211', '10407', '1'] }}
     }),
 
     // restorna todas as cidades com respectivos estados
