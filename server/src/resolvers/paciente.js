@@ -13,8 +13,8 @@ export default {
     /**
      * retorna todos os registros de paciente
      */
-    pacientes: async (parent, args, { sequelize, models }) => {   
-      return await models.Paciente.findAll({
+    pacientes: async (parent, args, { models }) => {
+      const pacientes = await models.Paciente.findAll({
         include: [
           {
             association: 'pessoa',
@@ -30,61 +30,65 @@ export default {
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
+      return pacientes
     },
 
     /**
      * restorna um registro de paciente pelo id
      */
-    paciente: (parent, { id }, { models }) => models.Paciente.findByPk(id, {
-      include: [
-        {
-          association: 'pessoa',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          include: [{
-            association: 'contato',
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-          }, {
-            association: 'enderecos',
+    paciente: async (parent, { id }, { models }) => {
+      const paciente = await models.Paciente.findByPk(id, {
+        include: [
+          {
+            association: 'pessoa',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [{
-              association: 'tipoLogradouro',
-              attributes: ['id', 'nome']
+              association: 'contato',
+              attributes: { exclude: ['createdAt', 'updatedAt'] }
             }, {
-              association: 'cidade',
-              attributes: ['id', 'nome']
+              association: 'enderecos',
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+              include: [{
+                association: 'tipoLogradouro',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'cidade',
+                attributes: ['id', 'nome']
+              }]
             }]
-          }]
-        }, {
-          association: 'unidadeSaude',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'naturalidade',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'estadoCivil',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'religiao',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'corPele',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'escolaridade',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'profissao',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'situacaoProfissional',
-          attributes: ['id', 'nome']
-        }, {
-          association: 'especialidades',
-          attributes: ['id', 'nome']
-        }
-      ],
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    })
+          }, {
+            association: 'unidadeSaude',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'naturalidade',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'estadoCivil',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'religiao',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'corPele',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'escolaridade',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'profissao',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'situacaoProfissional',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'especialidades',
+            attributes: ['id', 'nome']
+          }
+        ],
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
+      return paciente
+    }
 
   },
 

@@ -6,7 +6,6 @@
 export default (sequelize, DataTypes) => {
   const Consulta = sequelize.define('Consulta', {
     acompanhante: DataTypes.STRING,
-    
     queixaPrincipalObs: {
       type: DataTypes.TEXT,
       field: 'queixa_principal_obs'

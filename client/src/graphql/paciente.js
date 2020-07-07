@@ -31,6 +31,11 @@ export const LOAD_DROP_BOXES = gql`
       cnes
     }
 
+    cidades {
+      id
+      nome
+    }
+
     estadosCivis {
       id
       nome

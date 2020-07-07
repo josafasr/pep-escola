@@ -7,10 +7,14 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { makeStyles } from '@material-ui/core'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
+import {
+  makeStyles,
+  CssBaseline,
+  Box,
+  Typography,
+  Paper,
+  Button
+ } from '@material-ui/core'
 
 import PessoaForm from '../forms/PessoaForm'
 import ContatoForm from '../forms/ContatoForm'
@@ -28,6 +32,15 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: '10px'
+  },
+
+  boxFieldset: {
+    borderStyle: 'none'
+  },
+
+  boxTitle: {
+    paddingTop: '10px',
+    fontWeight: 'bold'
   },
 
   buttons: {
@@ -95,8 +108,6 @@ function EditPaciente(props) {
     skip: !id
   })
 
-  if (pacienteData.loading) return 'Carregando...'
-
   const handleChangePessoa = data => {
     setPessoa(data)
   }
@@ -109,8 +120,12 @@ function EditPaciente(props) {
     setEndereco(data)
   }
 
-  const handleChangePaciente = data => {
-    setPaciente(data)
+  const handleChangePaciente = pacienteField => {
+    const { name, value } = pacienteField
+    setPaciente({
+      ...paciente,
+      [name]: value
+    })
   }
 
   const handleSubmit = async (event) => {
@@ -134,56 +149,73 @@ function EditPaciente(props) {
     history.push('/pacientes')
   }
 
+  if (pacienteData.loading) return 'Carregando...'
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <Paper className={classes.paper} elevation={2}>
-        <PessoaForm
-          pessoaData={pacienteData.data?.paciente?.pessoa}
-          onChange={handleChangePessoa}
-          ref={pessoaRef}
-        />
+        <Box className={classes.boxFieldset} component="fieldset">
+          <legend>
+            <Typography className={classes.boxTitle}>Dados Pessoais</Typography>
+          </legend>
+          <PessoaForm
+            pessoaData={pacienteData.data?.paciente?.pessoa}
+            onChange={handleChangePessoa}
+            ref={pessoaRef}
+          />
 
-        <PacienteForm
-          pacienteData={pacienteData.data?.paciente}
-          onChange={handleChangePaciente}
-          ref={pacienteRef}
-        />
+          <PacienteForm
+            pacienteData={pacienteData.data?.paciente}
+            onChange={handleChangePaciente}
+            ref={pacienteRef}
+          />
+        </Box>
       </Paper>
 
       <Paper className={classes.paper} elevation={2}>
-        <ContatoForm
-          contatoData={pacienteData.data?.paciente?.pessoa?.contato}
-          onChange={handleChangeContato}
-          ref={contatoRef}
-        />
+        <Box className={classes.boxFieldset} component="fieldset">
+          <legend>
+            <Typography className={classes.boxTitle}>Contato</Typography>
+          </legend>
+          <ContatoForm
+            contatoData={pacienteData.data?.paciente?.pessoa?.contato}
+            onChange={handleChangeContato}
+            ref={contatoRef}
+          />
+        </Box>
       </Paper>
 
       <Paper className={classes.paper} elevation={2}>
-        <EnderecoForm
-          enderecoData={pacienteData.data?.paciente?.pessoa?.enderecos[0]}
-          onChange={handleChangeEndereco}
-          ref={enderecoRef}
-        />
+        <Box className={classes.boxFieldset} component="fieldset">
+          <legend>
+            <Typography className={classes.boxTitle}>Endereço</Typography>
+          </legend>
+          <EnderecoForm
+            enderecoData={pacienteData.data?.paciente?.pessoa?.enderecos[0]}
+            onChange={handleChangeEndereco}
+            ref={enderecoRef}
+          />
+        </Box>
       </Paper>
 
       <div className={classes.buttons}>
         <Button
           className={classes.button}
-          variant="outlined"
+          type="reset"
+          //variant="outlined"
+          //color="secondary"
+          size="small"
+          onClick={handleReset}
+        >{id ? 'Voltar' : 'Cancelar'}</Button>
+        <Button
+          className={classes.button}
+          variant="contained"
           color="primary"
           size="small"
           onClick={handleSubmit}
           disabled={id ? true : false}
         >Salvar</Button>
-        <Button
-          className={classes.button}
-          type="reset"
-          variant="outlined"
-          color="secondary"
-          size="small"
-          onClick={handleReset}
-        >{id ? 'Voltar' : 'Cancelar'}</Button>
       </div>
     </div>
   )

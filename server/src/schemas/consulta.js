@@ -12,11 +12,13 @@ export default `
     paciente: Paciente
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixas: [Queixa]
+    createdAt: String
   }
 
   type Query {
     consultas: [Consulta]
     consulta(id: ID!): Consulta
+    consultasByPaciente(pacienteId: ID!): [Consulta]
   }
 
   type ConsultaResponse {

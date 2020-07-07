@@ -10,12 +10,18 @@ export default {
     /**
      * retorna todos os registros de situação profissionais
      */
-    situacoesProfissionais: (parent, args, { models }) => models.SituacaoProfissional.findAll(),
+    situacoesProfissionais: async (parent, args, { models }) => {
+      const situacoesProfissionais = await models.SituacaoProfissional.findAll()
+      return situacoesProfissionais
+    },
 
     /**
      * restorna um registro de situação profissional pelo id
      */
-    situacaoProfissional: (parent, { id }, { models }) => models.SituacaoProfissional.findByPk(id)
+    situacaoProfissional: async (parent, { id }, { models }) => {
+      const situacaoProfissional = await models.SituacaoProfissional.findByPk(id)
+      return situacaoProfissional
+    }
   },
 
   Mutation: {

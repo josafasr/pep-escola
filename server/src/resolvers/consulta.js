@@ -53,7 +53,48 @@ export default {
           include: [
             {
               association: 'pessoa',
-              attributes: ['nome']
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+              include: [{
+                association: 'contato',
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+              }, {
+                association: 'enderecos',
+                attributes: { exclude: ['createdAt', 'updatedAt'] },
+                include: [{
+                  association: 'tipoLogradouro',
+                  attributes: ['id', 'nome']
+                }, {
+                  association: 'cidade',
+                  attributes: ['id', 'nome']
+                }]
+              }]
+            }, {
+              association: 'unidadeSaude',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'naturalidade',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'estadoCivil',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'religiao',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'corPele',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'escolaridade',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'profissao',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'situacaoProfissional',
+              attributes: ['id', 'nome']
+            }, {
+              association: 'especialidades',
+              attributes: ['id', 'nome']
             }
           ]
         }, {
@@ -70,11 +111,24 @@ export default {
           ]
         }, {
           association: 'queixas',
-          attributes: ['nome']
+          attributes: ['id', 'nome']
         }
       ],
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    })
+      attributes: { exclude: ['updatedAt'] }
+    }),
+
+    consultasByPaciente: async (parent, { pacienteId }, { models }) => {
+      const consultas = await models.Consulta.findAll({
+        include: [
+          {
+            association: 'queixas',
+            attributes: ['id', 'nome']
+          }
+        ],
+        where: { pacienteId }
+      })
+      return consultas
+    }
 
   },
 

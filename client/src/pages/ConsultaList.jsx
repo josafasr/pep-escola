@@ -1,11 +1,11 @@
 /**
- * @title Componente para listagem de pacientes/prontuários
- * @module src/pages/PacienteList
+ * @title Componente para listagem de consultas
+ * @module src/pages/ConsultaList
  * @author Josafá Santos dos Reis
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import {
   makeStyles,
@@ -24,18 +24,15 @@ import {
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
 import { toPtBrDate } from '../utils/format'
-import { GET_ALL } from '../graphql/paciente'
+import { GET_BY_PACIENTE } from '../graphql/consulta'
 
 const columns = [
   // { id: 'id', label: 'Id', minWidth: 50 },
-  { id: 'prontuario', label: 'Prontuário' },
-  { id: 'nome', label: 'Paciente' },
-  { id: 'dataNascimento', label: 'Nasimento' },
-  { id: 'sexo', label: 'Sexo' },
-  { id: 'rg', label: 'RG' },
-  { id: 'cpf', label: 'CPF' },
-  { id: 'cns', label: 'CNS' },
-  { id: 'detalhes', label: 'Detalhes' },
+  { id: 'createdAt', label: 'Data' },
+  { id: 'acompanhante', label: 'Acompanhante' },
+  { id: 'historiaDoencaAtual', label: 'História Doença Atual' },
+  { id: 'queixaPrincipalObs', label: 'Queixa Principal' },
+  { id: 'detalhes', label: 'Detalhes' }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     textTransform: 'none',
     margin: theme.spacing(1),
-    width: 'auto'
+    width: 'auto',
   },
 
   linkDetail: {
@@ -65,6 +62,8 @@ export default function PacienteList() {
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+  const { id } = useParams()
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -74,20 +73,22 @@ export default function PacienteList() {
     setPage(0);
   };
 
-  const pacientesResponse = useQuery(GET_ALL)
-  if (pacientesResponse.loading) return 'Carregando...'
-  if (pacientesResponse.error) return pacientesResponse.error.message
+  const consultasResponse = useQuery(GET_BY_PACIENTE, {
+    variables: { pacienteId: id }
+  })
+  if (consultasResponse.loading) return 'Carregando...'
+  if (consultasResponse.error) return consultasResponse.error.message
 
   return (
     <Paper className={classes.root}>
-      <Link to="/pacientes/criar">
+      <Link to={`/pacientes/${id}/consultas/criar`}>
         <Button
           className={classes.button}
           variant="contained"
           size="small"
           color="primary"
         >
-          Criar Prontuário
+          Nova Consulta
         </Button>
       </Link>
       <div>
@@ -104,21 +105,20 @@ export default function PacienteList() {
                   {column.label}
                 </TableCell>
               ))}
+              {/* <TableCell>Detalhes</TableCell> */}
             </TableRow>
           </TableHead>
-          {pacientesResponse.data && <TableBody>
-            {pacientesResponse.data.pacientes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+          {consultasResponse.data && <TableBody>
+            {consultasResponse.data.consultasByPaciente.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  <TableCell>{row.prontuario}</TableCell>
-                  <TableCell>{row.pessoa?.nome}</TableCell>
-                  <TableCell>{toPtBrDate(row.pessoa?.dataNascimento)}</TableCell>
-                  <TableCell>{row.pessoa?.sexo}</TableCell>
-                  <TableCell>{row.rg}</TableCell>
-                  <TableCell>{row.cpf}</TableCell>
-                  <TableCell>{row.cns}</TableCell>
+                  <TableCell>{new Date(parseInt(row.createdAt)).toLocaleDateString('pt-br')}</TableCell>
+                  <TableCell>{row.acompanhante}</TableCell>
+                  {/* <TableCell>{toPtBrDate(row.pessoa?.dataNascimento)}</TableCell> */}
+                  <TableCell>{row.historiaDoencaAtual}</TableCell>
+                  <TableCell>{row.queixaPrincipalObs}</TableCell>
                   <TableCell>
-                    <Link to={`pacientes/${row.id}`} className={classes.linkDetail}>
+                    <Link to={`/consultas/${row.id}`} className={classes.linkDetail}>
                       <FileCopyIcon />
                     </Link>
                   </TableCell>
@@ -128,12 +128,12 @@ export default function PacienteList() {
           </TableBody>}
         </Table>
       </TableContainer>
-      {pacientesResponse.data && <TablePagination
+      {consultasResponse.data && <TablePagination
         labelRowsPerPage="Linhas por página"
         rowsPerPageOptions={[10, 25, 100]}
         labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
         component="div"
-        count={pacientesResponse.data.pacientes.length}
+        count={consultasResponse.data.consultasByPaciente.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}

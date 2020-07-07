@@ -10,12 +10,18 @@ export default {
     /**
      * retorna todos os registros de profissão
      */
-    profissoes: (parent, args, { models }) => models.Profissao.findAll(),
+    profissoes: async (parent, args, { models }) => {
+      const profissoes = await models.Profissao.findAll()
+      return profissoes 
+    },
 
     /**
      * restorna um registro de profissão pelo id
      */
-    profissao: (parent, { id }, { models }) => models.Profissao.findByPk(id)
+    profissao: async (parent, { id }, { models }) => {
+      const profissao = await models.Profissao.findByPk(id)
+      return profissao
+    }
   },
 
   Mutation: {

@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) =>{
       */
       Queixa.belongsToMany(models.Consulta, {
         through: models.ConsultaQueixa,
-        as:'consulta',
+        as:'consultas',
         foreignKey: 'queixaId',
         otherKey: 'consultaId'
       })
