@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Switch, Link, Route, useHistory } from 'react-router-dom';
+import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import clsx from 'clsx'
 import {
   makeStyles,
@@ -32,6 +32,8 @@ import Usuario from '../../components/usuario'
 import UsuarioList from '../../components/usuario/UsuarioList'
 import EditPaciente from '../../pages/EditPaciente'
 import PacienteList from '../../pages/PacienteList'
+import PacienteView from '../../pages/PacienteView'
+import ConsultaEdit from '../../pages/ConsultaEdit'
 
 const drawerWidth = 240
 
@@ -114,6 +116,10 @@ const useStyles = makeStyles((theme) => ({
     color: 'inherit',
   },
 
+  selected: {
+    backgroundColor: 'rgb(223, 223, 223)'
+  },
+
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -126,6 +132,8 @@ export default function SideNav(props) {
   const { window } = props
 
   const history = useHistory()
+
+  const { path, url } = useRouteMatch()
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -146,7 +154,7 @@ export default function SideNav(props) {
       return
     }
 
-    setMobileOpen(mobileOpen)    
+    setMobileOpen(mobileOpen)
   }
 
   const toggleOpen = () => {
@@ -201,40 +209,40 @@ export default function SideNav(props) {
               <ListItemText primary={text} />
             </ListItem>
           ))} */}
-          <Link to="/" className={classes.link}>
+          <NavLink to={url} className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Início" />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to="/pacientes" className={classes.link}>
+          <NavLink to="/pacientes" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><FolderIcon /></ListItemIcon>
               <ListItemText primary="Prontuários" />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to="/agendamentos" className={classes.link}>
+          <NavLink to="/agendamentos" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
               <ListItemText primary="Agendamento" />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to="/cadastros" className={classes.link}>
+          <NavLink to="/cadastros" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><ViewListIcon /></ListItemIcon>
               <ListItemText primary="Cadastro" />
             </ListItem>
-          </Link>
+          </NavLink>
 
-          <Link to="/usuarios" className={classes.link}>
+          <NavLink to="/usuarios" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><GroupIcon /></ListItemIcon>
               <ListItemText primary="Usuários" />
             </ListItem>
-          </Link>
+          </NavLink>
         </List>
       </div>
     </div>
@@ -274,13 +282,13 @@ export default function SideNav(props) {
             </IconButton>
           </Hidden>
           {/* <Avatar className={classes.logo} alt="Logo Uesb" src="/images/uesb.png" variant="square" /> */}
-          
+
             <Link to="/" className={classes.link}>
               <Typography className={classes.titleBar} variant="h6" title="Início" noWrap>
                 Prontuário Eletrônico CEUAS
               </Typography>
             </Link>
-          
+
           <div className={classes.toobar}>
             <Avatar className={classes.avatar} children="JS">
               <Button className={classes.avatarBtn} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -315,7 +323,7 @@ export default function SideNav(props) {
             keepMounted: true
           }}
         >
-          {drawer}    
+          {drawer}
         </Drawer>
       </Hidden>
       <Hidden xsDown implementation="css">
@@ -333,23 +341,31 @@ export default function SideNav(props) {
           variant="permanent"
           open={open}
         >
-          {drawer}    
+          {drawer}
         </Drawer>
       </Hidden>
       <main className={classes.content}>
         <Toolbar />
-        
+
         <Switch>
-          <Route exact path="/pacientes/criar" component={EditPaciente} />
-          <Route exact path="/pacientes/:id" children={<EditPaciente />} />
           <Route exact path="/pacientes" component={PacienteList} />
+          <Route exact path="/pacientes/criar" component={EditPaciente} />
+          <Route exact path="/pacientes/:id/consultas/criar" children={<ConsultaEdit />} />
+          <Route path="/pacientes/:id">
+            <PacienteView />
+          </Route>
+
+          <Route exact path="/consultas/:id" component={ConsultaEdit} />
+
+          {/* <Route exact path="/paciente/consultas" children={<PacienteView />} /> */}
           <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />
           <Route exact path="/cadastros" render={() => (<div>Em desenvolvimento.....</div>)} />
           <Route exact path="/usuarios/criar" component={Usuario} />
           <Route exact path="/usuarios/:id" children={<Usuario />} />
           <Route exact path="/usuarios" component={UsuarioList} />
-          <Route exact path="/" render={() => (<div>Bem vind@!</div>)} />
-          {/* <Route path={`${match.path}`} component={EditPaciente} /> */}
+          {/* <Route exact path="/" render={() => (<div>Bem vind@!</div>)} /> */}
+          {/* <Route exact path="/" component={ConsultaEdit} /> */}
+          {/* <Route exact path="/" component={PacienteView} /> */}
         </Switch>
       </main>
     </div>
