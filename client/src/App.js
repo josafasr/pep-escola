@@ -29,8 +29,8 @@ function App(props) {
 
   const httpLink = new HttpLink({
     // uri: 'http://localhost:4000/api'
-    // uri: `https://${window.location.hostname}/apiceuas`
-    uri: `http://${window.location.hostname}:4000/api`
+    uri: `https://${window.location.hostname}/apiceuas`
+    // uri: `http://${window.location.hostname}:4000/api`
   })
 
   const authMiddleware = new ApolloLink((operation, forward) => {
@@ -76,7 +76,13 @@ function App(props) {
             afterMiddleware,
             httpLink
           ]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    queryDeduplication: false,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
   })
 
   return (
@@ -86,7 +92,7 @@ function App(props) {
         <StylesProvider injectFirst>
           <div className="App">
             <Switch>
-              <Route exact path="/login">
+              <Route path="/login">
                 <Login />
               </Route>
               <Route path="/" component={SideNav} />

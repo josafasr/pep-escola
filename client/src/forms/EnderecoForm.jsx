@@ -19,11 +19,6 @@ import { TIPOS_LOGRADOURO } from '../graphql/tipo-logradouro'
 import { CIDADES } from '../graphql/cidade'
 
 const useStyles = makeStyles((theme) => ({
-
-  boxFieldset: {
-    borderStyle: 'none'
-  },
-
   fields: {
     display: 'flex',
     flexDirection: 'column',
@@ -56,18 +51,18 @@ const useStyles = makeStyles((theme) => ({
 
 function EnderecoForm(props, ref) {
 
-  const { enderecoData } = props
+  const { enderecoData, disabled } = props
 
   const classes = useStyles()
 
   const [fields, setFields] = React.useState({
-    tipoLogradouroId: '',
+    tipoLogradouroId: enderecoData?.tipoLogradouroId || '',
     logradouro: enderecoData?.logradouro || '',
     numero: enderecoData?.numero || '',
     bairro: enderecoData?.bairro || '',
     complemento: enderecoData?.complemento || '',
     cep: enderecoData?.cep || '',
-    cidadeId: ''
+    cidadeId: enderecoData?.cidadeId || ''
   })
 
   const tiposLogradouroResponse = useQuery(TIPOS_LOGRADOURO, {
@@ -132,7 +127,7 @@ function EnderecoForm(props, ref) {
   }
 
   /**
-   * Possibilita, ao component pai, 
+   * Possibilita, ao component pai,
    * acesso a métodos deste component
    */
   React.useImperativeHandle(ref, () => ({
@@ -151,76 +146,93 @@ function EnderecoForm(props, ref) {
   }, [props, fields])
 
   return (
-    <Box className={classes.boxFieldset} component="fieldset">
-      <legend>
-        <Typography className={classes.boxTitle}>Endereço</Typography>
-      </legend>
-      <div className={classes.fields}>
-        <TextField
-          className={classes.formFields}
-          name="tipoLogradouroId"
-          value={fields.tipoLogradouroId}
-          onChange={handleChange}
-          label="Tipo de Logradouro"
-          select
-        >
-          {loadTiposLogradouro()}
-        </TextField>
+    <div className={classes.fields}>
+      <TextField
+        className={classes.formFields}
+        name="tipoLogradouroId"
+        value={fields.tipoLogradouroId}
+        onChange={handleChange}
+        label="Tipo de Logradouro"
+        select
+        inputProps={{
+          readOnly: disabled
+        }}
+      >
+        <MenuItem value=""><em>Não Informado</em></MenuItem>
+        {loadTiposLogradouro()}
+      </TextField>
 
-        <TextField
-          className={clsx(classes.formFields, classes.fieldGrow)}
-          name="logradouro"
-          value={fields.logradouro}
-          onChange={handleChange}
-          label="Logradouro"
-        />
+      <TextField
+        className={clsx(classes.formFields, classes.fieldGrow)}
+        name="logradouro"
+        value={fields.logradouro}
+        onChange={handleChange}
+        label="Logradouro"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
 
-        <TextField
-          className={classes.formFields}
-          type="number"
-          name="numero"
-          value={fields.numero}
-          onChange={handleChange}
-          label="Número"
-        />
+      <TextField
+        className={classes.formFields}
+        type="number"
+        name="numero"
+        value={fields.numero}
+        onChange={handleChange}
+        label="Número"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
 
-        <TextField
-          className={classes.formFields}
-          name="bairro"
-          value={fields.bairro}
-          onChange={handleChange}
-          label="Bairro"
-        />
+      <TextField
+        className={classes.formFields}
+        name="bairro"
+        value={fields.bairro}
+        onChange={handleChange}
+        label="Bairro"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
 
-        <TextField
-          className={classes.formFields}
-          name="complemento"
-          value={fields.complemento}
-          onChange={handleChange}
-          label="Complemento"
-        />
+      <TextField
+        className={classes.formFields}
+        name="complemento"
+        value={fields.complemento}
+        onChange={handleChange}
+        label="Complemento"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
 
-        <TextField
-          className={classes.formFields}
-          name="cep"
-          value={fields.cep}
-          onChange={handleChange}
-          label="CEP"
-        />
+      <TextField
+        className={classes.formFields}
+        name="cep"
+        value={fields.cep}
+        onChange={handleChange}
+        label="CEP"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
 
-        <TextField
-          className={classes.formFields}
-          name="cidadeId"
-          value={fields.cidadeId}
-          onChange={handleChange}
-          label="Cidade"
-          select
-        >
-          <MenuItem value=""><em>Não Informado</em></MenuItem>
-          {loadCidades()}
-        </TextField>
-      </div>
-    </Box>
+      <TextField
+        className={classes.formFields}
+        name="cidadeId"
+        value={fields.cidadeId}
+        onChange={handleChange}
+        label="Cidade"
+        inputProps={{
+          readOnly: disabled
+        }}
+        select
+      >
+        <MenuItem value=""><em>Não Informado</em></MenuItem>
+        {loadCidades()}
+      </TextField>
+    </div>
   )
 }
 export default React.forwardRef(EnderecoForm)

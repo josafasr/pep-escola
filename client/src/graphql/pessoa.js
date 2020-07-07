@@ -22,8 +22,10 @@ const pessoaApi = {
           homePage
         }
         enderecos {
+          id
           tipoLogradouro {
-          nome
+            id
+            nome
           }
           logradouro
           numero
@@ -31,6 +33,7 @@ const pessoaApi = {
           complemento
           cep
           cidade {
+            id
             nome
           }
         }

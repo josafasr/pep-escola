@@ -7,3 +7,5 @@
 */build/
 
 server/src/config/config.json
+
+.vscode/launch.json

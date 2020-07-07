@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ContatoForm(props, ref) {
 
-  const { contatoData } = props
+  const { contatoData, disabled } = props
 
   const classes = useStyles()
 
@@ -101,9 +101,9 @@ function ContatoForm(props, ref) {
 
   return (
     <Box className={classes.boxFieldset} component="fieldset">
-      <legend>
+      {/* <legend>
         <Typography className={classes.boxTitle}>Contato</Typography>
-      </legend>
+      </legend> */}
       <div className={classes.fields}>
         <TextField
           className={classes.formFields}
@@ -112,6 +112,9 @@ function ContatoForm(props, ref) {
           onChange={handleChange}
           label="Celular"
           size="small"
+          inputProps={{
+            readOnly: disabled
+          }}
         />
 
         <TextField
@@ -121,6 +124,9 @@ function ContatoForm(props, ref) {
           onChange={handleChange}
           label="Telefone"
           size="small"
+          inputProps={{
+            readOnly: disabled
+          }}
         />
 
         <TextField
@@ -131,6 +137,9 @@ function ContatoForm(props, ref) {
           onChange={handleChange}
           label="E-mail"
           size="small"
+          inputProps={{
+            readOnly: disabled
+          }}
         />
 
         <TextField
@@ -140,6 +149,9 @@ function ContatoForm(props, ref) {
           onChange={handleChange}
           label="Home Page"
           size="small"
+          inputProps={{
+            readOnly: disabled
+          }}
         />
       </div>
     </Box>
