@@ -13,109 +13,121 @@ export default {
     /**
      * retorna todos os registros de consulta
      */
-    consultas: (parent, args, { models }) => models.Consulta.findAll({
-      include: [
-        {
-          association: 'paciente',
-          include: [
-            {
-              association: 'pessoa',
-              attributes: ['nome']
-            }
-          ]
-        }, {
-          association: 'recordatorioAlimentar',
-          attributes: ['quantidade'],
-          include: [
-            {
-              association: 'alimento',
-              attributes: ['nome']
-            }, {
-              association: 'tipoRefeicao',
-              attributes: ['nome']
-            }
-          ]
-        }, {
-          association: 'queixas',
-          attributes: ['nome']
-        }
-      ],
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    }),
+    consultas: async (parent, _, { models }) => {
+      const consultas = await models.Consulta.findAll({
+        include: [
+          {
+            association: 'paciente',
+            include: [
+              {
+                association: 'pessoa',
+                attributes: ['id', 'nome']
+              }
+            ]
+          }, {
+            association: 'recordatorioAlimentar',
+            attributes: ['quantidade'],
+            include: [
+              {
+                association: 'alimento',
+                attributes: ['nome']
+              }, {
+                association: 'tipoRefeicao',
+                attributes: ['nome']
+              }
+            ]
+          }, {
+            association: 'queixaPrincipal',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'queixas',
+            attributes: ['id', 'nome']
+          }
+        ],
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
+      return consultas
+    },
 
     /**
      * restorna um registro de consulta pelo id
      */
-    consulta: (parent, { id }, { models }) => models.Consulta.findByPk(id, {
-      include: [
-        {
-          association: 'paciente',
-          include: [
-            {
-              association: 'pessoa',
-              attributes: { exclude: ['createdAt', 'updatedAt'] },
-              include: [{
-                association: 'contato',
-                attributes: { exclude: ['createdAt', 'updatedAt'] }
-              }, {
-                association: 'enderecos',
+    consulta: async (parent, { id }, { models }) => {
+      const consulta = await models.Consulta.findByPk(id, {
+        include: [
+          {
+            association: 'paciente',
+            include: [
+              {
+                association: 'pessoa',
                 attributes: { exclude: ['createdAt', 'updatedAt'] },
                 include: [{
-                  association: 'tipoLogradouro',
-                  attributes: ['id', 'nome']
+                  association: 'contato',
+                  attributes: { exclude: ['createdAt', 'updatedAt'] }
                 }, {
-                  association: 'cidade',
-                  attributes: ['id', 'nome']
+                  association: 'enderecos',
+                  attributes: { exclude: ['createdAt', 'updatedAt'] },
+                  include: [{
+                    association: 'tipoLogradouro',
+                    attributes: ['id', 'nome']
+                  }, {
+                    association: 'cidade',
+                    attributes: ['id', 'nome']
+                  }]
                 }]
-              }]
-            }, {
-              association: 'unidadeSaude',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'naturalidade',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'estadoCivil',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'religiao',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'corPele',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'escolaridade',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'profissao',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'situacaoProfissional',
-              attributes: ['id', 'nome']
-            }, {
-              association: 'especialidades',
-              attributes: ['id', 'nome']
-            }
-          ]
-        }, {
-          association: 'recordatorioAlimentar',
-          attributes: ['quantidade'],
-          include: [
-            {
-              association: 'alimento',
-              attributes: ['nome']
-            }, {
-              association: 'tipoRefeicao',
-              attributes: ['nome']
-            }
-          ]
-        }, {
-          association: 'queixas',
-          attributes: ['id', 'nome']
-        }
-      ],
-      attributes: { exclude: ['updatedAt'] }
-    }),
+              }, {
+                association: 'unidadeSaude',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'naturalidade',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'estadoCivil',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'religiao',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'corPele',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'escolaridade',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'profissao',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'situacaoProfissional',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'especialidades',
+                attributes: ['id', 'nome']
+              }
+            ]
+          }, {
+            association: 'recordatorioAlimentar',
+            attributes: ['quantidade'],
+            include: [
+              {
+                association: 'alimento',
+                attributes: ['nome']
+              }, {
+                association: 'tipoRefeicao',
+                attributes: ['nome']
+              }
+            ]
+          }, {
+            association: 'queixaPrincipal',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'queixas',
+            attributes: ['id', 'nome']
+          }
+        ],
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
+      return consulta
+    },
 
     consultasByPaciente: async (parent, { pacienteId }, { models }) => {
       const consultas = await models.Consulta.findAll({
@@ -128,7 +140,7 @@ export default {
         where: { pacienteId }
       })
       return consultas
-    }
+    },
 
   },
 
@@ -137,20 +149,28 @@ export default {
     /**
      * cria um novo registro de consulta
      */
-    createConsulta: async (parent, { recordatorioAlimentar, queixas, ...otherArgs }, { models }) => {
+    createConsulta: async (parent, { queixas, ...ohterArgs }, { sequelize, models }) => {
       try {
-        const consulta = await models.Consulta.create({ ...otherArgs })
+        const result = await sequelize.transaction(async (tx) => {
+          const consulta = await models.Consulta.create({ ...ohterArgs }, {
+            include: [
+              { association: 'recordatorioAlimentar' }
+              /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
+            ]
+          })
+          if (queixas) {
+            await consulta.addQueixas(queixas)
+          }
+          return consulta  // para 'result' receber 'consulta'
 
-        if (recordatorioAlimentar) {
-          await consulta.addRecordatorioAlimentar(recordatorioAlimentar)
-        }
-
-        if (queixas) {
-          await consulta.addQueixas(queixas)
-        }
+          /* if (recordatorioAlimentar) {
+            await consulta.addRecordatorioAlimentar(recordatorioAlimentar)
+          } */
+        }) // tx.commit
+        // 'consulta' ('result') fica disponível apenas após o commit
         return {
           ok: true,
-          consulta
+          consulta: result
         }
       } catch (err) {
         return {
@@ -168,7 +188,6 @@ export default {
         const consulta = await models.Consulta.findByPk(id)
         if ({ ...otherArgs }) {
           await consulta.update({ ...otherArgs }, {
-            // where: { id },
             returning: true,
             plain: true
           })

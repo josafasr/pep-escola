@@ -134,10 +134,9 @@ export default {
                 association: 'enderecos'
               }]
             }]
-          }, { transaction: tx })
-
+          })
           if (especialidades) {
-            await paciente.addEspecialidades(especialidades, { transaction: tx })
+            await paciente.addEspecialidades(especialidades)
           }
           return paciente // para 'result' receber 'paciente'
         }) // tx.commit

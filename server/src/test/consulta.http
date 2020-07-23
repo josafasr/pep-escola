@@ -1,0 +1,173 @@
+POST http://localhost:4000/api?query HTTP/1.1
+content-type: application/json
+
+{
+  "query": "{consultas {id paciente {pessoa {id nome}} queixas {id nome}}}"
+}
+
+###
+
+POST http://localhost:4000/api?query HTTP/1.1
+content-type: application/json
+
+{
+  "query": "{consulta(id: 6) {id paciente {pessoa {id nome}} consultaQueixas {queixa {nome} principal}}}"
+}
+
+###
+
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+query GetWithIncludes($id: ID!) {
+  consulta(id: $id) {
+    id
+    # createdAt
+    paciente {
+      id
+      pessoa {
+        id
+        nome
+        dataNascimento
+        sexo
+        enderecos {
+          id
+          tipoLogradouro {
+            id
+            nome
+          }
+          logradouro
+          numero
+          complemento
+          bairro
+          cep
+          cidade {
+            id
+            nome
+          }
+        }
+        contato {
+          id
+          celular
+          telefone
+          email
+          homePage
+        }
+      }
+      prontuario
+      rg
+      cpf
+      cartaoFamilia
+      cns
+      agenteComunitario
+      encaminhadoPor
+      unidadeSaude {
+        id
+        nome
+      }
+      naturalidade {
+        id
+        nome
+      }
+      estadoCivil {
+        id
+        nome
+      }
+      religiao {
+        id
+        nome
+      }
+      corPele {
+        id
+        nome
+      }
+      escolaridade {
+        id
+        nome
+      }
+      profissao {
+        id
+        nome
+      }
+      situacaoProfissional {
+        id
+        nome
+      }
+      especialidades {
+        id
+        nome
+      }
+    }
+    acompanhante
+    historiaDoencaAtual
+    queixaPrincipal {
+      id
+      nome
+    }
+    queixaPrincipalObs
+    queixas {
+      id
+      nome
+    }
+  }
+}
+
+{
+  "id": 24
+}
+
+###
+
+POST http://localhost:4000/api?query HTTP/1.1
+content-type: application/json
+
+{
+  "query": "{queixaPrincipal(id: 6) {id nome}}"
+}
+
+###
+
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+query TiposQueixa {
+  tiposQueixa {
+    id
+    nome
+  }
+}
+
+###
+
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+query Queixas {
+  queixas {
+    id
+    nome
+  }
+}
+
+###
+
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+mutation CreateConsultaQueixa {
+  createConsultaQueixa(consultaId: 6, queixaId: 6) {
+    ok
+    id
+    principal
+    consultaId
+    queixaId
+    errors {
+      path
+      message
+    }
+  }
+}

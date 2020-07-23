@@ -17,7 +17,6 @@ import {
   StepButton,
   Paper,
   Box,
-  Typography,
   Button
  } from '@material-ui/core'
 // import PersonIcon from '@material-ui/icons/Person'
@@ -27,12 +26,10 @@ import {
 
 import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
-import { isEmpty } from '../utils/check'
-// import ContatoForm from '../forms/ContatoForm'
-// import EnderecoForm from '../forms/EnderecoForm'
 import PessoaForm from '../forms/PessoaForm'
 import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
+import QueixaContext from '../contexts/QueixaContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,21 +41,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 0
   },
 
-  /* pessoaInfo: {
-    padding: '10px'
-  },
-
-  pessoaFields: {
-    marginLeft: '10px'
-  }, */
-
   box: {
     borderStyle: 'none',
     padding: theme.spacing(1, 2, 2, 2) // top, right, bottom, left
   },
 
   boxTitle: {
-    // paddingTop: '10px',
     fontWeight: 'bold'
   },
 
@@ -80,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   buttons: {
-    // marginTop: '10px',
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
@@ -116,24 +103,26 @@ function ConsultaEdit() {
   if (url.indexOf('criar') !== -1) {
     pacienteId = id
   }
-
-  const [pessoa, setPessoa] = React.useState({})
-  const [contato, setContato] = React.useState({})
-  const [endereco, setEndereco] = React.useState({})
+ 
+  //const [pessoa, setPessoa] = React.useState({})
+  //const [contato, setContato] = React.useState({})
+  //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState({})
   const [consulta, setConsulta] = React.useState({})
   const [activeStep, setActiveStep] = React.useState(0)
+  const [queixa, setQueixa] = React.useState({})
 
   const pessoaRef = React.useRef()
   const pacienteRef = React.useRef()
-  const contatoRef = React.useRef()
-  const enderecoRef = React.useRef()
+  //const contatoRef = React.useRef()
+  //const enderecoRef = React.useRef()
   const consultaRef = React.useRef()
 
   const [handleCreateConsulta] = useMutation(CREATE_CONSULTA, {
     variables: {
       ...consulta,
-      queixas: [parseInt(consulta.queixaPrincipalId)],
+      queixaPrincipalId: parseInt(queixa.id),
+      queixas: [parseInt(queixa.id)],
       pacienteId
     }
   })
@@ -141,7 +130,7 @@ function ConsultaEdit() {
   const pacienteData = useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
       onCompleted: (data) => {
-      setPessoa(data.paciente.pessoa)
+      //setPessoa(data.paciente.pessoa)
       setPaciente(data.paciente)
     },
     skip: !pacienteId,
@@ -152,12 +141,10 @@ function ConsultaEdit() {
     variables: { id },
     skip: !!pacienteId
   })
-
+/*
   const handleChangePessoa = data => {
     if (!isEmpty(data)) {
       setPessoa(data)
-    // } else {
-    //   setPessoa(pessoa)
     }
   }
 
@@ -172,7 +159,7 @@ function ConsultaEdit() {
       setEndereco(data)
     }
   }
-
+ */
   const handleChangePaciente = pacienteField => {
     const { name, value } = pacienteField
     setPaciente({
@@ -202,21 +189,20 @@ function ConsultaEdit() {
       alert('Não foi possível criar a consulta :(')
     }
   }
-
+/* 
   const handleReset = () => {
     pessoaRef.current.handleReset()
     pacienteRef.current.handleReset()
     contatoRef.current.handleReset()
     enderecoRef.current.handleReset()
     consultaRef.current.handleReset()
-    // history.push('/consultas')
   }
-
+*/
   const handleResetForms = () => {
-    setPessoa({})
+    //setPessoa({})
     setPaciente({})
-    setContato({})
-    setEndereco({})
+    //setContato({})
+    //setEndereco({})
     setConsulta({})
     history.goBack()
   }
@@ -232,11 +218,12 @@ function ConsultaEdit() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
-
+/* 
   const handleResetSteps = () => {
     setActiveStep(0)
     handleResetForms()
   }
+ */
 
   const buttons = (
     <div>
@@ -259,11 +246,6 @@ function ConsultaEdit() {
     </div>
   )
 
-  /* React.useEffect(() => {
-    //console.log(`ConsultaEdit - pacienteData: ${new Date().toLocaleTimeString()}`, pacienteData.data)
-    console.log(`ConsultaEdit - consulta: ${new Date().toLocaleTimeString()}`, consulta)
-  }, [consultaData, consulta]) */
-
   if (pacienteData.loading || consultaData.loading) return 'Carregando...'
 
   return (
@@ -273,7 +255,7 @@ function ConsultaEdit() {
       <Paper className={classes.paper} elevation={2}>
         <PessoaForm
           pessoaData={consultaData.data?.consulta.paciente.pessoa || pacienteData.data.paciente.pessoa}
-          onChange={handleChangePessoa}
+          //onChange={handleChangePessoa}
           ref={pessoaRef}
           disabled={false}
         />
@@ -308,11 +290,13 @@ function ConsultaEdit() {
           <StepContent classes={{ root: classes.stepContent }}>
             <Paper className={classes.paper} elevation={2}>
               <Box className={classes.box} componente="fieldset">
-                <ConsultaForm
-                  consultaData={consultaData?.data?.consulta || consulta}
-                  onChange={handleChangeConsulta}
-                  ref={consultaRef}
-                />
+                <QueixaContext.Provider value={{queixa, setQueixa}}>
+                  <ConsultaForm
+                    consultaData={consultaData?.data?.consulta || consulta}
+                    onChange={handleChangeConsulta}
+                    ref={consultaRef}
+                  />
+                </QueixaContext.Provider>
               </Box>
             </Paper>
             {/* {buttons} */}
@@ -320,14 +304,6 @@ function ConsultaEdit() {
         </Step>
       </Stepper>
       {buttons}
-      {/* {activeStep === 1 && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleResetForms} className={classes.button}>
-            Limpar
-          </Button>
-        </Paper>
-      )} */}
     </div>
   )
 }

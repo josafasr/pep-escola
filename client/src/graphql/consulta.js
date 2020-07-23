@@ -117,6 +117,7 @@ export const CREATE_CONSULTA = gql`
     $queixaPrincipalObs: String,
     $historiaDoencaAtual: String,
     $pacienteId: ID!,
+    $queixaPrincipalId: ID,
     $queixas: [ID]
   ) {
     createConsulta(
@@ -124,6 +125,7 @@ export const CREATE_CONSULTA = gql`
       queixaPrincipalObs: $queixaPrincipalObs,
       historiaDoencaAtual: $historiaDoencaAtual,
       pacienteId: $pacienteId,
+      queixaPrincipalId: $queixaPrincipalId
       queixas: $queixas
     ) {
       ok
@@ -132,6 +134,10 @@ export const CREATE_CONSULTA = gql`
         acompanhante
         queixaPrincipalObs
         historiaDoencaAtual
+        queixaPrincipal {
+          id
+          nome
+        }
         queixas {
           id
           nome
@@ -144,9 +150,11 @@ export const CREATE_CONSULTA = gql`
     }
   }`
 
-/*
-export const DELETE_PACIENTE = gql`
-  mutation($id: ID!) {
-    deletePaciente(id: $id)
-  }`
- */
+export const QUEIXA_PRINCIPAL = gql`
+  query QueixaPrincipal($id: ID!) {
+    queixaPrincipal(id: $id) {
+      id
+      nome
+    }
+  }
+`

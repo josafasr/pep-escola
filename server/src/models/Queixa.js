@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) =>{
         tableName: 'queixa'
     });
 
-      Queixa.associate = (models) => {
+    Queixa.associate = (models) => {
       /**
       * Relacionamento com a tabela de tipos de queixa
       * @see module:models/TipoQueixa
@@ -38,7 +38,21 @@ export default (sequelize, DataTypes) =>{
         as:'consultas',
         foreignKey: 'queixaId',
         otherKey: 'consultaId'
+      }),
+
+      /**
+      * Relacionamento com a tabela de consultas
+      * @see module:models/Consulta
+      */
+      Queixa.hasMany(models.Consulta, {
+        as:'queixaPrincipalConsultas',
+        foreignKey: 'queixaPrincipalId'
       })
+
+      /* Queixa.hasMany(models.ConsultaQueixa, {
+        as:'queixaConsultas',
+        foreignKey: 'queixaId'
+      }) */
     };
     return Queixa;
  };

@@ -11,6 +11,7 @@ export default `
     historiaDoencaAtual: String
     paciente: Paciente
     recordatorioAlimentar: [RecordatorioAlimentar]
+    queixaPrincipal: Queixa
     queixas: [Queixa]
     createdAt: String
   }
@@ -19,6 +20,7 @@ export default `
     consultas: [Consulta]
     consulta(id: ID!): Consulta
     consultasByPaciente(pacienteId: ID!): [Consulta]
+    queixaPrincipal(id: ID!): Queixa
   }
 
   type ConsultaResponse {
@@ -34,6 +36,7 @@ export default `
       historiaDoencaAtual: String,
       pacienteId: ID!,
       recordatorioAlimentar: [ID]
+      queixaPrincipalId: ID
       queixas: [ID]
     ): ConsultaResponse
 
@@ -42,7 +45,7 @@ export default `
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
-      pacienteId: ID,
+      pacienteId: ID!,
       recordatorioAlimentar: [ID]
       queixas: [ID]
     ): ConsultaResponse

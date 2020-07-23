@@ -5,28 +5,20 @@
  */
 
  import React from 'react'
- import { useQuery } from '@apollo/react-hooks'
  import clsx from 'clsx'
  import {
   makeStyles,
-  // Box,
-  // Typography,
-  TextField,
-  // FormControl,
-  // InputLabel,
-  // Input,
-  // Select,
-  MenuItem
+  TextField
 } from '@material-ui/core'
 
-import { QUEIXAS } from '../graphql/queixa'
+import QueixaAutocomplete from '../components/autocomplete/QueixaAutocomplete'
+import QueixaContext from '../contexts/QueixaContext'
 
 const useStyles = makeStyles((theme) => ({
   formFields: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    // padding: theme.spacing(0, 2),
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -56,55 +48,23 @@ function ConsultaForm(props, ref) {
 
   const classes = useStyles()
   const { consultaData } = props
-
   const [fields, setFields] = React.useState({
     acompanhante: '',
     queixaPrincipalId: '',
     queixaPrincipalObs: '',
-    historiaDoencaAtual: '',
-    //pacienteId: ''
+    historiaDoencaAtual: ''
   })
-
-  const queixasResponse = useQuery(QUEIXAS, {
-    onCompleted: () => {
-      if (consultaData) {
-        if (consultaData.queixaPrincipalId) {
-          setFields({ ...fields, queixaPrincipalId: consultaData.queixaPrincipalId })
-        } else if (consultaData.queixas) {
-          setFields({ ...fields, queixaPrincipalId: consultaData.queixas[0].id })
-        }
-      }
-    }
-  })
-
-  const loadQueixas = () => {
-    if (queixasResponse.loading) return 'Loading...'
-    if (queixasResponse.error) return 'Error :('
-
-    return (
-      queixasResponse.data.queixas.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
+  const {queixa, setQueixa} = React.useContext(QueixaContext)
 
   const handleChange = event => {
     event.preventDefault()
     event.stopPropagation()
     const { name, value } = event.target
-
-    //setFields({
-    //  ...fields,
-      // [name]: name.slice(-2) === 'Id' ? (parseInt(value) || '') : value
-    //  [name]: value
-    //})
-
-    setFields(prevValues => ({
-      ...prevValues,
+    setFields({
+      ...fields,
       [name]: name.slice(-2) === 'Id' ? (parseInt(value) || '') : value
-    }))
+    })
     if (props.onChange) {
-      //const newName = name.replace('Id', '')
       props.onChange({ 'name': name, 'value': value })
     }
   }
@@ -112,10 +72,9 @@ function ConsultaForm(props, ref) {
   const handleReset = () => {
     setFields({
       acompanhante: '',
-      queixaPrincipalId: '',
       queixaPrincipalObs: '',
       historiaDoencaAtual: '',
-      //pacienteId: ''
+      queixas: []
     })
   }
 
@@ -129,40 +88,25 @@ function ConsultaForm(props, ref) {
     }
   }))
 
-  /**
-   * Emite aviso de mudança ao component pai
-   */
-  /* React.useEffect(() => {
-    if (props.onChange) {
-      props.onChange(fields)
-    }
-  }, [props, fields]) */
-
   React.useEffect(() => {
     if (consultaData && Object.keys(consultaData).length > 0) {
       setFields({
         acompanhante: consultaData.acompanhante || '',
-        queixaPrincipalId: consultaData.queixaPrincipalId || '',
         queixaPrincipalObs: consultaData.queixaPrincipalObs || '',
         historiaDoencaAtual: consultaData.historiaDoencaAtual || ''
       })
     }
-  }, [consultaData])
+    if (Object.keys(queixa).length === 0) {
+      if (consultaData.queixas && consultaData.queixas.length > 0) {
+        setQueixa(consultaData.queixas[0])
+      }
+    }
+  }, [consultaData, queixa, setQueixa])
 
   return (
     <div className={classes.formFields}>
-      <TextField
-        className={classes.fields}
-        name="queixaPrincipalId"
-        value={fields.queixaPrincipalId}
-        onChange={handleChange}
-        label="Queixa Principal"
-        // criar autocomplete
-        select
-      >
-        <MenuItem value=""><em>Não informado</em></MenuItem>
-        {loadQueixas()}
-      </TextField>
+
+      <QueixaAutocomplete />
 
       <TextField
         className={classes.textArea}
@@ -194,13 +138,6 @@ function ConsultaForm(props, ref) {
         label="História da Doença Atual"
       />
 
-      {/* <TextField
-        className={classes.fields}
-        name="acompanhante"
-        value={fields.acompanhante}
-        onChange={handleChange}
-        label="Acompanhante"
-      /> */}
     </div>
   )
 }

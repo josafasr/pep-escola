@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de consultas
+ * @title Mapeamento da tabela de consultas
  * @module src/models/Consulta
  * @author Josafá Santos dos Reis
  */
@@ -17,6 +17,10 @@ export default (sequelize, DataTypes) => {
     pacienteId: {
       type: DataTypes.INTEGER,
       field: 'paciente_id'
+    },
+    queixaPrincipalId: {
+      type: DataTypes.INTEGER,
+      field: 'queixa_principal_id'
     }
   }, {
     schema: 'ceuas',
@@ -52,6 +56,15 @@ export default (sequelize, DataTypes) => {
       as: 'queixas',
       foreignKey: 'consultaId',
       otherKey: 'queixaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de queixas
+     * @see module:models/Queixa
+     */
+    Consulta.belongsTo(models.Queixa, {
+      as: 'queixaPrincipal',
+      foreignKey: 'queixaPrincipalId'
     })
   }
   return Consulta
