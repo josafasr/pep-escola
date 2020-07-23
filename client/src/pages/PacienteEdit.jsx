@@ -1,6 +1,6 @@
 /**
  * Componente para criação/edição de pacientes/prontuários
- * @module src/pages/PacienteList
+ * @module src/pages/PacienteEdit
  * @author Josafá Santos dos Reis
  */
 
@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   buttons: {
-    // marginTop: '10px',
     width: '100%',
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
@@ -66,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditPaciente(props) {
+function PacienteEdit(props) {
 
   let history = useHistory()
 
@@ -98,13 +97,6 @@ function EditPaciente(props) {
 
   const pacienteData = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
-    // onCompleted: (data) => {
-    //   setPaciente(data)
-      // setPessoa(data.paciente.pessoa)
-      // setEndereco(data.paciente.pessoa.endereco[0])
-      // setPessoa(data.paciente.pessoa.contato)
-    //   console.log(paciente)
-    // },
     skip: !id
   })
 
@@ -132,11 +124,9 @@ function EditPaciente(props) {
     event.preventDefault()
     const pacienteResponse = await handleCreatePaciente()
     if (pacienteResponse.data.createWithIncludes.ok) {
-      // console.log(pacienteResponse.data.createWithIncludes.paciente)
       alert('Paciente criado com sucesso!')
       handleReset()
     } else {
-      // console.log(pacienteResponse.data.createWithIncludes.errors)
       alert('Não foi possível criar o paciente :(')
     }
   }
@@ -203,8 +193,6 @@ function EditPaciente(props) {
         <Button
           className={classes.button}
           type="reset"
-          //variant="outlined"
-          //color="secondary"
           size="small"
           onClick={handleReset}
         >{id ? 'Voltar' : 'Cancelar'}</Button>
@@ -220,4 +208,4 @@ function EditPaciente(props) {
     </div>
   )
 }
-export default EditPaciente
+export default PacienteEdit

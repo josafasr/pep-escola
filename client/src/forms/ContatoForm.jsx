@@ -8,7 +8,6 @@ import React from 'react'
 import {
   makeStyles,
   Box,
-  Typography,
   TextField
 } from '@material-ui/core'
 
@@ -101,9 +100,6 @@ function ContatoForm(props, ref) {
 
   return (
     <Box className={classes.boxFieldset} component="fieldset">
-      {/* <legend>
-        <Typography className={classes.boxTitle}>Contato</Typography>
-      </legend> */}
       <div className={classes.fields}>
         <TextField
           className={classes.formFields}

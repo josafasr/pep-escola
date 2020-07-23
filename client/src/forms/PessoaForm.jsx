@@ -1,5 +1,5 @@
 /**
- * Formulário para criação/edição dos dados pessoais
+ * @title Formulário para criação/edição dos dados pessoais
  * @module src/forms/PessoaForm
  * @author Josafá Santos dos Reis
  */
@@ -9,13 +9,11 @@ import clsx from 'clsx'
 import {
   makeStyles,
   Box,
-  Typography,
   TextField,
   MenuItem
 } from '@material-ui/core'
 
 import { toPtBrDate } from '../utils/format'
-import { isEmpty } from '../utils/check'
 
 const useStyles = makeStyles((theme) => ({
 

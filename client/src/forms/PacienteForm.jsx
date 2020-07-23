@@ -1,5 +1,5 @@
 /**
- * Formulário para criação/edição dos dados de pacientes
+ * @title Formulário para criação/edição dos dados de pacientes
  * @module src/forms/PacienteForm
  * @author Josafá Santos dos Reis
  */
@@ -9,13 +9,7 @@ import { useQuery } from '@apollo/react-hooks'
 import clsx from 'clsx'
 import {
   makeStyles,
-  Box,
-  // Typography,
   TextField,
-  // FormControl,
-  // InputLabel,
-  // Input,
-  // Select,
   MenuItem
 } from '@material-ui/core'
 
@@ -27,7 +21,6 @@ import { CORES_PELE } from '../graphql/cor-pele'
 import { ESCOLARIDADES } from '../graphql/escolaridade'
 import { PROFISSOES } from '../graphql/profissao'
 import { SITUACOES_PROFISSIONAIS } from '../graphql/situacao-profissional'
-import { LOAD_DROP_BOXES } from '../graphql/paciente'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -79,7 +72,6 @@ function PacienteForm(props, ref) {
     cns: '',
     agenteComunitario: '',
     encaminhadoPor: '',
-    // pessoa: '',
     unidadeSaudeId: '',
     // nacionalidadeId: '',
     naturalidadeId: '',
@@ -91,27 +83,6 @@ function PacienteForm(props, ref) {
     situacaoProfissionalId: ''
   })
 
-  // console.log(`pacienteData ${new Date().toLocaleTimeString()}: `, pacienteData)
-  // console.log(`fields ${new Date().toLocaleTimeString()}: `, fields)
-
-  /* const loadDropBoxes = useQuery(LOAD_DROP_BOXES, {
-    onCompleted: () => {
-      if (pacienteData) {
-        setFields({
-          ...fields,
-          unidadeSaudeId: pacienteData.unidadeSaudeId,
-          naturalidadeId: pacienteData.naturalidadeId,
-          estadoCivilId: pacienteData.estadoCivilId,
-          religiaoId: pacienteData.religiaoId,
-          corPeleId: pacienteData.corPeleId,
-          escolaridadeId: pacienteData.escolaridadeId,
-          profissaoId: pacienteData.profissaoId,
-          situacaoProfissionalId: pacienteData.situacaoProfissionalId
-        })
-      }
-    }
-  }) */
-
   /**
    * Funções para povoar as listas dos campos do tipo select
    * Apenas após o povoamento das listas, os dados recebidos na prop pacienteData são inseridos em fields
@@ -121,10 +92,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.unidadeSaudeId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.unidadeSaudeId)
           setFields({ ...fields, unidadeSaudeId: pacienteData.unidadeSaudeId})
         } else if (pacienteData.unidadeSaude) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.unidadeSaude)
           setFields({ ...fields, unidadeSaudeId: pacienteData.unidadeSaude.id})
         }
       }
@@ -135,10 +104,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.naturalidadeId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.naturalidadeId)
           setFields({ ...fields, naturalidadeId: pacienteData.naturalidadeId })
         } else if (pacienteData.naturalidade) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.naturalidade)
           setFields({ ...fields, naturalidadeId: pacienteData.naturalidade.id })
         }
       }
@@ -149,10 +116,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.estadoCivilId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.estadoCivilId)
           setFields({ ...fields, estadoCivilId: pacienteData.estadoCivilId })
         } else if (pacienteData.estadoCivil) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.estadoCivil)
           setFields({ ...fields, estadoCivilId: pacienteData.estadoCivil.id })
         }
       }
@@ -163,10 +128,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.religiaoId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.religiaoId)
           setFields({ ...fields, religiaoId: pacienteData.religiaoId })
         } else if (pacienteData.religiao) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.religiao)
           setFields({ ...fields, religiaoId: pacienteData.religiao.id })
         }
       }
@@ -177,10 +140,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.corPeleId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.corPeleId)
           setFields({ ...fields, corPeleId: pacienteData.corPeleId })
         } else if (pacienteData.corPele) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.corPele)
           setFields({ ...fields, corPeleId: pacienteData.corPele.id })
         }
       }
@@ -191,10 +152,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.escolaridadeId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.escolaridadeId)
           setFields({ ...fields, escolaridadeId: pacienteData.escolaridadeId })
         } else if (pacienteData.escolaridade) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.escolaridade)
           setFields({ ...fields, escolaridadeId: pacienteData.escolaridade.id })
         }
       }
@@ -205,10 +164,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.profissaoId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.profissaoId)
           setFields({ ...fields, profissaoId: pacienteData.profissao.id})
         } else if (pacienteData.profissao) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.profissao)
           setFields({ ...fields, profissaoId: pacienteData.profissao.id })
         }
       }
@@ -219,10 +176,8 @@ function PacienteForm(props, ref) {
     onCompleted: () => {
       if (pacienteData) {
         if (pacienteData.situacaoProfissionalId) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.situacaoProfissionalId)
           setFields({ ...fields, situacaoProfissionalId: pacienteData.situacaoProfissionalId })
         } else if (pacienteData.situacaoProfissional) {
-          // console.log(`PacienteForm - ${new Date().toLocaleTimeString()}: `, pacienteData.situacaoProfissional)
           setFields({ ...fields, situacaoProfissionalId: pacienteData.situacaoProfissional.id })
         }
       }
@@ -326,7 +281,6 @@ function PacienteForm(props, ref) {
       cns: '',
       agenteComunitario: '',
       encaminhadoPor: '',
-      // pessoa: '',
       unidadeSaudeId: '',
       // nacionalidade: '',
       naturalidadeId: '',
@@ -399,8 +353,6 @@ function PacienteForm(props, ref) {
         situacaoProfissionalId: pacienteData.situacaoProfissionalId || ''
       })
     }
-    //console.log(`PacienteForm - pacienteData: ${new Date().toTimeString()}`, pacienteData)
-    //console.log(`PacienteForm - fields: ${new Date().toTimeString()}`, fields)
   }, [pacienteData])
 
 
@@ -473,33 +425,6 @@ function PacienteForm(props, ref) {
         <MenuItem value=""><em>Não Informado</em></MenuItem>
         {loadUnidadesSaude()}
       </TextField>
-
-      {/* <FormControl className={classes.formFields}>
-        <InputLabel id="input-label">Unidade de Saúde</InputLabel>
-        <Select
-          name="unidadeSaudeId"
-          value={fields.unidadeSaudeId}
-          onChange={handleChange}
-          labelId="input-label"
-        >
-          <MenuItem value=""><em>Não Informado</em></MenuItem>
-          {loadUnidadesSaude()}
-        </Select>
-      </FormControl> */}
-
-      {/* <TextField
-        className={classes.formFields}
-        name="nacionalidadeId"
-        value={fields.nacionalidadeId}
-        onChange={handleChange}
-        label="Nacionalidade"
-        // autocomplete
-        select
-      >
-        <MenuItem key={0} value=""></MenuItem>
-        <MenuItem key={1} value={1}>Brasileira</MenuItem>
-        <MenuItem key={2} value={2}>Extrangeira</MenuItem>
-      </TextField> */}
 
       <TextField
         className={classes.formFields}

@@ -9,13 +9,12 @@ import { Switch, Route, Link, useHistory, useRouteMatch, useParams } from 'react
 import {
   CssBaseline,
   makeStyles,
-  Paper,
   AppBar,
   Tabs,
   Tab
 } from '@material-ui/core'
 
-import EditPaciente from './EditPaciente'
+import PacienteEdit from './PacienteEdit'
 import ConsultaList from './ConsultaList'
 
 const useStyles = makeStyles((theme) => ({
@@ -31,12 +30,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function PacienteView() {
-
   const classes = useStyles()
-
   const { path, url } = useRouteMatch()
   const { id } = useParams()
-
   const newPath = path.replace('/:id', '')
   const newUrl = url.substring(0, 10)
 
@@ -48,11 +44,11 @@ function PacienteView() {
 
   let history = useHistory()
 
-  const [value, setValue] = React.useState(0);
+  //const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
+  /* const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
+  }; */
 
   return (
     <div>
@@ -60,7 +56,7 @@ function PacienteView() {
     <AppBar className={classes.appBar} position="static">
       <Tabs
         value={history.location.pathname}
-        onChange={handleChange}
+        //onChange={handleChange}
         variant="fullWidth"
         aria-label="simple tabs example"
       >
@@ -71,6 +67,7 @@ function PacienteView() {
           component={Link} 
           to={`${newUrl}/${id}`} 
         />
+
         <Tab 
           className={classes.tabTitle}
           label="Consultas" 
@@ -78,18 +75,10 @@ function PacienteView() {
           component={Link} 
           to={`${newUrl}/${id}/consultas`} 
         />
-        {/* <Tab
-          className={classes.tabTitle}
-          label="Test" 
-          value={`${newUrl}/${id}/test`} 
-          component={Link} 
-          to={`${newUrl}/${id}/test`} 
-        /> */}
       </Tabs>
     </AppBar>
     <Switch>
-      <Route exact path={`${routes[0]}`} component={EditPaciente} />
-      {/* <Route path={routes[1]} component={() => { return (<div>ConsultaList</div>)}} /> */}
+      <Route exact path={`${routes[0]}`} component={PacienteEdit} />
       <Route path={routes[1]} component={ConsultaList} />
       <Route path={routes[2]} component={() => { return (<div>Test</div>)}} />
     </Switch>

@@ -1,5 +1,5 @@
 /**
- * Formulário para criação/edição dos dados de endereço
+ * @title Formulário para criação/edição dos dados de endereço
  * @module src/forms/EnderecoForm
  * @author Josafá Santos dos Reis
  */
@@ -9,8 +9,6 @@ import { useQuery } from '@apollo/react-hooks'
 import clsx from 'clsx'
 import {
   makeStyles,
-  Box,
-  Typography,
   TextField,
   MenuItem
 } from '@material-ui/core'

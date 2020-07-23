@@ -30,7 +30,7 @@ import { deepPurple } from '@material-ui/core/colors'
 
 import Usuario from '../../components/usuario'
 import UsuarioList from '../../components/usuario/UsuarioList'
-import EditPaciente from '../../pages/EditPaciente'
+import PacienteEdit from '../../pages/PacienteEdit'
 import PacienteList from '../../pages/PacienteList'
 import PacienteView from '../../pages/PacienteView'
 import ConsultaEdit from '../../pages/ConsultaEdit'
@@ -69,10 +69,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7)//,
-    // [theme.breakpoints.up('sm')]: {
-    //   width: theme.spacing(9) + 1
-    // }
+    width: theme.spacing(7)
   },
 
   appBar: {
@@ -133,7 +130,7 @@ export default function SideNav(props) {
 
   const history = useHistory()
 
-  const { path, url } = useRouteMatch()
+  const { url } = useRouteMatch()
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -191,24 +188,9 @@ export default function SideNav(props) {
         onClick={toggleDrawer(false)}
         onKeyDown={toggleDrawer(false)}
       >
-        {/* <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
-
         <Divider />
 
         <List>
-          {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))} */}
           <NavLink to={url} className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><HomeIcon /></ListItemIcon>
@@ -349,7 +331,7 @@ export default function SideNav(props) {
 
         <Switch>
           <Route exact path="/pacientes" component={PacienteList} />
-          <Route exact path="/pacientes/criar" component={EditPaciente} />
+          <Route exact path="/pacientes/criar" component={PacienteEdit} />
           <Route exact path="/pacientes/:id/consultas/criar" children={<ConsultaEdit />} />
           <Route path="/pacientes/:id">
             <PacienteView />
@@ -363,9 +345,6 @@ export default function SideNav(props) {
           <Route exact path="/usuarios/criar" component={Usuario} />
           <Route exact path="/usuarios/:id" children={<Usuario />} />
           <Route exact path="/usuarios" component={UsuarioList} />
-          {/* <Route exact path="/" render={() => (<div>Bem vind@!</div>)} /> */}
-          {/* <Route exact path="/" component={ConsultaEdit} /> */}
-          {/* <Route exact path="/" component={PacienteView} /> */}
         </Switch>
       </main>
     </div>

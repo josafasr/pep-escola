@@ -10,8 +10,6 @@ import { useQuery } from '@apollo/react-hooks'
 import {
   makeStyles,
   Paper,
-  // Tabs,
-  // Tab,
   Table,
   TableBody,
   TableCell,
@@ -23,7 +21,6 @@ import {
  } from '@material-ui/core'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
-import { toPtBrDate } from '../utils/format'
 import { GET_BY_PACIENTE } from '../graphql/consulta'
 
 const columns = [
@@ -114,7 +111,6 @@ export default function PacienteList() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   <TableCell>{new Date(parseInt(row.createdAt)).toLocaleDateString('pt-br')}</TableCell>
                   <TableCell>{row.acompanhante}</TableCell>
-                  {/* <TableCell>{toPtBrDate(row.pessoa?.dataNascimento)}</TableCell> */}
                   <TableCell>{row.historiaDoencaAtual}</TableCell>
                   <TableCell>{row.queixaPrincipalObs}</TableCell>
                   <TableCell>
