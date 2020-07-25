@@ -1,6 +1,6 @@
 /**
- * Formulário para criação/edição dos dados de contatos
- * @module src/forms/ContatoForm
+ * @title Formulário para criação/edição dos dados de usuário
+ * @module src/forms/UsuarioForm
  * @author Josafá Santos dos Reis
  */
 
@@ -32,33 +32,30 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function ContatoForm(props, ref) {
-
-  const { contatoData, disabled } = props
-
+function UsuarioForm(props, ref) {
   const classes = useStyles()
-
+  const { usuarioData, disabled } = props
   const [fields, setFields] = React.useState({
-    celular: contatoData?.celular || '',
-    telefone: contatoData?.telefone || '',
-    email: contatoData?.email || '',
-    homePage: contatoData?.homePage || ''
+    nome: usuarioData?.nome || '',
+    senha: '',
+    grupos: []
   })
 
   const handleChange = event => {
     event.preventDefault()
-    event.stopPropagation()
     const { name, value } = event.target
-
-    setFields({ ...fields, [name]: value })
+    setFields({
+      ...fields,
+      [name]: value
+    })
   }
 
   const handleReset = () => {
-    setFields({ celular: '', telefone: '', email: '', homePage: '' })
+    setFields({ nome: '', senha: '', grupos: [] })
   }
 
   /**
-   * Possibilita, ao component pai, 
+   * Possibilita, ao component pai,
    * acesso a métodos deste component
    */
   React.useImperativeHandle(ref, () => ({
@@ -80,10 +77,10 @@ function ContatoForm(props, ref) {
     <div className={classes.fields}>
       <TextField
         className={classes.formFields}
-        name="celular"
-        value={fields.celular}
+        name="nome"
+        value={fields.nome}
         onChange={handleChange}
-        label="Celular"
+        label="Nome de usuário"
         size="small"
         inputProps={{
           readOnly: disabled
@@ -91,36 +88,12 @@ function ContatoForm(props, ref) {
       />
 
       <TextField
+        type="password"
         className={classes.formFields}
-        name="telefone"
-        value={fields.telefone}
+        name="senha"
+        value={fields.senha}
         onChange={handleChange}
-        label="Telefone"
-        size="small"
-        inputProps={{
-          readOnly: disabled
-        }}
-      />
-
-      <TextField
-        className={classes.formFields}
-        type="email"
-        name="email"
-        value={fields.email}
-        onChange={handleChange}
-        label="E-mail"
-        size="small"
-        inputProps={{
-          readOnly: disabled
-        }}
-      />
-
-      <TextField
-        className={classes.formFields}
-        name="homePage"
-        value={fields.homePage}
-        onChange={handleChange}
-        label="Home Page"
+        label="Senha"
         size="small"
         inputProps={{
           readOnly: disabled
@@ -129,4 +102,4 @@ function ContatoForm(props, ref) {
     </div>
   )
 }
-export default React.forwardRef(ContatoForm)
+export default React.forwardRef(UsuarioForm)

@@ -98,7 +98,7 @@ function PessoaForm(props, ref) {
     if (props.onChange) {
       props.onChange(fields)
     }
-  })
+  }, [props, fields])
 
   // if (!isEmpty(pessoaData)) {
     return (

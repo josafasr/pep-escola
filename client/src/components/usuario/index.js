@@ -1,15 +1,12 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import clsx from 'clsx'
 import {
   CssBaseline,
   Paper,
   Box,
   Typography,
-  TextField,
-  Button,
-  MenuItem
+  Button
 } from '@material-ui/core'
 
 import useStyles from './styles'
@@ -18,71 +15,25 @@ import contatoApi from '../contato/api'
 import enderecoApi from '../endereco/api'
 import pessoaApi from '../pessoa/api'
 import usuarioApi from './api'
+import PessoaForm from '../../forms/PessoaForm'
+import EnderecoForm from '../../forms/EnderecoForm'
+import ContatoForm from '../../forms/ContatoForm'
+import UsuarioForm from '../../forms/UsuarioForm'
 
 export default function Usuario() {
-
+  const classes = useStyles()
   let history = useHistory()
-
   const { id } = useParams()
 
-  const classes = useStyles()
+  const [usuario, setUsuario] = React.useState({})
+  const [pessoa, setPessoa] = React.useState({})
+  const [contato, setContato] = React.useState({})
+  const [endereco, setEndereco] = React.useState({})
 
-  const [usuario, setUsuario] = React.useState({ nome: '', senha: '', pessoa: '', grupos: [] })
-  const [pessoa, setPessoa] = React.useState({ nome: '', nascimento: '', sexo: '', contato: '', enderecos: '' })
-  const [contato, setContato] = React.useState({ celular: '', telefone: '', email: '', homePage: '' })
-  const [endereco, setEndereco] = React.useState({
-    tipoLogradouro: '',
-    logradouro: '',
-    numero: '',
-    bairro: '',
-    complemento: '',
-    cep: '',
-    cidade: ''
-  })
-
-  const handleChangePessoa = event => {
-    event.preventDefault()
-    event.stopPropagation()
-    const { name, value } = event.target
-
-    setPessoa(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }))
-  }
-
-  const handleChangeEndereco = event => {
-    event.preventDefault()
-    event.stopPropagation()
-    const { name, value } = event.target
-
-    setEndereco(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }))
-  }
-
-  const handleChangeContato = event => {
-    event.preventDefault()
-    event.stopPropagation()
-    const { name, value } = event.target
-
-    setContato(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }))
-  }
-
-  const handleChangeUsuario = event => {
-    event.preventDefault()
-    event.stopPropagation()
-    const { name, value } = event.target
-
-    setUsuario(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }))
-  }
+  const pessoaRef = React.useRef()
+  const enderecoRef = React.useRef()
+  const contatoRef = React.useRef()
+  const usuarioRef = React.useRef()
 
   const [handleCreateContato] = useMutation(contatoApi.createMutation, {
     variables: contato
@@ -90,13 +41,13 @@ export default function Usuario() {
 
   const [handleCreateEndereco] = useMutation(enderecoApi.createMutation, {
     variables: {
-      tipoLogradouroId: parseInt(endereco.tipoLogradouro),
+      tipoLogradouroId: parseInt(endereco.tipoLogradouroId),
       logradouro: endereco.logradouro,
       numero: parseInt(endereco.numero),
       complemento: endereco.complemento,
       bairro: endereco.bairro,
       cep: endereco.cep,
-      cidadeId: parseInt(endereco.cidade),
+      cidadeId: parseInt(endereco.cidadeId),
       ativo: true
     }
   })
@@ -125,7 +76,7 @@ export default function Usuario() {
       const pessoaResponse = await handleCreatePessoa({
         variables: {
           nome: pessoa.nome,
-          dataNascimento: toDatabaseDate(pessoa.nascimento),
+          dataNascimento: toDatabaseDate(pessoa.dataNascimento),
           sexo: pessoa.sexo,
           contatoId: parseInt(createdContato.id),
           enderecos: [parseInt(createdEndereco.id)],
@@ -163,22 +114,30 @@ export default function Usuario() {
   }
 
   const handleReset = () => {
-    setUsuario({ nome: '', senha: '', pessoa: '', grupos: [] })
-    setContato({ celular: '', telefone: '', email: '', homePage: '' })
-    setEndereco({
-      tipoLogradouro: '',
-      logradouro: '',
-      numero: '',
-      bairro: '',
-      complemento: '',
-      cep: '',
-      cidade: ''
-    })
-    setPessoa({ nome: '', nascimento: '', sexo: '', contato: '' })
+    pessoaRef.current.handleReset()
+    enderecoRef.current.handleReset()
+    contatoRef.current.handleReset()
+    usuarioRef.current.handleReset()
   }
 
   const handleBack = () => {
     history.push('/usuarios')
+  }
+
+  const handleChangePessoa = data => {
+    setPessoa(data)
+  }
+
+  const handleChangeEndereco = data => {
+    setEndereco(data)
+  }
+
+  const handleChangeContato = data => {
+    setContato(data)
+  }
+
+  const handleChangeUsuario = data => {
+    setUsuario(data)
   }
 
   /**
@@ -186,24 +145,12 @@ export default function Usuario() {
    * @param id id do usuário
    * @return {object} data: objeto com os dados do usuário
    */
-  useQuery(usuarioApi.findAllFieldsQuery, {
+  const usuarioData = useQuery(usuarioApi.findAllFieldsQuery, {
     variables: { id },
-    onCompleted: (data) => {
-      setUsuario({ nome: data.usuario.nome })
-      setPessoa({ nome: data.usuario.pessoa?.nome, nascimento: data.usuario.pessoa?.dataNascimento, sexo: data.usuario.pessoa?.sexo })
-      setContato({ celular: data.usuario.pessoa?.contato?.celular, telefone: data.usuario.pessoa?.contato?.telefone, email: data.usuario.pessoa?.contato?.email, homePage: data.usuario.pessoa?.contato?.homePage })
-      setEndereco({
-        tipoLogradouro: data.usuario.pessoa?.enderecos[0]?.tipoLogradouro?.nome,
-        logradouro: data.usuario.pessoa?.enderecos[0]?.logradouro,
-        numero: data.usuario.pessoa?.enderecos[0]?.numero,
-        bairro: data.usuario.pessoa?.enderecos[0]?.bairro,
-        complemento: data.usuario.pessoa?.enderecos[0]?.complemento,
-        cep: data.usuario.pessoa?.enderecos[0]?.cep,
-        cidade: data.usuario.pessoa?.enderecos[0]?.cidade?.nome
-      })
-    },
     skip: !id
   })
+
+  if (usuarioData.loading) { return <p>Carregando...</p> }
 
   return (
     <React.Fragment>
@@ -212,7 +159,7 @@ export default function Usuario() {
         <div className={classes.fieldsContainer}>
           <Paper className={classes.paper} elevation={2}>
             <Box className={classes.boxFieldset} component="fieldset">
-              <div className={classes.fields}>
+              {/*<div className={classes.fields}>
                 <TextField
                   className={clsx(classes.formFields, classes.grow2)}
                   // error={!!errors["nomeError"]}
@@ -221,39 +168,14 @@ export default function Usuario() {
                   onChange={handleChangePessoa}
                   label="Nome"
                   // helperText={errors["nomeError"]}
-                />
+                /> */}
 
-                <TextField
-                  // type="date"
-                  format={'DD/MM/YYYY'}
-                  placeholder="data"
-                  className={classes.formFields}
-                  // error={!!errors["nascimentoError"]}
-                  name="nascimento"
-                  value={pessoa.nascimento || ''}
-                  onChange={handleChangePessoa}
-                  label="Data de nascimento"
-                  // helperText={errors["nascimentoError"]}
-                  // format="DD/MM/YYYY"
-                  placeholder="dd/mm/aaaa"
-                  InputLabelProps={{ shrink: true }}
-                />
-
-                <TextField
-                  className={clsx(classes.formFields, classes.selectField)}
-                  // error={!!errors["sexoError"]}
-                  name="sexo"
-                  value={pessoa.sexo || ''}
-                  onChange={handleChangePessoa}
-                  label="Sexo"
-                  // helperText={errors["sexoError"]}
-                  select
-                >
-                  <MenuItem value=""></MenuItem>
-                  <MenuItem value="Feminino">Feminino</MenuItem>
-                  <MenuItem value="Masculino">Masculino</MenuItem>
-                </TextField>
-              </div>
+              <PessoaForm
+                pessoaData={usuarioData.data?.usuario?.pessoa}
+                onChange={handleChangePessoa}
+                ref={pessoaRef}
+                disabled={!!id}
+              />
             </Box>
           </Paper>
 
@@ -262,79 +184,12 @@ export default function Usuario() {
               <legend className={classes.boxTitle}>
                 <Typography>Endereço</Typography>
               </legend>
-              <div className={classes.fields}>
-                <TextField
-                  // className="text-field select-field"
-                  className={clsx(classes.formFields, classes.selectField)}
-                  name="tipoLogradouro"
-                  value={endereco.tipoLogradouro || ''}
-                  onChange={handleChangeEndereco}
-                  label="Tipo de Logradouro"
-                  select
-                >
-                  <MenuItem value={0}></MenuItem>
-                  <MenuItem value={1}>Alameda</MenuItem>
-                  <MenuItem value={2}>Avenida</MenuItem>
-                  <MenuItem value={3}>Praça</MenuItem>
-                  <MenuItem value={4}>Rua</MenuItem>
-                  <MenuItem value={5}>Travessa</MenuItem>
-                </TextField>
-
-                <TextField
-                  className={clsx(classes.formFields, classes.grow2)}
-                  name="logradouro"
-                  value={endereco.logradouro || ''}
-                  onChange={handleChangeEndereco}
-                  label="Logradouro"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  type="number"
-                  name="numero"
-                  value={endereco.numero || ''}
-                  onChange={handleChangeEndereco}
-                  label="Número"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  name="bairro"
-                  value={endereco.bairro || ''}
-                  onChange={handleChangeEndereco}
-                  label="Bairro"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  name="complemento"
-                  value={endereco.complemento || ''}
-                  onChange={handleChangeEndereco}
-                  label="Complemento"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  name="cep"
-                  value={endereco.cep || ''}
-                  onChange={handleChangeEndereco}
-                  label="CEP"
-                />
-
-                <TextField
-                  className={clsx(classes.formFields, classes.selectField)}
-                  name="cidade"
-                  value={endereco.cidade || ''}
-                  onChange={handleChangeEndereco}
-                  label="Cidade"
-                  select
-                >
-                  <MenuItem value=""></MenuItem>
-                  <MenuItem value={1}>Itapetinga</MenuItem>
-                  <MenuItem value={2}>Jequié</MenuItem>
-                  <MenuItem value={3}>Vitória da Conquista</MenuItem>
-                </TextField>
-              </div>
+              <EnderecoForm
+                enderecoData={usuarioData.data?.usuario?.pessoa?.enderecos[0]}
+                onChange={handleChangeEndereco}
+                ref={enderecoRef}
+                disabled={!!id}
+              />
             </Box>
           </Paper>
 
@@ -343,41 +198,12 @@ export default function Usuario() {
               <legend>
                 <Typography>Contato</Typography>
               </legend>
-              <div className={classes.fields}>
-                <TextField
-                  className={classes.formFields}
-                  name="celular"
-                  value={contato.celular || ''}
-                  onChange={handleChangeContato}
-                  label="Celular"
-                  // ref={field}
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  name="telefone"
-                  value={contato.telefone || ''}
-                  onChange={handleChangeContato}
-                  label="Telefone"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  type="email"
-                  name="email"
-                  value={contato.email || ''}
-                  onChange={handleChangeContato}
-                  label="E-mail"
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  name="homePage"
-                  value={contato.homePage || ''}
-                  onChange={handleChangeContato}
-                  label="Home Page"
-                />
-              </div>
+              <ContatoForm
+                contatoData={usuarioData.data?.usuario?.pessoa?.contato}
+                onChange={handleChangeContato}
+                ref={contatoRef}
+                disabled={!!id}
+              />
             </Box>
           </Paper>
 
@@ -386,46 +212,12 @@ export default function Usuario() {
               <legend>
                 <Typography>Dados de Usuário</Typography>
               </legend>
-              <div className={classes.fields}>
-                <TextField
-                  className={classes.formFields}
-                  // error={!!errors["nomeUsuarioError"]}
-                  name="nome"
-                  value={usuario.nome || ''}
-                  onChange={handleChangeUsuario}
-                  label="Nome de usuário"
-                  // helperText={errors["nomeUsuarioError"]}
-                />
-
-                <TextField
-                  className={classes.formFields}
-                  // error={!!errors["senhaError"]}
-                  type="password"
-                  name="senha"
-                  value={usuario.senha || ''}
-                  onChange={handleChangeUsuario}
-                  label="Senha"
-                  // helperText={errors["senhaError"]}
-                />
-
-                {/* <TextField
-                  className={classes.formFields}
-                  // error={!!errors["pessoaIdError"]}
-                  name="pessoa"
-                  value={usuario.pessoa}
-                  onChange={handleChangeUsuario}
-                  label="Pessoa"
-                  // helperText={errors["pessoaIdError"]}
-                /> */}
-
-                {/* <TextField
-                  className="text-field"
-                  name="grupos"
-                  value={usuario.grupos}
-                  onChange={this.handleChangeUsuario}
-                  label="Grupos"
-                /> */}
-              </div>
+              <UsuarioForm
+                usuarioData={usuarioData.data?.usuario}
+                onChange={handleChangeUsuario}
+                ref={usuarioRef}
+                disabled={!!id}
+              />
             </Box>
           </Paper>
         </div>  

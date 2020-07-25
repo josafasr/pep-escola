@@ -20,7 +20,7 @@ export default {
         include: [
         {
           association: 'pessoa',
-          attributes: ['nome', 'dataNascimento', 'sexo'],
+          attributes: ['id', 'nome', 'dataNascimento', 'sexo'],
           include: [
           {
             association: 'contato',
@@ -32,17 +32,17 @@ export default {
             include: [
             {
               association: 'tipoLogradouro',
-              attributes: ['nome']
+              attributes: ['id', 'nome']
             },
             {
               association: 'cidade',
-              attributes: ['nome']
+              attributes: ['id', 'nome']
             }]
           }]
         },
         {
           association: 'grupos',
-          attributes: ['nome']
+          attributes: ['id', 'nome']
         }],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
@@ -57,7 +57,7 @@ export default {
         include: [
         {
           association: 'pessoa',
-          attributes: ['nome', 'dataNascimento', 'sexo'],
+          attributes: ['id', 'nome', 'dataNascimento', 'sexo'],
           include: [
           {
             association: 'contato',
@@ -69,17 +69,17 @@ export default {
             include: [
             {
               association: 'tipoLogradouro',
-              attributes: ['nome']
+              attributes: ['id', 'nome']
             },
             {
               association: 'cidade',
-              attributes: ['nome']
+              attributes: ['id', 'nome']
             }]
           }]
         },
         {
           association: 'grupos',
-          attributes: ['nome']
+          attributes: ['id', 'nome']
         }],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })

@@ -54,27 +54,39 @@ function EnderecoForm(props, ref) {
   const classes = useStyles()
 
   const [fields, setFields] = React.useState({
-    tipoLogradouroId: enderecoData?.tipoLogradouroId || '',
+    tipoLogradouroId: '',
     logradouro: enderecoData?.logradouro || '',
     numero: enderecoData?.numero || '',
     bairro: enderecoData?.bairro || '',
     complemento: enderecoData?.complemento || '',
     cep: enderecoData?.cep || '',
-    cidadeId: enderecoData?.cidadeId || ''
+    cidadeId: ''
   })
 
   const tiposLogradouroResponse = useQuery(TIPOS_LOGRADOURO, {
     onCompleted: () => {
-      if(enderecoData && enderecoData.tipoLogradouro) {
-        setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouro.id })
+      if (enderecoData) {
+        if (enderecoData.tipoLogradouroId) {
+          setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouroId })
+          console.log(enderecoData.tipoLogradouroId)
+        } else if (enderecoData.tipoLogradouro) {
+          setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouro.id })
+          console.log(enderecoData.tipoLogradouro.id)
+        }
       }
     }
   })
 
   const cidadesResponse = useQuery(CIDADES, {
     onCompleted: () => {
-      if(enderecoData && enderecoData.cidade) {
-        setFields({ ...fields, cidadeId: enderecoData.cidade.id })
+      if (enderecoData) {
+        if (enderecoData.cidadeId) {
+          setFields({ ...fields, cidadeId: enderecoData.cidadeId })
+          console.log(enderecoData.cidadeId)
+        } else if (enderecoData.cidade) {
+          setFields({ ...fields, cidadeId: enderecoData.cidade.id })
+          console.log(enderecoData.cidade.id)
+        }
       }
     }
   })
