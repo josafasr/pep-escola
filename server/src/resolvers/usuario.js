@@ -118,6 +118,40 @@ export default {
     },
 
     /**
+     * cria um novo registro de usuário com dependências
+     */
+    createUsuarioWithIncludes: async (parent, { grupos, ...otherArgs }, { sequelize, models, user }) => {
+      //  if (user) {
+      try {
+        const result = await sequelize.transaction(async (tx) => {
+          const usuario = await models.Usuario.create({ ...otherArgs }, {
+            include: [{
+              association: 'pessoa',
+              include: [
+                { association: 'contato' },
+                { association: 'enderecos' }
+              ]
+            }]
+          })
+          if (grupos && grupos.length > 0) {
+            usuario.addGrupos(grupos)
+          }
+          return usuario
+        })
+        return {
+          ok: true,
+          usuario: result
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
+    // }
+    },
+
+    /**
      * atualiza um registro de usuário, dado o id
      */
     updateUsuario: async (parent, { id, grupos, ...rest }, { models }) => {

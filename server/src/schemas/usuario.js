@@ -12,7 +12,7 @@ export default `
     grupos: [Grupo]
   }
 
-  type CreateUsuarioResponse {
+  type UsuarioResponse {
     ok: Boolean
     usuario: Usuario
     errors: [Error]
@@ -37,7 +37,14 @@ export default `
       senha: String!,
       pessoaId: Int!,
       grupos: [Int]
-    ): CreateUsuarioResponse
+    ): UsuarioResponse
+
+    createUsuarioWithIncludes(
+      nome: String!,
+      senha: String!,
+      pessoa: PessoaInput!,
+      grupos: [ID]
+    ): UsuarioResponse
 
     updateUsuario(
       id: ID!,
@@ -45,7 +52,7 @@ export default `
       senha: String,
       pessoaId: Int,
       grupos: [Int]
-    ): CreateUsuarioResponse
+    ): UsuarioResponse
 
     deleteUsuario(id: ID!): Boolean
 

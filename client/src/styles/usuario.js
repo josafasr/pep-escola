@@ -1,3 +1,8 @@
+/**
+ * @title Definição de estilos dos componentes de usuários
+ * @module src/pages/UsuarioView
+ * @author Josafá Santos dos Reis
+ */
 import { makeStyles } from '@material-ui/core'
 
 export const useStyles = makeStyles((theme) => ({
@@ -11,7 +16,6 @@ export const useStyles = makeStyles((theme) => ({
 
   form: {
     width: '100%',
-    // padding: theme.spacing(2)
   },
 
   boxFieldset: {

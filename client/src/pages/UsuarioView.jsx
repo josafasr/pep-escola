@@ -7,8 +7,7 @@
 import React from 'react'
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import {
-  CssBaseline,
-  makeStyles
+  CssBaseline
 } from '@material-ui/core'
 
 import UsuarioList from './UsuarioList'
@@ -16,10 +15,10 @@ import UsuarioEdit from './UsuarioEdit'
 
 const UsuarioView = () => {
   const { path } = useRouteMatch()
-  console.log(path);
 
   return (
     <div>
+      <CssBaseline />
       <Switch>
         <Route path={`${path}/criar`} component={UsuarioEdit} />
         <Route path={`${path}/:id`} children={<UsuarioEdit />} />

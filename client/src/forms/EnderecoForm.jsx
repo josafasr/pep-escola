@@ -68,10 +68,8 @@ function EnderecoForm(props, ref) {
       if (enderecoData) {
         if (enderecoData.tipoLogradouroId) {
           setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouroId })
-          console.log(enderecoData.tipoLogradouroId)
         } else if (enderecoData.tipoLogradouro) {
           setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouro.id })
-          console.log(enderecoData.tipoLogradouro.id)
         }
       }
     }

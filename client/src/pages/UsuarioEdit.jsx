@@ -11,10 +11,8 @@ import {
 
 import { useStyles } from '../styles/usuario'
 import { toDatabaseDate } from '../utils/format'
-import contatoApi from '../components/contato/api'
-import enderecoApi from '../components/endereco/api'
-import pessoaApi from '../components/pessoa/api'
-import usuarioApi from '../graphql/usuario'
+
+import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES } from '../graphql/usuario'
 import PessoaForm from '../forms/PessoaForm'
 import EnderecoForm from '../forms/EnderecoForm'
 import ContatoForm from '../forms/ContatoForm'
@@ -24,7 +22,7 @@ export default function UsuarioEdit() {
   const classes = useStyles()
   let history = useHistory()
   const { id } = useParams()
-  console.log('id: ', id);
+
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
   const [contato, setContato] = React.useState({})
@@ -35,26 +33,17 @@ export default function UsuarioEdit() {
   const contatoRef = React.useRef()
   const usuarioRef = React.useRef()
 
-  const [handleCreateContato] = useMutation(contatoApi.createMutation, {
-    variables: contato
-  })
-
-  const [handleCreateEndereco] = useMutation(enderecoApi.createMutation, {
+  const [handleCreateUsuario] = useMutation(CREATE_WITH_INCLUDES, {
     variables: {
-      tipoLogradouroId: parseInt(endereco.tipoLogradouroId),
-      logradouro: endereco.logradouro,
-      numero: parseInt(endereco.numero),
-      complemento: endereco.complemento,
-      bairro: endereco.bairro,
-      cep: endereco.cep,
-      cidadeId: parseInt(endereco.cidadeId),
-      ativo: true
+      ...usuario,
+      pessoa: {
+        ...pessoa,
+        dataNascimento: toDatabaseDate(pessoa.dataNascimento),
+        contato: contato,
+        enderecos: [endereco]
+      }
     }
   })
-
-  const [handleCreatePessoa] = useMutation(pessoaApi.createMutation)
-
-  const [handleCreateUsuario] = useMutation(usuarioApi.createMutation)
 
   /**
    * @method handleSubmit Envio dos dados do furmulário para criação do usuário
@@ -62,54 +51,14 @@ export default function UsuarioEdit() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     event.stopPropagation()
-
-    const contatoResponse = await handleCreateContato()
-
-    const enderecoResponse = await handleCreateEndereco()
-
-    // if (contatoResponse.data.createContato.ok && enderecoResponse.data.createEndereco.ok) {
-    if (contatoResponse.data.createContato.ok) {
-      console.log('Created contato: ', contatoResponse.data.createContato.contato)
-      const createdContato = contatoResponse.data.createContato.contato
-      const createdEndereco = enderecoResponse.data.createEndereco.endereco
-
-      const pessoaResponse = await handleCreatePessoa({
-        variables: {
-          nome: pessoa.nome,
-          dataNascimento: toDatabaseDate(pessoa.dataNascimento),
-          sexo: pessoa.sexo,
-          contatoId: parseInt(createdContato.id),
-          enderecos: [parseInt(createdEndereco.id)],
-        }
-      })
-
-      if (pessoaResponse.data.createPessoa.ok) {
-        console.log('Created pessoa: ', pessoaResponse.data.createPessoa.pessoa)
-        const createdPessoa = pessoaResponse.data.createPessoa.pessoa
-
-        const usuarioResponse = await handleCreateUsuario({
-          variables: {
-            pessoaId: parseInt(createdPessoa.id),
-            ...usuario
-          }
-        })
-
-        if(usuarioResponse.data.createUsuario.ok) {
-          console.log('Created usuario: ', usuarioResponse.data.createUsuario.usuario)
-          handleReset()
-        } else {
-          console.log('Errors usuario: ', usuarioResponse.data.createUsuario.errors)
-        }
-      } else {
-        console.log('Errors pessoa: ', pessoaResponse.data.createPessoa.errors)
-      }
+    
+    const usuarioResponse = await handleCreateUsuario()
+    if (usuarioResponse.data.createUsuarioWithIncludes.ok) {
+      alert('Usuário criado com sucesso!')
+      console.log(usuarioResponse.data.createWithIncludes.usuario);
+      handleBack()
     } else {
-      if (!contatoResponse.data.createContato.ok) {
-        console.log('Errors contato: ', contatoResponse.data.createContato.errors)
-      }
-      if (!enderecoResponse.data.createEndereco.ok) {
-        console.log('Errors endereço: ', enderecoResponse.data.createEndereco.errors)
-      }
+      alert('Não foi possível criar o paciente :(')
     }
   }
 
@@ -121,6 +70,7 @@ export default function UsuarioEdit() {
   }
 
   const handleBack = () => {
+    handleReset()
     history.push('/usuarios')
   }
 
@@ -145,7 +95,7 @@ export default function UsuarioEdit() {
    * @param id id do usuário
    * @return {object} data: objeto com os dados do usuário
    */
-  const usuarioData = useQuery(usuarioApi.findAllFieldsQuery, {
+  const usuarioData = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
     skip: !id
   })
@@ -169,7 +119,9 @@ export default function UsuarioEdit() {
                   label="Nome"
                   // helperText={errors["nomeError"]}
                 /> */}
-
+              <legend className={classes.boxTitle}>
+                <Typography>Dados Pessoais</Typography>
+              </legend>
               <PessoaForm
                 pessoaData={usuarioData.data?.usuario?.pessoa}
                 onChange={handleChangePessoa}

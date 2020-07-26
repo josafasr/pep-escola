@@ -15,7 +15,7 @@ import {
  } from '@material-ui/core'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
-import usuarioApi from '../graphql/usuario'
+import { GET_ALL } from '../graphql/usuario'
 
 const columns = [
   { id: 'id', label: 'Id', minWidth: 50 },
@@ -57,7 +57,7 @@ export default function UsuarioList(props) {
     setPage(0);
   };
 
-  const { loading, error, data } = useQuery(usuarioApi.findAllQuery)
+  const { loading, error, data } = useQuery(GET_ALL)
 
   if (loading) return 'Carregando...'
   if (error) return 'Erro :('
