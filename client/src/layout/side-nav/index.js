@@ -28,8 +28,8 @@ import FolderIcon from '@material-ui/icons/Folder'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import { deepPurple } from '@material-ui/core/colors'
 
-import Usuario from '../../components/usuario'
-import UsuarioList from '../../components/usuario/UsuarioList'
+//import Usuario from '../../components/usuario'
+import UsuarioView from '../../pages/UsuarioView'
 import PacienteEdit from '../../pages/PacienteEdit'
 import PacienteList from '../../pages/PacienteList'
 import PacienteView from '../../pages/PacienteView'
@@ -342,9 +342,9 @@ export default function SideNav(props) {
           {/* <Route exact path="/paciente/consultas" children={<PacienteView />} /> */}
           <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />
           <Route exact path="/cadastros" render={() => (<div>Em desenvolvimento.....</div>)} />
-          <Route exact path="/usuarios/criar" component={Usuario} />
-          <Route exact path="/usuarios/:id" children={<Usuario />} />
-          <Route exact path="/usuarios" component={UsuarioList} />
+          {/* <Route exact path="/usuarios/criar" component={Usuario} />
+          <Route exact path="/usuarios/:id" children={<Usuario />} /> */}
+          <Route path="/usuarios" component={UsuarioView} />
         </Switch>
       </main>
     </div>
