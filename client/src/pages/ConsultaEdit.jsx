@@ -254,7 +254,7 @@ function ConsultaEdit() {
 
       <Paper className={classes.paper} elevation={2}>
         <PessoaForm
-          pessoaData={consultaData.data?.consulta.paciente.pessoa || pacienteData.data.paciente.pessoa}
+          pessoaData={consultaData.data?.consulta.paciente.pessoa || pacienteData.data?.paciente.pessoa}
           //onChange={handleChangePessoa}
           ref={pessoaRef}
           disabled={false}

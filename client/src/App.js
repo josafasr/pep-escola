@@ -28,8 +28,6 @@ function App(props) {
   // }, [])
 
   const httpLink = new HttpLink({
-    // uri: 'http://localhost:4000/api'
-    // uri: `https://${window.location.hostname}/apiceuas`
     uri: `http://${window.location.hostname}:4000/api`
   })
 
