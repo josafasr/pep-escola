@@ -12,7 +12,8 @@ import { ApolloLink, from } from 'apollo-link'
 
 import { StylesProvider } from '@material-ui/styles'
 
-import Login from './components/login/Login'
+// import Login from './components/login/Login'
+import LoginForm from './forms/LoginForm'
 import SideNav from './layout/side-nav'
 
 function App(props) {
@@ -91,7 +92,7 @@ function App(props) {
           <div className="App">
             <Switch>
               <Route path="/login">
-                <Login />
+                <LoginForm />
               </Route>
               <Route path="/" component={SideNav} />
             </Switch>

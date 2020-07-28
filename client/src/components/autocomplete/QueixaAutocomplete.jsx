@@ -75,7 +75,7 @@ export default function QueixaAutocomplete(props) {
             ...params.InputProps,
             endAdornment: (
               <React.Fragment>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {loading ? <CircularProgress color="inherit" size={30} /> : null}
                 {params.InputProps.endAdornment}
               </React.Fragment>
             )

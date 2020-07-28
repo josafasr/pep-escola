@@ -1,6 +1,6 @@
 /**
- * @file API GraphQL sobre usuários
- * @module src/components/user/api
+ * @title API GraphQL sobre usuários
+ * @module src/graphql/usuario
  * @author Josafá Santos
  */
 
@@ -89,6 +89,20 @@ export const GET_WITH_INCLUDES = gql`
       grupos {
         id
         nome
+      }
+    }
+  }
+`
+
+export const TRY_LOGIN = gql`
+  query TryLogin($nome: String!, $senha: String!) {
+    login(nome: $nome, senha: $senha) {
+      ok
+      token
+      reloadToken
+      errors {
+        path
+        message
       }
     }
   }

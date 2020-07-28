@@ -9,3 +9,5 @@
 server/src/config/config.json
 
 .vscode/launch.json
+
+server/src/config/

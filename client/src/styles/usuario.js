@@ -1,6 +1,6 @@
 /**
  * @title Definição de estilos dos componentes de usuários
- * @module src/pages/UsuarioView
+ * @module src/styles/usuario
  * @author Josafá Santos dos Reis
  */
 import { makeStyles } from '@material-ui/core'

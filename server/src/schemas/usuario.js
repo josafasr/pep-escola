@@ -29,6 +29,7 @@ export default `
     usuario(id: ID!): Usuario
     usuarios: [Usuario]
     findAllFields(id: ID!): Usuario
+    login(nome: String!, senha: String!): LoginResponse
   }
 
   type Mutation {
@@ -55,7 +56,5 @@ export default `
     ): UsuarioResponse
 
     deleteUsuario(id: ID!): Boolean
-
-    login(nome: String!, senha: String!): LoginResponse
   }
 `

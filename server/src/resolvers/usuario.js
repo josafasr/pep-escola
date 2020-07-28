@@ -84,7 +84,9 @@ export default {
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuario
-    }
+    },
+
+    login: async (parent, { nome, senha }, { models, SECRET, SECRET2 }) => tryLogin(nome, senha, models, SECRET, SECRET2)
   },
 
   Mutation: {
@@ -192,8 +194,6 @@ export default {
       } catch (err) {
         return false
       }
-    },
-
-    login: async (parent, { nome, senha }, { models, SECRET, SECRET2 }) => tryLogin(nome, senha, models, SECRET, SECRET2)
+    }
   }
 }
