@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import clsx from 'clsx'
 import {
@@ -139,12 +139,6 @@ export default function SideNav(props) {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      history.push('/login')
-    }
-  })
 
   const toggleDrawer = (mobileOpen) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {

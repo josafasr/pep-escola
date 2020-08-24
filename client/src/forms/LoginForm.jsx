@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/react-hooks'
 import {
   Card,
@@ -28,8 +28,17 @@ const LoginForm = () => {
     senha: ''
   })
   const history = useHistory()
+  let location = useLocation()
+  let { from } = location.state || { from: { pathname: "/" } }
 
-  const [handleLogin, { loading, data }] = useLazyQuery(TRY_LOGIN)
+  const [handleLogin, { loading, data }] = useLazyQuery(TRY_LOGIN, {
+    onCompleted: () => {
+      const { token, reloadToken } = data.login
+      localStorage.setItem('token', token)
+      localStorage.setItem('reloadToken', reloadToken)
+      history.replace(from)
+    }
+  })
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -47,13 +56,6 @@ const LoginForm = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('reloadToken')
   }, [])
-
-  if (data && data.login.ok) {
-    const { token, reloadToken } = data.login
-    localStorage.setItem('token', token)
-    localStorage.setItem('reloadToken', reloadToken)
-    history.push('/')
-  }
 
   return (
     <div className={classes.root}>
@@ -118,7 +120,7 @@ const LoginForm = () => {
             color="secondary"
             size="small"
             onClick={handleSubmit}
-            disabled={fields.nome === '' && fields.senha === ''}
+            disabled={fields.nome === '' || fields.senha === ''}
           >
             {loading ? <CircularProgress color="inherit" size={30} /> : 'Entrar'}
           </Button>
