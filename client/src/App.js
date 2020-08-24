@@ -9,26 +9,16 @@ import { ApolloProvider } from 'react-apollo'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink, from } from 'apollo-link'
-
 import { StylesProvider } from '@material-ui/styles'
 
-// import Login from './components/login/Login'
+import PrivateRoute from './utils/auth'
 import LoginForm from './forms/LoginForm'
 import SideNav from './layout/side-nav'
 
 function App(props) {
-  // const [isLoggedin, setIsLoggedin] = useState(false)
-
-  // useEffect (() => {
-  //   const token = localStorage.getItem('token')
-  //   if (token != null) {
-  //     setIsLoggedin(true)
-  //   } else {
-  //     setIsLoggedin(false)
-  //   }
-  // }, [])
 
   const httpLink = new HttpLink({
+    //uri: `https://${window.location.hostname}/api`
     uri: `http://${window.location.hostname}:4000/api`
   })
 
@@ -94,7 +84,9 @@ function App(props) {
               <Route path="/login">
                 <LoginForm />
               </Route>
-              <Route path="/" component={SideNav} />
+              <PrivateRoute path="/">
+                <SideNav />
+              </PrivateRoute>
             </Switch>
           </div>
         </StylesProvider>

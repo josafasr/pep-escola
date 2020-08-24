@@ -80,10 +80,8 @@ function EnderecoForm(props, ref) {
       if (enderecoData) {
         if (enderecoData.cidadeId) {
           setFields({ ...fields, cidadeId: enderecoData.cidadeId })
-          console.log(enderecoData.cidadeId)
         } else if (enderecoData.cidade) {
           setFields({ ...fields, cidadeId: enderecoData.cidade.id })
-          console.log(enderecoData.cidade.id)
         }
       }
     }

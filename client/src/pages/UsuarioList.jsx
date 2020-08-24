@@ -110,7 +110,9 @@ export default function UsuarioList(props) {
         </Table>
       </TableContainer>
       {!!data && <TablePagination
+        labelRowsPerPage="Linhas por página"
         rowsPerPageOptions={[10, 25, 100]}
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
         component="div"
         count={data.usuarios.length}
         rowsPerPage={rowsPerPage}

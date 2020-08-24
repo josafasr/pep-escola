@@ -55,7 +55,6 @@ export default function UsuarioEdit() {
     const usuarioResponse = await handleCreateUsuario()
     if (usuarioResponse.data.createUsuarioWithIncludes.ok) {
       alert('Usuário criado com sucesso!')
-      console.log(usuarioResponse.data.createWithIncludes.usuario);
       handleBack()
     } else {
       alert('Não foi possível criar o paciente :(')
