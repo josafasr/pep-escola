@@ -50,7 +50,6 @@ export default {
         celular: args.celular,
         telefone: args.telefone,
         email: args.email,
-        homePage: args.homePage,
         updatedAt: new Date(),
       }, {
         where: { id: args.id },

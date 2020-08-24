@@ -128,7 +128,6 @@ export const CREATE_WITH_INCLUDES = gql`
             celular
             telefone
             email
-            homePage
           }
         }
         prontuario
@@ -177,7 +176,6 @@ export const GET_WITH_INCLUDES = gql`
           celular
           telefone
           email
-          homePage
         }
       }
       prontuario

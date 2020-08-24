@@ -1,5 +1,5 @@
 /**
- * Formulário para criação/edição dos dados de contatos
+ * @title Formulário para criação/edição dos dados de contatos
  * @module src/forms/ContatoForm
  * @author Josafá Santos dos Reis
  */
@@ -41,8 +41,7 @@ function ContatoForm(props, ref) {
   const [fields, setFields] = React.useState({
     celular: contatoData?.celular || '',
     telefone: contatoData?.telefone || '',
-    email: contatoData?.email || '',
-    homePage: contatoData?.homePage || ''
+    email: contatoData?.email || ''
   })
 
   const handleChange = event => {
@@ -54,7 +53,7 @@ function ContatoForm(props, ref) {
   }
 
   const handleReset = () => {
-    setFields({ celular: '', telefone: '', email: '', homePage: '' })
+    setFields({ celular: '', telefone: '', email: '' })
   }
 
   /**
@@ -109,18 +108,6 @@ function ContatoForm(props, ref) {
         value={fields.email}
         onChange={handleChange}
         label="E-mail"
-        size="small"
-        inputProps={{
-          readOnly: disabled
-        }}
-      />
-
-      <TextField
-        className={classes.formFields}
-        name="homePage"
-        value={fields.homePage}
-        onChange={handleChange}
-        label="Home Page"
         size="small"
         inputProps={{
           readOnly: disabled

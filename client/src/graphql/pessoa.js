@@ -19,7 +19,6 @@ const pessoaApi = {
           celular
           telefone
           email
-          homePage
         }
         enderecos {
           id
@@ -52,7 +51,6 @@ const pessoaApi = {
           celular
           telefone
           email
-          homePage
         }
         enderecos {
           tipoLogradouro {
@@ -84,7 +82,6 @@ const pessoaApi = {
             celular
             telefone
             email
-            homePage
           }
           enderecos {
             tipoLogradouro {
@@ -119,7 +116,6 @@ const pessoaApi = {
           celular
           telefone
           email
-          homePage
         }
         enderecos {
           tipoLogradouro {

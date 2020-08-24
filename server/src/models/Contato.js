@@ -19,10 +19,6 @@ export default (sequelize, DataTypes) => {
           msg: 'E-mail inválido'
         }
       }
-    },
-    homePage: {
-      type: DataTypes.STRING,
-      field: 'home_page'
     }
   }, {
     schema: 'dados_gerais',

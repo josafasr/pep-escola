@@ -10,7 +10,6 @@ export default `
     celular: String
     telefone: String
     email: String
-    homePage: String
   }
 
   input ContatoInput {
@@ -18,7 +17,6 @@ export default `
     celular: String
     telefone: String
     email: String
-    homePage: String
   }
 
   type CreateContatoResponse {
@@ -36,23 +34,20 @@ export default `
     createContatoBkp(
       celular: String,
       telefone: String,
-      email: String,
-      homePage: String
+      email: String
     ): Contato
 
     createContato(
       celular: String,
       telefone: String,
-      email: String,
-      homePage: String
+      email: String
     ): CreateContatoResponse
 
     updateContato(
       id: ID!,
       celular: String,
       telefone: String,
-      email: String,
-      homePage: String
+      email: String
     ): Contato
 
     deleteContato(id: ID!): Boolean

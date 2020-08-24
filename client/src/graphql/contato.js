@@ -1,5 +1,5 @@
 /**
- * @file API GraphQL sobre contatos
+ * @title API GraphQL sobre contatos
  * @module src/components/contato/api
  * @author Josafá Santos dos Reis
  */
@@ -14,7 +14,6 @@ export const FIND_BY_PK = gql`
       celular
       telefone
       email
-      homePage
     }
   }`
 
@@ -25,20 +24,18 @@ export const FIND_ALL = gql`
       celular
       telefone
       email
-      homePage
     }
   }`
 
   /* createMutation: gql`
-    mutation($celular: String, $telefone: String, $email: String, $homePage: String) {
-      createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
+    mutation($celular: String, $telefone: String, $email: String) {
+      createContato(celular: $celular, telefone: $telefone, email: $email) {
         ok
         contato {
           id
           celular
           telefone
           email
-          homePage
         }
         errors {
           path
@@ -48,27 +45,25 @@ export const FIND_ALL = gql`
     }`, */
 
 export const CREATE_CONTATO = gql`
-  mutation CreateContato($celular: String, $telefone: String, $email: String, $homePage: String) {
-    createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
+  mutation CreateContato($celular: String, $telefone: String, $email: String) {
+    createContato(celular: $celular, telefone: $telefone, email: $email) {
       ok
       contato {
         id
         celular
         telefone
         email
-        homePage
       }
     }
   }`
 
 export const UPDATE_CONTATO = gql`
-  mutation UpdateContato($id: ID!, $celular: String, $telefone: String, $email: String, $homePage: String) {
-    updateContato(id: $id, celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
+  mutation UpdateContato($id: ID!, $celular: String, $telefone: String, $email: String) {
+    updateContato(id: $id, celular: $celular, telefone: $telefone, email: $email) {
       id
       celular
       telefone
       email
-      homePage
     }
   }`
 
