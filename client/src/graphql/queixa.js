@@ -21,3 +21,26 @@ export const QUEIXAS = gql`
       nome
     }
   }`
+
+export const TIPOS_QUEIXA = gql`
+  query tiposQueixa {
+    tiposQueixa {
+      id
+      nome
+    }
+  }`
+
+export const CREATE_QUEIXA = gql`
+  mutation CreateQueixa($nome: String, $tipoQueixaId: ID!) {
+    createQueixa(nome: $nome, tipoQueixaId: $tipoQueixaId) {
+      ok
+      queixa {
+        id
+        nome
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }`
