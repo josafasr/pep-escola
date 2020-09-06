@@ -58,7 +58,7 @@ export default {
             }]
           }, {
             association: 'unidadeSaude',
-            attributes: ['id', 'nome']
+            attributes: ['id', 'nome', 'cnes']
           }, {
             association: 'naturalidade',
             attributes: ['id', 'nome']

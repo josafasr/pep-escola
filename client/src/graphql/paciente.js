@@ -188,6 +188,7 @@ export const GET_WITH_INCLUDES = gql`
       unidadeSaude {
         id
         nome
+        cnes
       }
       naturalidade {
         id

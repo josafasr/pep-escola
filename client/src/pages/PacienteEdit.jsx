@@ -1,5 +1,5 @@
 /**
- * Componente para criação/edição de pacientes/prontuários
+ * @title Componente para criação/edição de pacientes/prontuários
  * @module src/pages/PacienteEdit
  * @author Josafá Santos dos Reis
  */
@@ -10,6 +10,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
   CssBaseline,
+  CircularProgress,
   Box,
   Typography,
   Paper,
@@ -22,6 +23,8 @@ import EnderecoForm from '../forms/EnderecoForm'
 import PacienteForm from '../forms/PacienteForm'
 import { toDatabaseDate } from '../utils/format'
 import { CREATE_WITH_INCLUDES, GET_WITH_INCLUDES } from '../graphql/paciente'
+
+import PacienteContext from '../contexts/PacienteContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,8 +98,11 @@ function PacienteEdit(props) {
     }
   })
 
-  const pacienteData = useQuery(GET_WITH_INCLUDES, {
+  const { loading, data, error } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
+    onCompleted: (data) => {
+      setPaciente(data.paciente)
+    },
     skip: !id
   })
 
@@ -112,13 +118,13 @@ function PacienteEdit(props) {
     setEndereco(data)
   }
 
-  const handleChangePaciente = pacienteField => {
+  /* const handleChangePaciente = pacienteField => {
     const { name, value } = pacienteField
     setPaciente({
       ...paciente,
       [name]: value
     })
-  }
+  } */
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -139,7 +145,13 @@ function PacienteEdit(props) {
     history.push('/pacientes')
   }
 
-  if (pacienteData.loading) return 'Carregando...'
+  if (loading) return (
+    <>
+      <CircularProgress />
+      <span>Carregando...</span>
+    </>
+  )
+  if (error) return 'Error :('
 
   return (
     <div className={classes.root}>
@@ -150,16 +162,26 @@ function PacienteEdit(props) {
             <Typography className={classes.boxTitle}>Dados Pessoais</Typography>
           </legend>
           <PessoaForm
-            pessoaData={pacienteData.data?.paciente?.pessoa}
+            pessoaData={data?.paciente?.pessoa}
             onChange={handleChangePessoa}
             ref={pessoaRef}
           />
-
-          <PacienteForm
-            pacienteData={pacienteData.data?.paciente}
-            onChange={handleChangePaciente}
-            ref={pacienteRef}
-          />
+          {/* <PacienteContext.Provider value={{paciente, setPaciente}}>
+            <NaturalidadeContext.Provider  value={{naturalidade, setNaturalidade}}>
+              <PacienteForm
+                pacienteData={pacienteData.data?.paciente}
+                onChange={handleChangePaciente}
+                ref={pacienteRef}
+              />
+            </NaturalidadeContext.Provider>
+          </PacienteContext.Provider> */}
+          <PacienteContext.Provider value={[paciente, setPaciente]}>
+            <PacienteForm
+              //pacienteData={pacienteData.data?.paciente}
+              //onChange={handleChangePaciente}
+              ref={pacienteRef}
+            />
+          </PacienteContext.Provider>
         </Box>
       </Paper>
 
@@ -169,7 +191,7 @@ function PacienteEdit(props) {
             <Typography className={classes.boxTitle}>Contato</Typography>
           </legend>
           <ContatoForm
-            contatoData={pacienteData.data?.paciente?.pessoa?.contato}
+            contatoData={data?.paciente?.pessoa?.contato}
             onChange={handleChangeContato}
             ref={contatoRef}
           />
@@ -182,7 +204,7 @@ function PacienteEdit(props) {
             <Typography className={classes.boxTitle}>Endereço</Typography>
           </legend>
           <EnderecoForm
-            enderecoData={pacienteData.data?.paciente?.pessoa?.enderecos[0]}
+            enderecoData={data?.paciente?.pessoa?.enderecos[0]}
             onChange={handleChangeEndereco}
             ref={enderecoRef}
           />

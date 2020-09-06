@@ -9,18 +9,15 @@ import { useQuery } from '@apollo/react-hooks'
 import clsx from 'clsx'
 import {
   makeStyles,
+  CircularProgress,
   TextField,
   MenuItem
 } from '@material-ui/core'
 
-import { UNIDADES_SAUDE } from '../graphql/unidade-saude'
-import { CIDADES } from '../graphql/cidade'
-import { ESTADOS_CIVIS } from '../graphql/estado-civil'
-import { RELIGIOES } from '../graphql/religiao'
-import { CORES_PELE } from '../graphql/cor-pele'
-import { ESCOLARIDADES } from '../graphql/escolaridade'
-import { PROFISSOES } from '../graphql/profissao'
-import { SITUACOES_PROFISSIONAIS } from '../graphql/situacao-profissional'
+import { LOAD_DROP_DOWNS } from '../graphql/consulta'
+
+import NaturalidadeAutocomplete from '../components/autocomplete/NaturalidadeAutocomplete'
+import PacienteContext from '../contexts/PacienteContext'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -61,219 +58,16 @@ const useStyles = makeStyles((theme) => ({
 function PacienteForm(props, ref) {
 
   const classes = useStyles()
-
-  const { pacienteData } = props
-
-  const [fields, setFields] = React.useState({
-    prontuario: '',
-    rg: '',
-    cpf: '',
-    cartaoFamilia: '',
-    cns: '',
-    agenteComunitario: '',
-    encaminhadoPor: '',
-    unidadeSaudeId: '',
-    // nacionalidadeId: '',
-    naturalidadeId: '',
-    estadoCivilId: '',
-    religiaoId: '',
-    corPeleId: '',
-    escolaridadeId: '',
-    profissaoId: '',
-    situacaoProfissionalId: ''
-  })
+  const [paciente, setPaciente] = React.useContext(PacienteContext)
 
   /**
-   * Funções para povoar as listas dos campos do tipo select
-   * Apenas após o povoamento das listas, os dados recebidos na prop pacienteData são inseridos em fields
-   */
-
-  const unidadesSaudeResponse = useQuery(UNIDADES_SAUDE, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.unidadeSaudeId) {
-          setFields({ ...fields, unidadeSaudeId: pacienteData.unidadeSaudeId})
-        } else if (pacienteData.unidadeSaude) {
-          setFields({ ...fields, unidadeSaudeId: pacienteData.unidadeSaude.id})
-        }
-      }
-    }
-  })
-
-  const naturalidadesResponse = useQuery(CIDADES, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.naturalidadeId) {
-          setFields({ ...fields, naturalidadeId: pacienteData.naturalidadeId })
-        } else if (pacienteData.naturalidade) {
-          setFields({ ...fields, naturalidadeId: pacienteData.naturalidade.id })
-        }
-      }
-    }
-  })
-
-  const estadosCivisResponse = useQuery(ESTADOS_CIVIS, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.estadoCivilId) {
-          setFields({ ...fields, estadoCivilId: pacienteData.estadoCivilId })
-        } else if (pacienteData.estadoCivil) {
-          setFields({ ...fields, estadoCivilId: pacienteData.estadoCivil.id })
-        }
-      }
-    }
-  })
-
-  const religioesResponse = useQuery(RELIGIOES, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.religiaoId) {
-          setFields({ ...fields, religiaoId: pacienteData.religiaoId })
-        } else if (pacienteData.religiao) {
-          setFields({ ...fields, religiaoId: pacienteData.religiao.id })
-        }
-      }
-    }
-  })
-
-  const coresPeleResponse = useQuery(CORES_PELE, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.corPeleId) {
-          setFields({ ...fields, corPeleId: pacienteData.corPeleId })
-        } else if (pacienteData.corPele) {
-          setFields({ ...fields, corPeleId: pacienteData.corPele.id })
-        }
-      }
-    }
-  })
-
-  const escolaridadesResponse = useQuery(ESCOLARIDADES, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.escolaridadeId) {
-          setFields({ ...fields, escolaridadeId: pacienteData.escolaridadeId })
-        } else if (pacienteData.escolaridade) {
-          setFields({ ...fields, escolaridadeId: pacienteData.escolaridade.id })
-        }
-      }
-    }
-  })
-
-  const profissoesResponse = useQuery(PROFISSOES, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.profissaoId) {
-          setFields({ ...fields, profissaoId: pacienteData.profissao.id})
-        } else if (pacienteData.profissao) {
-          setFields({ ...fields, profissaoId: pacienteData.profissao.id })
-        }
-      }
-    }
-  })
-
-  const situacoesProfissionaisResponse = useQuery(SITUACOES_PROFISSIONAIS, {
-    onCompleted: () => {
-      if (pacienteData) {
-        if (pacienteData.situacaoProfissionalId) {
-          setFields({ ...fields, situacaoProfissionalId: pacienteData.situacaoProfissionalId })
-        } else if (pacienteData.situacaoProfissional) {
-          setFields({ ...fields, situacaoProfissionalId: pacienteData.situacaoProfissional.id })
-        }
-      }
-    }
-  })
-
-  const loadUnidadesSaude = () => {
-    if (unidadesSaudeResponse.loading) return 'Loading...'
-    if (unidadesSaudeResponse.error) return 'Error :('
-
-    return (
-      unidadesSaudeResponse.data.unidadesSaude.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadNaturalidades = () => {
-    if (naturalidadesResponse.loading) return 'Loading...'
-    if (naturalidadesResponse.error) return 'Error :('
-
-    return (
-      naturalidadesResponse.data.cidades.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadEstadosCivis = () => {
-    if (estadosCivisResponse.loading) return 'Loading...'
-    if (estadosCivisResponse.error) return 'Error :('
-
-    return (
-      estadosCivisResponse.data.estadosCivis.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadReligioes = () => {
-    if (religioesResponse.loading) return 'Loading...'
-    if (religioesResponse.error) return 'Error :('
-
-    return (
-      religioesResponse.data.religioes.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadCoresPele = () => {
-    if (coresPeleResponse.loading) return 'Loading...'
-    if (coresPeleResponse.error) return 'Error :('
-
-    return (
-      coresPeleResponse.data.coresPele.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadEscolaridades = () => {
-    if (escolaridadesResponse.loading) return 'Loading...'
-    if (escolaridadesResponse.error) return 'Error :('
-
-    return (
-      escolaridadesResponse.data.escolaridades.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadProfissoes = () => {
-    if (profissoesResponse.loading) return 'Loading...'
-    if (profissoesResponse.error) return 'Error :('
-
-    return (
-      profissoesResponse.data.profissoes.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadSituacoesProfissionais = () => {
-    if (situacoesProfissionaisResponse.loading) return 'Loading...'
-    if (situacoesProfissionaisResponse.error) return 'Error :('
-
-    return (
-      situacoesProfissionaisResponse.data.situacoesProfissionais.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
+   * Dados para povoar as listas dos campos do tipo select
+   * Apenas após o povoamento das listas, os dados recebidos nas props do paciente são inseridos
+   */  
+  const { loading, data, error } = useQuery(LOAD_DROP_DOWNS)
 
   const handleReset = () => {
-    setFields({
+    setPaciente({
       prontuario: '',
       rg: '',
       cpf: '',
@@ -281,15 +75,15 @@ function PacienteForm(props, ref) {
       cns: '',
       agenteComunitario: '',
       encaminhadoPor: '',
-      unidadeSaudeId: '',
+      unidadeSaude: {},
       // nacionalidade: '',
-      naturalidadeId: '',
-      estadoCivilId: '',
-      religiaoId: '',
-      corPeleId: '',
-      escolaridadeId: '',
-      profissaoId: '',
-      situacaoProfissionalId: ''
+      naturalidade: {},
+      estadoCivil: {},
+      religiao: {},
+      corPele: {},
+      escolaridade: {},
+      profissao: {},
+      situacaoProfissional: {}
     })
   }
 
@@ -304,64 +98,22 @@ function PacienteForm(props, ref) {
   }))
 
   const handleChange = (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-
     const { name, value } = event.target
-    /* setFields({
-      ...fields,
-      [name]: name.slice(-2) === 'Id' ? (parseInt(value) || '') : value
-    }) */
-    setFields(prevValues => ({
+    setPaciente(prevValues => ({
       ...prevValues,
-      [name]: name.slice(-2) === 'Id' ? (parseInt(value) || '') : value
+      [name]: value
     }))
-    if (props.onChange) {
-      //const newName = name.replace('Id', '')
-      props.onChange({ 'name': name, 'value': value })
-    }
   }
-  
-  /**
-   * Emite aviso de mudança ao component pai
-   */
-  /* React.useEffect(() => {
-    //console.log(`useEffect ${new Date().toLocaleTimeString()}: `, fields)
-    if (props.onChange) {
-      props.onChange(fields)
-    }
-  }, [props, fields]) */
 
-  React.useEffect(() => {
-    if (pacienteData && Object.keys(pacienteData).length > 0) {
-      setFields({
-        prontuario: pacienteData.prontuario || '',
-        rg: pacienteData.rg || '',
-        cpf: pacienteData.cpf || '',
-        cartaoFamilia: pacienteData.cartaoFamilia || '',
-        cns: pacienteData.cns || '',
-        agenteComunitario: pacienteData.agenteComunitario || '',
-        encaminhadoPor: pacienteData.encaminhadoPor || '',
-        unidadeSaudeId: pacienteData.unidadeSaudeId || '',
-        // nacionalidadeId: '',
-        naturalidadeId: pacienteData.naturalidadeId || '',
-        estadoCivilId: pacienteData.estadoCivilId || '',
-        religiaoId: pacienteData.religiaoId || '',
-        corPeleId: pacienteData.corPeleId || '',
-        escolaridadeId: pacienteData.escolaridadeId || '',
-        profissaoId: pacienteData.profissaoId || '',
-        situacaoProfissionalId: pacienteData.situacaoProfissionalId || ''
-      })
-    }
-  }, [pacienteData])
-
+  if (loading) return (<CircularProgress />)
+  if (error) return 'Error :('
 
   return (
     <div className={classes.fields}>
       <TextField
         className={classes.formFields}
         name="prontuario"
-        value={fields.prontuario}
+        value={paciente.prontuario || ''}
         onChange={handleChange}
         label="Nº Prontuário"
       />
@@ -369,7 +121,7 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="rg"
-        value={fields.rg}
+        value={paciente.rg || ''}
         onChange={handleChange}
         label="RG"
       />
@@ -377,7 +129,7 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cpf"
-        value={fields.cpf}
+        value={paciente.cpf || ''}
         onChange={handleChange}
         label="CPF"
       />
@@ -385,7 +137,7 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cartaoFamilia"
-        value={fields.cartaoFamilia}
+        value={paciente.cartaoFamilia || ''}
         onChange={handleChange}
         label="Cartão Familia"
       />
@@ -393,7 +145,7 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cns"
-        value={fields.cns}
+        value={paciente.cns || ''}
         onChange={handleChange}
         label="CNS"
       />
@@ -401,7 +153,7 @@ function PacienteForm(props, ref) {
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="agenteComunitario"
-        value={fields.agenteComunitario}
+        value={paciente.agenteComunitario || ''}
         onChange={handleChange}
         label="ACS"
       />
@@ -409,105 +161,122 @@ function PacienteForm(props, ref) {
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="encaminhadoPor"
-        value={fields.encaminhadoPor}
+        value={paciente.encaminhadoPor || ''}
         onChange={handleChange}
         label="Encaminhado por"
       />
 
       <TextField
         className={classes.formFields}
-        name="unidadeSaudeId"
-        value={fields.unidadeSaudeId}
+        name="unidadeSaude"
+        value={paciente.unidadeSaude || ''}
         onChange={handleChange}
         label="Unidade de Saúde"
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        <MenuItem value=""><em>Não Informado</em></MenuItem>
-        {loadUnidadesSaude()}
+        {data.unidadesSaude.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
+
+      <NaturalidadeAutocomplete />
 
       <TextField
         className={classes.formFields}
-        name="naturalidadeId"
-        value={fields.naturalidadeId}
-        onChange={handleChange}
-        label="Naturalidade"
-        select
-      >
-        <MenuItem value=""><em>Não Informado</em></MenuItem>
-        {loadNaturalidades()} {/* 1, 10407, 10211 */}
-      </TextField>
-
-      <TextField
-        className={classes.formFields}
-        name="estadoCivilId"
-        value={fields.estadoCivilId}
+        name="estadoCivil"
+        value={paciente.estadoCivil || ''}
         onChange={handleChange}
         label="Estado Civil"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome + ''
+        }}
       >
-        {loadEstadosCivis()}
+        {data.estadosCivis.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
       <TextField
         className={classes.formFields}
-        name="religiaoId"
-        value={fields.religiaoId}
+        name="religiao"
+        value={paciente.religiao || ''}
         onChange={handleChange}
         label="Religião"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        {loadReligioes()}
+        {data.religioes.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
       <TextField
         className={classes.formFields}
-        name="corPeleId"
-        value={fields.corPeleId}
+        name="corPele"
+        value={paciente.corPele || ''}
         onChange={handleChange}
         label="Cor da Pele"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        {loadCoresPele()}
+        {data.coresPele.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
       <TextField
         className={classes.formFields}
-        name="escolaridadeId"
-        value={fields.escolaridadeId}
+        name="escolaridade"
+        value={paciente.escolaridade || ''}
         onChange={handleChange}
         label="Escolaridade"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        {loadEscolaridades()}
+        {data.escolaridades.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
       <TextField
         className={classes.formFields}
-        name="profissaoId"
-        value={fields.profissaoId}
+        name="profissao"
+        value={paciente.profissao || ''}
         onChange={handleChange}
         label="Profissão"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        {loadProfissoes()}
+        {data.profissoes.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
       <TextField
         className={classes.formFields}
-        name="situacaoProfissionalId"
-        value={fields.situacaoProfissionalId}
+        name="situacaoProfissional"
+        value={paciente.situacaoProfissional || ''}
         onChange={handleChange}
         label="Situação Profissional"
         // autocomplete
         select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        {loadSituacoesProfissionais()}
+        {data.situacoesProfissionais.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
     </div>
   )
