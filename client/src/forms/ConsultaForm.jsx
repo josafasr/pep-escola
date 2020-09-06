@@ -12,7 +12,7 @@
 } from '@material-ui/core'
 
 import QueixaAutocomplete from '../components/autocomplete/QueixaAutocomplete'
-import QueixaContext from '../contexts/QueixaContext'
+import ConsultaContext from '../contexts/ConsultaContext'
 
 const useStyles = makeStyles((theme) => ({
   formFields: {
@@ -45,36 +45,23 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function ConsultaForm(props, ref) {
-
   const classes = useStyles()
-  const { consultaData } = props
-  const [fields, setFields] = React.useState({
-    acompanhante: '',
-    queixaPrincipalId: '',
-    queixaPrincipalObs: '',
-    historiaDoencaAtual: ''
-  })
-  const {queixa, setQueixa} = React.useContext(QueixaContext)
+  const [consulta, setConsulta] = React.useContext(ConsultaContext)
 
   const handleChange = event => {
-    event.preventDefault()
-    event.stopPropagation()
     const { name, value } = event.target
-    setFields({
-      ...fields,
-      [name]: name.slice(-2) === 'Id' ? (parseInt(value) || '') : value
-    })
-    if (props.onChange) {
+    setConsulta({ ...consulta, [name]: value })
+    /* if (props.onChange) {
       props.onChange({ 'name': name, 'value': value })
-    }
+    } */
   }
 
   const handleReset = () => {
-    setFields({
+    setConsulta({
       acompanhante: '',
       queixaPrincipalObs: '',
-      historiaDoencaAtual: '',
-      queixas: []
+      historiaDoencaAtual: ''//,
+      //queixas: []
     })
   }
 
@@ -88,7 +75,7 @@ function ConsultaForm(props, ref) {
     }
   }))
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (consultaData && Object.keys(consultaData).length > 0) {
       setFields({
         acompanhante: consultaData.acompanhante || '',
@@ -101,7 +88,7 @@ function ConsultaForm(props, ref) {
         setQueixa(consultaData.queixas[0])
       }
     }
-  }, [consultaData, queixa, setQueixa])
+  }, [consultaData, queixa, setQueixa]) */
 
   return (
     <div className={classes.formFields}>
@@ -111,7 +98,7 @@ function ConsultaForm(props, ref) {
       <TextField
         className={classes.textArea}
         name="queixaPrincipalObs"
-        value={fields.queixaPrincipalObs}
+        value={consulta.queixaPrincipalObs || ''}
         onChange={handleChange}
         multiline
         rows={3}
@@ -122,7 +109,7 @@ function ConsultaForm(props, ref) {
       <TextField
         className={clsx(classes.fields, classes.fieldGrow)}
         name="acompanhante"
-        value={fields.acompanhante}
+        value={consulta.acompanhante || ''}
         onChange={handleChange}
         label="Acompanhante"
       />
@@ -130,7 +117,7 @@ function ConsultaForm(props, ref) {
       <TextField
         className={classes.textArea}
         name="historiaDoencaAtual"
-        value={fields.historiaDoencaAtual}
+        value={consulta.historiaDoencaAtual || ''}
         onChange={handleChange}
         multiline
         rows={3}

@@ -101,6 +101,10 @@ export const GET_WITH_INCLUDES = gql`
         }
       }
       acompanhante
+      queixaPrincipal {
+        id
+        nome
+      }
       historiaDoencaAtual
       queixaPrincipalObs
       queixas {
@@ -157,3 +161,35 @@ export const QUEIXA_PRINCIPAL = gql`
     }
   }
 `
+export const LOAD_DROP_DOWNS = gql`
+  query LoadDropDowns {
+    unidadesSaude {
+      id
+      nome
+      cnes
+    }
+    estadosCivis {
+      id
+      nome
+    }
+    religioes {
+      id
+      nome
+    }
+    coresPele {
+      id
+      nome
+    }
+    escolaridades {
+      id
+      nome
+    }
+    profissoes {
+      id
+      nome
+    }
+    situacoesProfissionais {
+      id
+      nome
+    }
+  }`

@@ -57,6 +57,7 @@ export default {
         include: [
           {
             association: 'paciente',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [
               {
                 association: 'pessoa',

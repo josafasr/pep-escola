@@ -24,12 +24,12 @@ import {
 // import HomeIcon from '@material-ui/icons/Home'
 // import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
-import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
 import PessoaForm from '../forms/PessoaForm'
-import PacienteForm from '../forms/PacienteForm'
+import PacienteContextForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
-import QueixaContext from '../contexts/QueixaContext'
+import PacienteContext from '../contexts/PacienteContext'
+import ConsultaContext from '../contexts/ConsultaContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,10 +107,9 @@ function ConsultaEdit() {
   //const [pessoa, setPessoa] = React.useState({})
   //const [contato, setContato] = React.useState({})
   //const [endereco, setEndereco] = React.useState({})
-  const [paciente, setPaciente] = React.useState({})
+  const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
   const [activeStep, setActiveStep] = React.useState(0)
-  const [queixa, setQueixa] = React.useState({})
 
   const pessoaRef = React.useRef()
   const pacienteRef = React.useRef()
@@ -121,60 +120,29 @@ function ConsultaEdit() {
   const [handleCreateConsulta] = useMutation(CREATE_CONSULTA, {
     variables: {
       ...consulta,
-      queixaPrincipalId: parseInt(queixa.id),
-      queixas: [parseInt(queixa.id)],
+      //queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
+      //queixas: [parseInt(queixa.id)],
       pacienteId
     }
   })
 
-  const pacienteData = useQuery(GET_PACIENTE, {
+  /* const pacienteData = useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
-      onCompleted: (data) => {
-      //setPessoa(data.paciente.pessoa)
+    onCompleted: (data) => {
+      console.log('GET_PACIENTE');
       setPaciente(data.paciente)
     },
-    skip: !pacienteId,
-    notifyOnNetworkStatusChange: true,
-  })
+    skip: !pacienteId
+  }) */
 
-  const consultaData = useQuery(GET_WITH_INCLUDES, {
+  const { loading, data } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
+    onCompleted: (data) => {
+      setPaciente(data.consulta.paciente)
+      setConsulta(data.consulta)
+    },
     skip: !!pacienteId
   })
-/*
-  const handleChangePessoa = data => {
-    if (!isEmpty(data)) {
-      setPessoa(data)
-    }
-  }
-
-  const handleChangeContato = data => {
-    if (!isEmpty(data)) {
-      setContato(data)
-    }
-  }
-
-  const handleChangeEndereco = data => {
-    if (!isEmpty(data)) {
-      setEndereco(data)
-    }
-  }
- */
-  const handleChangePaciente = pacienteField => {
-    const { name, value } = pacienteField
-    setPaciente({
-      ...paciente,
-      [name]: value
-    })
-  }
-
-  const handleChangeConsulta = consultaField => {
-    const { name, value } = consultaField
-    setConsulta({
-      ...consulta,
-      [name]: value
-    })
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -246,7 +214,7 @@ function ConsultaEdit() {
     </div>
   )
 
-  if (pacienteData.loading || consultaData.loading) return 'Carregando...'
+  if (loading) return 'Carregando...'
 
   return (
     <div className={classes.root}>
@@ -254,7 +222,7 @@ function ConsultaEdit() {
 
       <Paper className={classes.paper} elevation={2}>
         <PessoaForm
-          pessoaData={consultaData.data?.consulta.paciente.pessoa || pacienteData.data?.paciente.pessoa}
+          pessoaData={data?.consulta.paciente.pessoa || paciente?.pessoa}
           //onChange={handleChangePessoa}
           ref={pessoaRef}
           disabled={false}
@@ -272,12 +240,12 @@ function ConsultaEdit() {
           </StepButton>
           <StepContent classes={{ root: classes.stepContent }}>
             <Paper className={classes.paper} elevation={2}>
-              <PacienteForm
-                pacienteData={consultaData?.data?.consulta?.paciente || paciente}
-                onChange={handleChangePaciente}
-                ref={pacienteRef}
-                // disabled={false}
-              />
+              <PacienteContext.Provider value={[paciente, setPaciente]}>
+                <PacienteContextForm
+                  ref={pacienteRef}
+                  // disabled={false}
+                />
+              </PacienteContext.Provider>
             </Paper>
             {/* {buttons} */}
           </StepContent>
@@ -290,13 +258,13 @@ function ConsultaEdit() {
           <StepContent classes={{ root: classes.stepContent }}>
             <Paper className={classes.paper} elevation={2}>
               <Box className={classes.box} componente="fieldset">
-                <QueixaContext.Provider value={{queixa, setQueixa}}>
+                <ConsultaContext.Provider value={[consulta, setConsulta]}>
                   <ConsultaForm
-                    consultaData={consultaData?.data?.consulta || consulta}
-                    onChange={handleChangeConsulta}
+                    //consultaData={consultaData?.data?.consulta || consulta}
+                    //onChange={handleChangeConsulta}
                     ref={consultaRef}
                   />
-                </QueixaContext.Provider>
+                </ConsultaContext.Provider>
               </Box>
             </Paper>
             {/* {buttons} */}
