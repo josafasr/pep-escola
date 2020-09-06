@@ -66,12 +66,15 @@ function App(props) {
             httpLink
           ]),
     cache: new InMemoryCache(),
-    queryDeduplication: false,
+    queryDeduplication: true,
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'cache-and-network',
-      },
-    },
+        fetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-first',
+        errorPolicy: 'all',
+        returnPartialData: true
+      }
+    }
   })
 
   return (
