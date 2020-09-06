@@ -1,5 +1,5 @@
 /**
- * @file Acesso à API GraphQL sobre cidades
+ * @title Acesso à API GraphQL sobre cidades
  * @module src/graphql/cidade
  * @author Josafá Santos dos Reis
  */
@@ -21,5 +21,19 @@ export const CIDADES = gql`
       id
       nome
       codigoIBGE
+    }
+  }`
+
+export const CIDADES_BY_TEXT = gql`
+  query CidadesByText($text: String!) {
+    cidadesByText(text: $text) {
+      id
+      nome
+      codigoIBGE
+      estado {
+        id
+        nome
+        sigla
+      }
     }
   }`

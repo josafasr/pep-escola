@@ -21,7 +21,8 @@ export default (sequelize, DataTypes) => {
     }
   }, {
     schema: 'dados_gerais',
-    tableName: 'estado'
+    tableName: 'estado',
+    timestamps: false
   });
 
   Estado.associate = (models) => {

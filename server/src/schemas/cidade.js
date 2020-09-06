@@ -14,6 +14,7 @@ export default `
   type Query {
     cidade(id: ID!): Cidade
     cidades: [Cidade]
+    cidadesByText(text: String!): [Cidade]
   }
 
   type Mutation {

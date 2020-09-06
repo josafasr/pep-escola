@@ -16,6 +16,15 @@ export default {
       where: { id: { [Op.in]: ['10211', '10407', '1'] }}
     }),
 
+    // restorna as cidades cujos nomes inicial com o texto digitado
+    cidadesByText: (_, args, { models }) => models.Cidade.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      where: { nome: { [Op.like]: `${args.text}%` }},
+      include: {
+        association: 'estado'
+      }
+    }),
+
     // restorna todas as cidades com respectivos estados
     // cidadesWithEstado: (parent, args, { models }) => models.Cidade.findAll({
     //   include: [
