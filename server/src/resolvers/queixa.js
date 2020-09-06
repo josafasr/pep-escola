@@ -1,34 +1,36 @@
 /**
- * @file Operações sobre a tabela de apresentações de queixa
+ * @title Operações sobre a tabela de apresentações de queixa
  * @module src/resolvers/queixa
  * @author Marcos Porto 
  */
 
-  import { formatErrors } from '../format-errors';
+import { Op } from 'sequelize'
+import { formatErrors } from '../format-errors';
 
-  export default {
+export default {
 
-    // retorna todos as Queixa
-     Query: {
-             queixas: ( parents, args, {models}) => models.Queixa.findAll(/* {
-                 include: [
-                     {
-                         as: 'consulta_queixa',
-                         model: models.ConsultaQueixa
-                    }
-                ]
-            } */),
+  Query: {
+
+    // retorna todas as queixas
+    queixas: (parents, args, { models }) => models.Queixa.findAll(),
+
+    /**
+     * Busca queixas por partes do nome
+     * @returns array de queixas
+     */
+    queixasByText: async (_, { text }, { models }) => {
+      const queixas = await models.Queixa.findAll({
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        where: {
+          nome: { [Op.like]: `${text}%` }
+        }
+      })
+      return queixas
+    },
 
      // busca queixa pelo código
-     queixa: (parent, { id }, { models }) => models.Queixa.findByPk(id/* , {
-         include: [
-             {
-                as: 'consulta_queixa',
-                 model: models.ConsultaQueixa 
-              }
-          ]
-      } */)
-     },
+    queixa: (parent, { id }, { models }) => models.Queixa.findByPk(id)
+  },
 
     Mutation: {
         // cria uma nova Queixa

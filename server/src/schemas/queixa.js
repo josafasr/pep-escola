@@ -1,5 +1,5 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de queixa
+ * @title Descritores GraphQL para as operações sobre a tabela de queixa
  * @module src/schemas/queixa
  * @author Marcos Porto 
  */
@@ -22,6 +22,7 @@ export default `
     type Query {
         queixa(id: ID!): Queixa
         queixas: [Queixa]
+        queixasByText(text: String!): [Queixa]
     }
 
     type Mutation{

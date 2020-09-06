@@ -13,34 +13,46 @@ import {
 } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
-import { QUEIXAS, TIPOS_QUEIXA, CREATE_QUEIXA } from '../../graphql/queixa'
-import QueixaContext from '../../contexts/QueixaContext'
+import { QUEIXAS_BY_TEXT, TIPOS_QUEIXA, CREATE_QUEIXA } from '../../graphql/queixa'
+import ConsultaContext from '../../contexts/ConsultaContext'
 
 const filter = createFilterOptions();
 
 export default function QueixaAutocomplete(props) {
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
-  const {queixa, setQueixa} = React.useContext(QueixaContext)
+  const [value, setValue] = React.useState({})
 
-  const [value, setValue] = React.useState(QueixaContext);
+  const [inputValue, setInputValue] = React.useState('')
+  const [reason, setReason] = React.useState()
+  
   const [show, toggleShow] = React.useState(false)
-  const loading = open && options.length === 0  
+  const [consulta, setConsulta] = React.useContext(ConsultaContext)
+  // const loading = open && options.length === 0 && inputValue.length 
 
-  const [handleQueixas] = useLazyQuery(QUEIXAS, {
+  const [handleQueixas, { networkStatus }] = useLazyQuery(QUEIXAS_BY_TEXT, {
+    onCompleted: (data) => {
+      setOptions(data.queixasByText)
+    },
+    skip: !open,
+    notifyOnNetworkStatusChange: true
+  })
+  /* const [handleQueixas] = useLazyQuery(QUEIXAS, {
     onCompleted: (data) => {
       setOptions(data.queixas)
     },
     skip: !open
-  })
+  }) */
 
-  const tiposQueixaResponse = useQuery(TIPOS_QUEIXA, {
+  const loading = networkStatus === 1
+
+  const tiposQueixaResponse = useQuery(TIPOS_QUEIXA) /* , {
     onCompleted: () => {
       if (queixa) {
         setDialogValue({ ...dialogValue, tipoQueixaId: queixa.id })
       }
     }
-  })
+  }) */
 
   const loadTiposQueixa = () => {
     if (tiposQueixaResponse.loading) return 'Carregando...'
@@ -58,7 +70,7 @@ export default function QueixaAutocomplete(props) {
   const handleChange = (event, newValue, reason) => {
     event.preventDefault()
     if (reason === 'select-option') {
-      setQueixa(newValue)
+      setConsulta({ ...consulta, queixaPrincipal: newValue })
     }
 
     if (typeof newValue === 'string') {
@@ -94,6 +106,12 @@ export default function QueixaAutocomplete(props) {
     tipoQueixaId: ''
   })
 
+  const handleInputChange = (_, value, reason) => {
+    
+    setInputValue(value)
+    setReason(reason)
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setValue({
@@ -113,18 +131,25 @@ export default function QueixaAutocomplete(props) {
   React.useEffect(() => {
     let active = true
 
-    if (!loading) {
+    /* if (!loading) {
       return undefined
-    }
+    } */
 
-    if (active) {
-      handleQueixas()
+    if (active && (reason === 'input')) {
+      console.log(inputValue)
+      if (inputValue && inputValue.length > 2) {
+        handleQueixas({
+          variables: {
+            text: inputValue
+          }
+        })
+      }
     }
 
     return () => {
       active = false
     }
-  }, [loading, handleQueixas])
+  }, [reason, inputValue, handleQueixas])
 
   React.useEffect(() => {
     if (!open) {
@@ -144,8 +169,10 @@ export default function QueixaAutocomplete(props) {
         onClose={() => {
           setOpen(false)
         }}
-        value={queixa}
+        value={consulta.queixaPrincipal || ''}
         onChange={handleChange}
+        inputValue={inputValue}
+        onInputChange={handleInputChange}
         options={options}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
@@ -157,7 +184,7 @@ export default function QueixaAutocomplete(props) {
             });
           }
 
-          return filtered;
+          return filtered
         }}
         getOptionSelected={(option, value) => option === value}
         getOptionLabel={(option) => {

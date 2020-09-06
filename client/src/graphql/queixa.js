@@ -22,6 +22,14 @@ export const QUEIXAS = gql`
     }
   }`
 
+export const QUEIXAS_BY_TEXT = gql`
+  query QueixasByText($text: String!) {
+    queixasByText(text: $text) {
+      id
+      nome
+    }
+  }`
+
 export const TIPOS_QUEIXA = gql`
   query tiposQueixa {
     tiposQueixa {
