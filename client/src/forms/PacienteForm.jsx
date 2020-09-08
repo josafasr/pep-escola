@@ -20,16 +20,10 @@ import NaturalidadeAutocomplete from '../components/autocomplete/NaturalidadeAut
 import PacienteContext from '../contexts/PacienteContext'
 
 const useStyles = makeStyles((theme) => ({
-
-  boxFieldset: {
-    borderStyle: 'none'
-  },
-
   fields: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -37,16 +31,11 @@ const useStyles = makeStyles((theme) => ({
     }
   },
 
-  boxTitle: {
-    paddingTop: '10px',
-    fontWeight: 'bold'
-  },
-
   formFields: {
     margin: theme.spacing(1, 0),
     minWidth: '240px',
     [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(2, 2, 0, 0)
+      margin: theme.spacing(1, 2, 0, 0)
     }
   },
 
@@ -58,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function PacienteForm(props, ref) {
 
   const classes = useStyles()
+  const { disabled } = props
   const [paciente, setPaciente] = React.useContext(PacienteContext)
 
   /**
@@ -113,65 +103,89 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="prontuario"
-        value={paciente.prontuario || ''}
+        value={paciente?.prontuario || ''}
         onChange={handleChange}
         label="Nº Prontuário"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={classes.formFields}
         name="rg"
-        value={paciente.rg || ''}
+        value={paciente?.rg || ''}
         onChange={handleChange}
         label="RG"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={classes.formFields}
         name="cpf"
-        value={paciente.cpf || ''}
+        value={paciente?.cpf || ''}
         onChange={handleChange}
         label="CPF"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={classes.formFields}
         name="cartaoFamilia"
-        value={paciente.cartaoFamilia || ''}
+        value={paciente?.cartaoFamilia || ''}
         onChange={handleChange}
         label="Cartão Familia"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={classes.formFields}
         name="cns"
-        value={paciente.cns || ''}
+        value={paciente?.cns || ''}
         onChange={handleChange}
         label="CNS"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="agenteComunitario"
-        value={paciente.agenteComunitario || ''}
+        value={paciente?.agenteComunitario || ''}
         onChange={handleChange}
         label="ACS"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="encaminhadoPor"
-        value={paciente.encaminhadoPor || ''}
+        value={paciente?.encaminhadoPor || ''}
         onChange={handleChange}
         label="Encaminhado por"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
         className={classes.formFields}
         name="unidadeSaude"
-        value={paciente.unidadeSaude || ''}
+        value={paciente?.unidadeSaude || ''}
         onChange={handleChange}
         label="Unidade de Saúde"
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome
@@ -186,10 +200,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="estadoCivil"
-        value={paciente.estadoCivil || ''}
+        value={paciente?.estadoCivil || ''}
         onChange={handleChange}
         label="Estado Civil"
-        // autocomplete
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome + ''
@@ -202,10 +218,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="religiao"
-        value={paciente.religiao || ''}
+        value={paciente?.religiao || ''}
         onChange={handleChange}
         label="Religião"
-        // autocomplete
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome
@@ -218,10 +236,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="corPele"
-        value={paciente.corPele || ''}
+        value={paciente?.corPele || ''}
         onChange={handleChange}
         label="Cor da Pele"
-        // autocomplete
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome
@@ -234,10 +254,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="escolaridade"
-        value={paciente.escolaridade || ''}
+        value={paciente?.escolaridade || ''}
         onChange={handleChange}
         label="Escolaridade"
-        // autocomplete
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome
@@ -250,9 +272,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="profissao"
-        value={paciente.profissao || ''}
+        value={paciente?.profissao || ''}
         onChange={handleChange}
         label="Profissão"
+        inputProps={{
+          readOnly: disabled
+        }}
         // autocomplete
         select
         SelectProps={{
@@ -266,10 +291,12 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="situacaoProfissional"
-        value={paciente.situacaoProfissional || ''}
+        value={paciente?.situacaoProfissional || ''}
         onChange={handleChange}
-        label="Situação Profissional"
-        // autocomplete
+        label="Situação Ocupacional"
+        inputProps={{
+          readOnly: disabled
+        }}
         select
         SelectProps={{
           renderValue: value => value.nome

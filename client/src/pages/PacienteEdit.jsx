@@ -25,6 +25,7 @@ import { toDatabaseDate } from '../utils/format'
 import { CREATE_WITH_INCLUDES, GET_WITH_INCLUDES } from '../graphql/paciente'
 
 import PacienteContext from '../contexts/PacienteContext'
+import PessoaContext from '../contexts/PessoaContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,13 +103,10 @@ function PacienteEdit(props) {
     variables: { id },
     onCompleted: (data) => {
       setPaciente(data.paciente)
+      setPessoa(data.paciente.pessoa)
     },
     skip: !id
   })
-
-  const handleChangePessoa = data => {
-    setPessoa(data)
-  }
 
   const handleChangeContato = data => {
     setContato(data)
@@ -117,14 +115,6 @@ function PacienteEdit(props) {
   const handleChangeEndereco = data => {
     setEndereco(data)
   }
-
-  /* const handleChangePaciente = pacienteField => {
-    const { name, value } = pacienteField
-    setPaciente({
-      ...paciente,
-      [name]: value
-    })
-  } */
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -161,25 +151,17 @@ function PacienteEdit(props) {
           <legend>
             <Typography className={classes.boxTitle}>Dados Pessoais</Typography>
           </legend>
-          <PessoaForm
-            pessoaData={data?.paciente?.pessoa}
-            onChange={handleChangePessoa}
-            ref={pessoaRef}
-          />
-          {/* <PacienteContext.Provider value={{paciente, setPaciente}}>
-            <NaturalidadeContext.Provider  value={{naturalidade, setNaturalidade}}>
-              <PacienteForm
-                pacienteData={pacienteData.data?.paciente}
-                onChange={handleChangePaciente}
-                ref={pacienteRef}
-              />
-            </NaturalidadeContext.Provider>
-          </PacienteContext.Provider> */}
+          <PessoaContext.Provider value={{pessoa, setPessoa}}>
+            <PessoaForm
+              ref={pessoaRef}
+              disabled={!!id}
+            />
+          </PessoaContext.Provider>
+  
           <PacienteContext.Provider value={[paciente, setPaciente]}>
             <PacienteForm
-              //pacienteData={pacienteData.data?.paciente}
-              //onChange={handleChangePaciente}
               ref={pacienteRef}
+              disabled={!!id}
             />
           </PacienteContext.Provider>
         </Box>

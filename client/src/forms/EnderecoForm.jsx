@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 0),
     minWidth: '210px',
     [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(2, 2, 0, 0)
+      margin: theme.spacing(1, 2, 0, 0)
     }
   },
 

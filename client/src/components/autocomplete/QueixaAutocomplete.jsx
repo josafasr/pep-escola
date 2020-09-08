@@ -37,22 +37,10 @@ export default function QueixaAutocomplete(props) {
     skip: !open,
     notifyOnNetworkStatusChange: true
   })
-  /* const [handleQueixas] = useLazyQuery(QUEIXAS, {
-    onCompleted: (data) => {
-      setOptions(data.queixas)
-    },
-    skip: !open
-  }) */
 
   const loading = networkStatus === 1
 
-  const tiposQueixaResponse = useQuery(TIPOS_QUEIXA) /* , {
-    onCompleted: () => {
-      if (queixa) {
-        setDialogValue({ ...dialogValue, tipoQueixaId: queixa.id })
-      }
-    }
-  }) */
+  const tiposQueixaResponse = useQuery(TIPOS_QUEIXA)
 
   const loadTiposQueixa = () => {
     if (tiposQueixaResponse.loading) return 'Carregando...'
@@ -161,7 +149,11 @@ export default function QueixaAutocomplete(props) {
     <React.Fragment>
       <Autocomplete
         id="asinchronous-query"
-        style={{ width: 300 }}
+        style={{
+          margin: '11px 10px 0 0',
+          padding: '0 10px 0 0',
+          minWidth: '240px'
+        }}
         open={open}
         onOpen={() => {
           setOpen(true)
