@@ -110,6 +110,10 @@ export const GET_WITH_INCLUDES = gql`
       queixas {
         id
         nome
+        tipoQueixa {
+          id
+          nome
+        }
       }
     }
   }`

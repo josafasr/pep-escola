@@ -149,6 +149,10 @@ query Queixas {
   queixas {
     id
     nome
+    tipoQueixa {
+      id
+      nome
+    }
   }
 }
 

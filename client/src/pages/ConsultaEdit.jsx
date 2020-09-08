@@ -16,7 +16,6 @@ import {
   StepContent,
   StepButton,
   Paper,
-  Box,
   Button
  } from '@material-ui/core'
 // import PersonIcon from '@material-ui/icons/Person'
@@ -25,11 +24,15 @@ import {
 // import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
+import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import PessoaForm from '../forms/PessoaForm'
-import PacienteContextForm from '../forms/PacienteForm'
+import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
+import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
+import PessoaContext from '../contexts/PessoaContext'
 import PacienteContext from '../contexts/PacienteContext'
 import ConsultaContext from '../contexts/ConsultaContext'
+import { toPtBrDate } from '../utils/format'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,18 +44,14 @@ const useStyles = makeStyles((theme) => ({
     padding: 0
   },
 
-  box: {
-    borderStyle: 'none',
-    padding: theme.spacing(1, 2, 2, 2) // top, right, bottom, left
-  },
-
   boxTitle: {
     fontWeight: 'bold'
   },
 
   paper: {
     width: '100%',
-    marginBottom: '10px'
+    marginBottom: '10px',
+    padding: theme.spacing(1) // top, right, bottom, left
   },
 
   stepButton: {
@@ -64,7 +63,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   stepContent: {
-    paddingLeft: '8px'
+    paddingLeft: '8px',
+    paddingRight: 0
   },
 
   buttons: {
@@ -104,7 +104,7 @@ function ConsultaEdit() {
     pacienteId = id
   }
  
-  //const [pessoa, setPessoa] = React.useState({})
+  const [pessoa, setPessoa] = React.useState({})
   //const [contato, setContato] = React.useState({})
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
@@ -117,38 +117,58 @@ function ConsultaEdit() {
   //const enderecoRef = React.useRef()
   const consultaRef = React.useRef()
 
-  const [handleCreateConsulta] = useMutation(CREATE_CONSULTA, {
-    variables: {
-      ...consulta,
-      //queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
-      //queixas: [parseInt(queixa.id)],
-      pacienteId
-    }
-  })
+  const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
 
-  /* const pacienteData = useQuery(GET_PACIENTE, {
+  /* const pacienteData =  */useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
     onCompleted: (data) => {
-      console.log('GET_PACIENTE');
+      setPessoa({
+        ...data.paciente.pessoa,
+        dataNascimento: toPtBrDate(data.paciente.pessoa.dataNascimento)
+        // dataNascimento: new Date(`${data.paciente.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", {dateStyle: "short"})
+      })
       setPaciente(data.paciente)
     },
     skip: !pacienteId
-  }) */
+  })
 
-  const { loading, data } = useQuery(GET_WITH_INCLUDES, {
+  const { loading } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
     onCompleted: (data) => {
+      setPessoa({
+        ...data.consulta.paciente.pessoa,
+        dataNascimento: toPtBrDate(data.consulta.paciente.pessoa.dataNascimento)
+      })
       setPaciente(data.consulta.paciente)
       setConsulta(data.consulta)
     },
     skip: !!pacienteId
   })
 
+  const bindConsulta = (toBind) => {
+    const queixaPrincipalId = parseInt(toBind.queixaPrincipal.id)
+    const queixasIds = toBind.queixas.map(queixa => parseInt(queixa.id))
+
+    return { queixaPrincipalId, queixasIds }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    const consultaResponse = await handleCreateConsulta()
+    const bindedFields = bindConsulta(consulta)
+    console.log(bindedFields);
+
+    const consultaResponse = await handleCreateConsulta({
+      variables: {
+        pacienteId,
+        acompanhante: consulta.acompanhante,
+        queixaPrincipalObs: consulta.queixaPrincipalObs,
+        historiaDoencaAtual: consulta.historiaDoencaAtual,
+        queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
+        queixas: consulta.queixas.map(queixa => parseInt(queixa.id))
+      }
+    })
 
     if (consultaResponse.data.createConsulta.ok) {
       alert('Consulta criada com sucesso!')
@@ -168,10 +188,10 @@ function ConsultaEdit() {
 */
   const handleResetForms = () => {
     //setPessoa({})
-    setPaciente({})
+    //setPaciente({})
     //setContato({})
     //setEndereco({})
-    setConsulta({})
+    //setConsulta({})
     history.goBack()
   }
 
@@ -199,17 +219,19 @@ function ConsultaEdit() {
         //disabled={activeStep === 0}
         onClick={activeStep === 0 ? handleResetForms : handleBack}
         className={classes.button}
+        size="small"
       >
         Voltar
       </Button>
       <Button
-        disabled={activeStep === 1 && !pacienteId}
+        disabled={activeStep === 2 && !pacienteId}
         variant="contained"
         color="primary"
-        onClick={activeStep === 1 ? handleSubmit : handleNext}
+        onClick={activeStep === 2 ? handleSubmit : handleNext}
         className={classes.button}
+        size="small"
       >
-        {activeStep === 1 ? 'Salvar' : 'Avançar'}
+        {activeStep === 2 ? 'Salvar' : 'Avançar'}
       </Button>
     </div>
   )
@@ -219,59 +241,66 @@ function ConsultaEdit() {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <ConsultaContext.Provider value={[consulta, setConsulta]}>
+        <Paper className={classes.paper} elevation={2}>
+          <PessoaContext.Provider value={{pessoa, setPessoa}}>
+            <PessoaForm
+              ref={pessoaRef}
+              disabled={!!pacienteId}
+            />
+          </PessoaContext.Provider>
+        </Paper>
 
-      <Paper className={classes.paper} elevation={2}>
-        <PessoaForm
-          pessoaData={data?.consulta.paciente.pessoa || paciente?.pessoa}
-          //onChange={handleChangePessoa}
-          ref={pessoaRef}
-          disabled={false}
-        />
-      </Paper>
-
-      <Stepper
-        activeStep={activeStep}
-        orientation="vertical"
-        classes={{ root: classes.stepper }}
-      >
-        <Step disabled={false}>
-          <StepButton className={classes.stepButton} onClick={handleStep(0)}>
-            <StepLabel className={classes.stepLabel}>Dados Pessoais</StepLabel>
-          </StepButton>
-          <StepContent classes={{ root: classes.stepContent }}>
-            <Paper className={classes.paper} elevation={2}>
-              <PacienteContext.Provider value={[paciente, setPaciente]}>
-                <PacienteContextForm
-                  ref={pacienteRef}
-                  // disabled={false}
-                />
-              </PacienteContext.Provider>
-            </Paper>
-            {/* {buttons} */}
-          </StepContent>
-        </Step>
-
-        <Step disabled={false}>
-          <StepButton className={classes.stepButton} onClick={handleStep(1)}>
-            <StepLabel className={classes.stepLabel}>Anamnese</StepLabel>
-          </StepButton>
-          <StepContent classes={{ root: classes.stepContent }}>
-            <Paper className={classes.paper} elevation={2}>
-              <Box className={classes.box} componente="fieldset">
-                <ConsultaContext.Provider value={[consulta, setConsulta]}>
-                  <ConsultaForm
-                    //consultaData={consultaData?.data?.consulta || consulta}
-                    //onChange={handleChangeConsulta}
-                    ref={consultaRef}
+        <Stepper
+          activeStep={activeStep}
+          orientation="vertical"
+          classes={{ root: classes.stepper }}
+        >
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(0)}>
+              <StepLabel className={classes.stepLabel}>Dados Pessoais</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <PacienteContext.Provider value={[paciente, setPaciente]}>
+                  <PacienteForm
+                    ref={pacienteRef}
+                    disabled={!!pacienteId}
                   />
-                </ConsultaContext.Provider>
-              </Box>
-            </Paper>
-            {/* {buttons} */}
-          </StepContent>
-        </Step>
-      </Stepper>
-      {buttons}
+                </PacienteContext.Provider>
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+          
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(1)}>
+              <StepLabel className={classes.stepLabel}>Anamnese</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <ConsultaForm
+                  ref={consultaRef}
+                  />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(2)}>
+              <StepLabel className={classes.stepLabel}>Interrogatório Sistemático</StepLabel>
+            </StepButton>
+
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <InterrogatorioSistematicoForm />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+        </Stepper>
+      </ConsultaContext.Provider>
     </div>
   )
 }

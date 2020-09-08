@@ -12,7 +12,13 @@ export default {
   Query: {
 
     // retorna todas as queixas
-    queixas: (parents, args, { models }) => models.Queixa.findAll(),
+    queixas: (parents, args, { models }) => models.Queixa.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: {
+        association: 'tipoQueixa',
+        attributes: ['id', 'nome']
+      }
+    }),
 
     /**
      * Busca queixas por partes do nome

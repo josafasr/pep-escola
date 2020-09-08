@@ -122,7 +122,11 @@ export default {
             attributes: ['id', 'nome']
           }, {
             association: 'queixas',
-            attributes: ['id', 'nome']
+            attributes: ['id', 'nome'],
+            include: {
+              association: 'tipoQueixa',
+              attributes: ['id', 'nome']
+            }
           }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }

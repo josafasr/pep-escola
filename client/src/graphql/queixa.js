@@ -19,6 +19,10 @@ export const QUEIXAS = gql`
     queixas {
       id
       nome
+      tipoQueixa {
+        id
+        nome
+      }
     }
   }`
 
