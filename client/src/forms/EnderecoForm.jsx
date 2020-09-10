@@ -13,8 +13,8 @@ import {
   MenuItem
 } from '@material-ui/core'
 
-import { TIPOS_LOGRADOURO } from '../graphql/tipo-logradouro'
-import { CIDADES } from '../graphql/cidade'
+import { LOAD_DROP_DOWNS } from '../graphql/endereco'
+import EnderecoContext from '../contexts/EnderecoContext'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -48,86 +48,31 @@ const useStyles = makeStyles((theme) => ({
 
 function EnderecoForm(props, ref) {
 
-  const { enderecoData, disabled } = props
+  const { disabled } = props
 
   const classes = useStyles()
 
-  const [fields, setFields] = React.useState({
-    tipoLogradouroId: '',
-    logradouro: enderecoData?.logradouro || '',
-    numero: enderecoData?.numero || '',
-    bairro: enderecoData?.bairro || '',
-    complemento: enderecoData?.complemento || '',
-    cep: enderecoData?.cep || '',
-    cidadeId: ''
-  })
+  const {endereco, setEndereco} = React.useContext(EnderecoContext)
 
-  const tiposLogradouroResponse = useQuery(TIPOS_LOGRADOURO, {
-    onCompleted: () => {
-      if (enderecoData) {
-        if (enderecoData.tipoLogradouroId) {
-          setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouroId })
-        } else if (enderecoData.tipoLogradouro) {
-          setFields({ ...fields, tipoLogradouroId: enderecoData.tipoLogradouro.id })
-        }
-      }
-    }
-  })
-
-  const cidadesResponse = useQuery(CIDADES, {
-    onCompleted: () => {
-      if (enderecoData) {
-        if (enderecoData.cidadeId) {
-          setFields({ ...fields, cidadeId: enderecoData.cidadeId })
-        } else if (enderecoData.cidade) {
-          setFields({ ...fields, cidadeId: enderecoData.cidade.id })
-        }
-      }
-    }
-  })
-
-  const loadTiposLogradouro = () => {
-    if (tiposLogradouroResponse.loading) return 'Loading...'
-    if (tiposLogradouroResponse.error) return 'Error :('
-
-    return (
-      tiposLogradouroResponse.data.tiposLogradouro.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
-
-  const loadCidades = () => {
-    if (cidadesResponse.loading) return 'Loading...'
-    if (cidadesResponse.error) return 'Error :('
-
-    return (
-      cidadesResponse.data.cidades.map((item) => (
-        <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-      ))
-    )
-  }
+  const { loading, data, error } = useQuery(LOAD_DROP_DOWNS)
 
   const handleChange = event => {
-    event.preventDefault()
-    event.stopPropagation()
     const { name, value } = event.target
-
-    setFields({
-      ...fields,
-      [name]: (name === 'numero' || name.slice(-2) === 'Id') ? (parseInt(value) || '') : value
-    })
+    setEndereco(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const handleReset = () => {
-    setFields({
-      tipoLogradouroId: '',
+    setEndereco({
+      tipoLogradouro: '',
       logradouro: '',
       numero: '',
       bairro: '',
       complemento: '',
       cep: '',
-      cidadeId: ''
+      cidade: ''
     })
   }
 
@@ -141,36 +86,35 @@ function EnderecoForm(props, ref) {
     }
   }))
 
-  /**
-   * Emite aviso de mudança ao component pai
-   */
-  React.useEffect(() => {
-    if (props.onChange) {
-      props.onChange(fields)
-    }
-  }, [props, fields])
+  if (loading) return 'Carregando...'
+  if (error) return 'Erro :('
 
   return (
     <div className={classes.fields}>
       <TextField
         className={classes.formFields}
-        name="tipoLogradouroId"
-        value={fields.tipoLogradouroId}
+        name="tipoLogradouro"
+        value={endereco.tipoLogradouro || ''}
         onChange={handleChange}
         label="Tipo de Logradouro"
         select
         inputProps={{
           readOnly: disabled
         }}
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
       >
-        <MenuItem value=""><em>Não Informado</em></MenuItem>
-        {loadTiposLogradouro()}
+        {/* <MenuItem value=""><em>Não Informado</em></MenuItem> */}
+        {data.tiposLogradouro.map((item) => (
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>
+        ))}
       </TextField>
 
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="logradouro"
-        value={fields.logradouro}
+        value={endereco.logradouro || ''}
         onChange={handleChange}
         label="Logradouro"
         inputProps={{
@@ -182,7 +126,7 @@ function EnderecoForm(props, ref) {
         className={classes.formFields}
         type="number"
         name="numero"
-        value={fields.numero}
+        value={endereco.numero || ''}
         onChange={handleChange}
         label="Número"
         inputProps={{
@@ -193,7 +137,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="bairro"
-        value={fields.bairro}
+        value={endereco.bairro || ''}
         onChange={handleChange}
         label="Bairro"
         inputProps={{
@@ -204,7 +148,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="complemento"
-        value={fields.complemento}
+        value={endereco.complemento || ''}
         onChange={handleChange}
         label="Complemento"
         inputProps={{
@@ -215,7 +159,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cep"
-        value={fields.cep}
+        value={endereco.cep || ''}
         onChange={handleChange}
         label="CEP"
         inputProps={{
@@ -225,17 +169,22 @@ function EnderecoForm(props, ref) {
 
       <TextField
         className={classes.formFields}
-        name="cidadeId"
-        value={fields.cidadeId}
+        name="cidade"
+        value={endereco.cidade || ''}
         onChange={handleChange}
         label="Cidade"
         inputProps={{
           readOnly: disabled
         }}
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
         select
       >
-        <MenuItem value=""><em>Não Informado</em></MenuItem>
-        {loadCidades()}
+        {/* <MenuItem value=""><em>Não Informado</em></MenuItem> */}
+        {data.cidades.map((item) => (
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>
+        ))}
       </TextField>
     </div>
   )

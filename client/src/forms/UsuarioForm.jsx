@@ -10,6 +10,8 @@ import {
   TextField
 } from '@material-ui/core'
 
+import UsuarioContext from '../contexts/UsuarioContext'
+
 const useStyles = makeStyles((theme) => ({
   fields: {
     display: 'flex',
@@ -34,24 +36,20 @@ const useStyles = makeStyles((theme) => ({
 
 function UsuarioForm(props, ref) {
   const classes = useStyles()
-  const { usuarioData, disabled } = props
-  const [fields, setFields] = React.useState({
-    nome: usuarioData?.nome || '',
-    senha: '',
-    grupos: []
-  })
+  const { disabled } = props
+
+  const {usuario, setUsuario} = React.useContext(UsuarioContext)
 
   const handleChange = event => {
-    event.preventDefault()
     const { name, value } = event.target
-    setFields({
-      ...fields,
+    setUsuario({
+      ...usuario,
       [name]: value
     })
   }
 
   const handleReset = () => {
-    setFields({ nome: '', senha: '', grupos: [] })
+    setUsuario({ nome: '', senha: '', grupos: [] })
   }
 
   /**
@@ -67,18 +65,18 @@ function UsuarioForm(props, ref) {
   /**
    * Emite aviso de mudança ao component pai
    */
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (props.onChange) {
       props.onChange(fields)
     }
-  }, [props, fields])
+  }, [props, fields]) */
 
   return (
     <div className={classes.fields}>
       <TextField
         className={classes.formFields}
         name="nome"
-        value={fields.nome}
+        value={usuario.nome || ''}
         onChange={handleChange}
         label="Nome de usuário"
         size="small"
@@ -91,7 +89,7 @@ function UsuarioForm(props, ref) {
         type="password"
         className={classes.formFields}
         name="senha"
-        value={fields.senha}
+        value={usuario.senha || ''}
         onChange={handleChange}
         label="Senha"
         size="small"

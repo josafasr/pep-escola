@@ -47,11 +47,11 @@ function PessoaForm(props, ref) {
   const {pessoa, setPessoa} = React.useContext(PessoaContext)
 
   const handleChange = event => {
-    event.preventDefault()
-
     const { name, value } = event.target
-
-    setPessoa({ ...pessoa, [name]: value })
+    setPessoa(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const handleReset = () => {

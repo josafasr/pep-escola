@@ -13,6 +13,10 @@ import { useStyles } from '../styles/usuario'
 import { toDatabaseDate } from '../utils/format'
 
 import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES } from '../graphql/usuario'
+import PessoaContext from '../contexts/PessoaContext'
+import EnderecoContext from '../contexts/EnderecoContext'
+import ContatoContext from '../contexts/ContatoContext'
+import UsuarioContext from '../contexts/UsuarioContext'
 import PessoaForm from '../forms/PessoaForm'
 import EnderecoForm from '../forms/EnderecoForm'
 import ContatoForm from '../forms/ContatoForm'
@@ -73,22 +77,6 @@ export default function UsuarioEdit() {
     history.push('/usuarios')
   }
 
-  const handleChangePessoa = data => {
-    setPessoa(data)
-  }
-
-  const handleChangeEndereco = data => {
-    setEndereco(data)
-  }
-
-  const handleChangeContato = data => {
-    setContato(data)
-  }
-
-  const handleChangeUsuario = data => {
-    setUsuario(data)
-  }
-
   /**
    * Query para exibir os dados do usuário
    * @param id id do usuário
@@ -96,6 +84,12 @@ export default function UsuarioEdit() {
    */
   const usuarioData = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
+    onCompleted: (data) => {
+      setPessoa(data.usuario.pessoa)
+      setContato(data.usuario.pessoa.contato)
+      setEndereco(data.usuario.pessoa.enderecos[0])
+      setUsuario(data.usuario)
+    },
     skip: !id
   })
 
@@ -106,71 +100,71 @@ export default function UsuarioEdit() {
       <CssBaseline />
       <form className={classes.form} onSubmit={handleSubmit}>
         <div className={classes.fieldsContainer}>
-          <Paper className={classes.paper} elevation={2}>
-            <Box className={classes.boxFieldset} component="fieldset">
-              {/*<div className={classes.fields}>
-                <TextField
-                  className={clsx(classes.formFields, classes.grow2)}
-                  // error={!!errors["nomeError"]}
-                  name="nome"
-                  value={pessoa.nome || ''}
-                  onChange={handleChangePessoa}
-                  label="Nome"
-                  // helperText={errors["nomeError"]}
-                /> */}
-              <legend className={classes.boxTitle}>
-                <Typography>Dados Pessoais</Typography>
-              </legend>
-              <PessoaForm
-                pessoaData={usuarioData.data?.usuario?.pessoa}
-                onChange={handleChangePessoa}
-                ref={pessoaRef}
-                disabled={!!id}
-              />
-            </Box>
-          </Paper>
+          <UsuarioContext.Provider value={{usuario, setUsuario}}>
+            <Paper className={classes.paper} elevation={2}>
+              <Box className={classes.boxFieldset} component="fieldset">
+                {/*<div className={classes.fields}>
+                  <TextField
+                    className={clsx(classes.formFields, classes.grow2)}
+                    // error={!!errors["nomeError"]}
+                    name="nome"
+                    value={pessoa.nome || ''}
+                    onChange={handleChangePessoa}
+                    label="Nome"
+                    // helperText={errors["nomeError"]}
+                  /> */}
+                <legend className={classes.boxTitle}>
+                  <Typography>Dados Pessoais</Typography>
+                </legend>
+                <PessoaContext.Provider value={{pessoa, setPessoa}}>
+                  <PessoaForm
+                    ref={pessoaRef}
+                    disabled={!!id}
+                  />
+                </PessoaContext.Provider>
+              </Box>
+            </Paper>
 
-          <Paper className={classes.paper} elevation={2}>
-            <Box className={classes.boxFieldset} component="fieldset">
-              <legend className={classes.boxTitle}>
-                <Typography>Endereço</Typography>
-              </legend>
-              <EnderecoForm
-                enderecoData={usuarioData.data?.usuario?.pessoa?.enderecos[0]}
-                onChange={handleChangeEndereco}
-                ref={enderecoRef}
-                disabled={!!id}
-              />
-            </Box>
-          </Paper>
+            <Paper className={classes.paper} elevation={2}>
+              <Box className={classes.boxFieldset} component="fieldset">
+                <legend className={classes.boxTitle}>
+                  <Typography>Endereço</Typography>
+                </legend>
+                <EnderecoContext.Provider value={{endereco, setEndereco}}>
+                  <EnderecoForm
+                    ref={enderecoRef}
+                    disabled={!!id}
+                  />
+                </EnderecoContext.Provider>
+              </Box>
+            </Paper>
 
-          <Paper className={classes.paper} elevation={2}>
-            <Box className={classes.boxFieldset} component="fieldset">
-              <legend>
-                <Typography>Contato</Typography>
-              </legend>
-              <ContatoForm
-                contatoData={usuarioData.data?.usuario?.pessoa?.contato}
-                onChange={handleChangeContato}
-                ref={contatoRef}
-                disabled={!!id}
-              />
-            </Box>
-          </Paper>
+            <Paper className={classes.paper} elevation={2}>
+              <Box className={classes.boxFieldset} component="fieldset">
+                <legend>
+                  <Typography>Contato</Typography>
+                </legend>
+                <ContatoContext.Provider value={{contato, setContato}}>
+                  <ContatoForm
+                    ref={contatoRef}
+                    disabled={!!id}
+                  />
+                </ContatoContext.Provider>
+              </Box>
+            </Paper>
 
-          <Paper className={classes.paper} elevation={2}>
-            <Box className={classes.boxFieldset} component="fieldset">
-              <legend>
-                <Typography>Dados de Usuário</Typography>
-              </legend>
-              <UsuarioForm
-                usuarioData={usuarioData.data?.usuario}
-                onChange={handleChangeUsuario}
-                ref={usuarioRef}
-                disabled={!!id}
-              />
-            </Box>
-          </Paper>
+            <Paper className={classes.paper} elevation={2}>
+              <Box className={classes.boxFieldset} component="fieldset">
+                <legend>
+                  <Typography>Dados de Usuário</Typography>
+                </legend>
+                <UsuarioForm
+                  ref={usuarioRef}
+                  disabled={!!id}
+                />
+              </Box>
+            </Paper>
+          </UsuarioContext.Provider>
         </div>  
 
         <div>

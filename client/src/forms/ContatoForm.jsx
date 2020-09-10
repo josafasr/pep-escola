@@ -10,6 +10,8 @@ import {
   TextField
 } from '@material-ui/core'
 
+import ContatoContext from '../contexts/ContatoContext'
+
 const useStyles = makeStyles((theme) => ({
   fields: {
     display: 'flex',
@@ -33,26 +35,22 @@ const useStyles = makeStyles((theme) => ({
 
 function ContatoForm(props, ref) {
 
-  const { contatoData, disabled } = props
+  const { disabled } = props
 
   const classes = useStyles()
 
-  const [fields, setFields] = React.useState({
-    celular: contatoData?.celular || '',
-    telefone: contatoData?.telefone || '',
-    email: contatoData?.email || ''
-  })
+  const {contato, setContato} = React.useContext(ContatoContext)
 
   const handleChange = event => {
-    event.preventDefault()
-    event.stopPropagation()
     const { name, value } = event.target
-
-    setFields({ ...fields, [name]: value })
+    setContato(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const handleReset = () => {
-    setFields({ celular: '', telefone: '', email: '' })
+    setContato({ celular: '', telefone: '', email: '' })
   }
 
   /**
@@ -65,21 +63,12 @@ function ContatoForm(props, ref) {
     }
   }))
 
-  /**
-   * Emite aviso de mudança ao component pai
-   */
-  React.useEffect(() => {
-    if (props.onChange) {
-      props.onChange(fields)
-    }
-  }, [props, fields])
-
   return (
     <div className={classes.fields}>
       <TextField
         className={classes.formFields}
         name="celular"
-        value={fields.celular}
+        value={contato.celular || ''}
         onChange={handleChange}
         label="Celular"
         size="small"
@@ -91,7 +80,7 @@ function ContatoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="telefone"
-        value={fields.telefone}
+        value={contato.telefone || ''}
         onChange={handleChange}
         label="Telefone"
         size="small"
@@ -104,7 +93,7 @@ function ContatoForm(props, ref) {
         className={classes.formFields}
         type="email"
         name="email"
-        value={fields.email}
+        value={contato.email || ''}
         onChange={handleChange}
         label="E-mail"
         size="small"
