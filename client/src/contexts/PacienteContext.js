@@ -16,6 +16,7 @@ const PacienteContext = createContext(
     religiao: {},
     corPele: {},
     escolaridade: {},
+    tempoEstudo: {},
     profissao: {},
     situacaoProfissional: {}
   }

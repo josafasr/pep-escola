@@ -9,8 +9,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { CIDADES_BY_TEXT } from '../../graphql/cidade'
 import PacienteContext from '../../contexts/PacienteContext'
 
-export default function NaturalidadeAutocomplete() {
+export default function NaturalidadeAutocomplete(props) {
 
+  const { disabled } = props
   const [inputValue, setInputValue] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
@@ -91,9 +92,11 @@ export default function NaturalidadeAutocomplete() {
           <TextField
             {...params}
             label="Naturalidade"
+            placeholder="Digite para carregar"
             size="small"
             InputProps={{
               ...params.InputProps,
+              readOnly: disabled,
               endAdornment: (
                 <div>
                   {isLoading ? <CircularProgress color="inherit" size={30} /> : null}

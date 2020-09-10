@@ -15,7 +15,7 @@ export default `
   }
 
   type Mutation {
-    createSituacaoProfissional(nome: String): SituacaoProfissional
+    createSituacaoProfissional(id: ID!, nome: String): SituacaoProfissional
     updateSituacaoProfissional(id: ID!, nome: String): SituacaoProfissional
     deleteSituacaoProfissional(id: ID!): Int
   }

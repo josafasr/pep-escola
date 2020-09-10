@@ -53,6 +53,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       field: 'escolaridade_id'
     },
+    tempoEstudoId: {
+      type: DataTypes.INTEGER,
+      field: 'tempo_estudo_id'
+    },
     profissaoId: {
       type: DataTypes.INTEGER,
       field: 'profissao_id'
@@ -138,6 +142,15 @@ export default (sequelize, DataTypes) => {
     Paciente.belongsTo(models.Escolaridade, {
       as: 'escolaridade',
       foreignKey: 'escolaridadeId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de tempos de estudo
+     * @see module:src/models/TempoEstudo
+     */
+    Paciente.belongsTo(models.TempoEstudo, {
+      as: 'tempoEstudo',
+      foreignKey: 'tempoEstudoId'
     }),
 
     /**

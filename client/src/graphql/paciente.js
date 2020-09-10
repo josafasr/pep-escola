@@ -56,6 +56,11 @@ export const LOAD_DROP_BOXES = gql`
       nome
     }
 
+    temposEstudo {
+      id
+      nome
+    }
+
     profissoes {
       id
       nome
@@ -84,6 +89,7 @@ export const CREATE_WITH_INCLUDES = gql`
     $religiaoId: ID,
     $corPeleId: ID,
     $escolaridadeId: ID,
+    $tempoEstudoId: ID,
     $profissaoId: ID,
     $situacaoProfissionalId: ID,
     $especialidades: [ID]
@@ -104,6 +110,7 @@ export const CREATE_WITH_INCLUDES = gql`
       religiaoId: $religiaoId,
       corPeleId: $corPeleId,
       escolaridadeId: $escolaridadeId,
+      tempoEstudoId: $tempoEstudoId,
       profissaoId: $profissaoId,
       situacaoProfissionalId: $situacaoProfissionalId,
       especialidades: $especialidades
@@ -210,6 +217,10 @@ export const GET_WITH_INCLUDES = gql`
         id
         nome
       }
+      tempoEstudo {
+        id
+        nome
+      }
       profissao {
         id
         nome
@@ -222,6 +233,43 @@ export const GET_WITH_INCLUDES = gql`
         id
         nome
       }
+    }
+  }`
+
+export const LOAD_DROP_DOWNS = gql`
+  query LoadDropDowns {
+    unidadesSaude {
+      id
+      nome
+      cnes
+    }
+    estadosCivis {
+      id
+      nome
+    }
+    religioes {
+      id
+      nome
+    }
+    coresPele {
+      id
+      nome
+    }
+    escolaridades {
+      id
+      nome
+    }
+    temposEstudo {
+      id
+      nome
+    }
+    profissoes {
+      id
+      nome
+    }
+    situacoesProfissionais {
+      id
+      nome
     }
   }`
 

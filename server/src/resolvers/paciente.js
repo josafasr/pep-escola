@@ -75,6 +75,9 @@ export default {
             association: 'escolaridade',
             attributes: ['id', 'nome']
           }, {
+            association: 'tempoEstudo',
+            attributes: ['id', 'nome']
+          }, {
             association: 'profissao',
             attributes: ['id', 'nome']
           }, {

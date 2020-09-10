@@ -29,11 +29,7 @@ export default {
     /**
      * cria um novo registro de situação profissional
      */
-    createSituacaoProfissional: (parent, args, { models }) => models.SituacaoProfissional.create({
-      nome: args.nome,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }),
+    createSituacaoProfissional: (parent, args, { models }) => models.SituacaoProfissional.create(args),
 
     /**
      * atualiza um registro de situação profissional, dado o id

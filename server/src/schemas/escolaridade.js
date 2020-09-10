@@ -1,7 +1,7 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de escolaridade
- * @module schemas/escolaridade
- * @author Josafá Santos
+ * @title Descritores GraphQL para as operações sobre a tabela de escolaridade
+ * @module src/schemas/escolaridade
+ * @author Josafá Santos dos Reis
  */
 export default `
   type Escolaridade {

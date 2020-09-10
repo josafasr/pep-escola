@@ -26,6 +26,8 @@ import { CREATE_WITH_INCLUDES, GET_WITH_INCLUDES } from '../graphql/paciente'
 
 import PacienteContext from '../contexts/PacienteContext'
 import PessoaContext from '../contexts/PessoaContext'
+import ContatoContext from '../contexts/ContatoContext'
+import EnderecoContext from '../contexts/EnderecoContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,32 +91,49 @@ function PacienteEdit(props) {
 
   const [handleCreatePaciente] = useMutation(CREATE_WITH_INCLUDES, {
     variables: {
-      ...paciente,
+      prontuario: paciente.prontuario,
+      rg: paciente.rg,
+      cpf: paciente.cpf,
+      cartaoFamilia: paciente.cartaoFamilia,
+      cns: paciente.cns,
+      agenteComunitario: paciente.agenteComunitario,
+      encaminhadoPor: paciente.encaminhadoPor,
+      unidadeSaudeId: paciente.unidadeSaude?.id,
+      naturalidadeId: paciente.naturalidade?.id,
+      estadoCivilId: paciente.estadoCivil?.id,
+      religiaoId: paciente.religiao?.id,
+      corPeleId: paciente.corPele?.id,
+      escolaridadeId: paciente.escolaridade?.id,
+      tempoEstudoId: paciente.tempoEstudo?.id,
+      profissaoId: paciente.profissao?.id,
+      situacaoProfissionalId: paciente.situacaoProfissional?.id,
       pessoa: {
         ...pessoa,
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
         contato: contato,
-        enderecos: [endereco]
+        enderecos: [{
+          tipoLogradouroId: endereco.tipoLogradouro?.id,
+          logradouro: endereco.logradouro,
+          numero: parseInt(endereco.numero),
+          bairro: endereco.bairro,
+          complemento: endereco.complemento,
+          cep: endereco.cep,
+          cidadeId: endereco.cidade?.id
+        }]
       }
     }
   })
 
-  const { loading, data, error } = useQuery(GET_WITH_INCLUDES, {
+  const { loading, error } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
     onCompleted: (data) => {
       setPaciente(data.paciente)
       setPessoa(data.paciente.pessoa)
+      setContato(data.paciente.pessoa.contato)
+      setEndereco(data.paciente.pessoa.enderecos[0])
     },
     skip: !id
   })
-
-  const handleChangeContato = data => {
-    setContato(data)
-  }
-
-  const handleChangeEndereco = data => {
-    setEndereco(data)
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -172,11 +191,12 @@ function PacienteEdit(props) {
           <legend>
             <Typography className={classes.boxTitle}>Contato</Typography>
           </legend>
-          <ContatoForm
-            contatoData={data?.paciente?.pessoa?.contato}
-            onChange={handleChangeContato}
-            ref={contatoRef}
-          />
+          <ContatoContext.Provider value={{contato, setContato}}>
+            <ContatoForm
+              ref={contatoRef}
+              disabled={!!id}
+            />
+          </ContatoContext.Provider>
         </Box>
       </Paper>
 
@@ -185,11 +205,12 @@ function PacienteEdit(props) {
           <legend>
             <Typography className={classes.boxTitle}>Endereço</Typography>
           </legend>
-          <EnderecoForm
-            enderecoData={data?.paciente?.pessoa?.enderecos[0]}
-            onChange={handleChangeEndereco}
-            ref={enderecoRef}
-          />
+          <EnderecoContext.Provider value={{endereco, setEndereco}}>
+            <EnderecoForm
+              ref={enderecoRef}
+              disabled={!!id}
+            />
+          </EnderecoContext.Provider>
         </Box>
       </Paper>
 

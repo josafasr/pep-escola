@@ -29,11 +29,7 @@ export default {
     /**
      * cria um novo registro de profissão
      */
-    createProfissao: (parent, args, { models }) => models.Profissao.create({
-      nome: args.nome,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }),
+    createProfissao: (parent, args, { models }) => models.Profissao.create(args),
 
     /**
      * atualiza um registro de profissão, dado o id

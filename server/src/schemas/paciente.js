@@ -21,6 +21,7 @@ export default `
     religiao: Religiao
     corPele: CorPele
     escolaridade: Escolaridade
+    tempoEstudo: TempoEstudo
     profissao: Profissao
     situacaoProfissional: SituacaoProfissional
     especialidades: [Especialidade]
@@ -54,6 +55,7 @@ export default `
       religiaoId: ID,
       corPeleId: ID,
       escolaridadeId: ID,
+      tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID]
@@ -75,6 +77,7 @@ export default `
       religiaoId: ID,
       corPeleId: ID,
       escolaridadeId: ID,
+      tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID]
@@ -97,6 +100,7 @@ export default `
       religiaoId: ID,
       corPeleId: ID,
       escolaridadeId: ID,
+      tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID]

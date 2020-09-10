@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@material-ui/core'
 
-import { LOAD_DROP_DOWNS } from '../graphql/consulta'
+import { LOAD_DROP_DOWNS } from '../graphql/paciente'
 
 import NaturalidadeAutocomplete from '../components/autocomplete/NaturalidadeAutocomplete'
 import PacienteContext from '../contexts/PacienteContext'
@@ -72,6 +72,7 @@ function PacienteForm(props, ref) {
       religiao: {},
       corPele: {},
       escolaridade: {},
+      tempoEstudo: {},
       profissao: {},
       situacaoProfissional: {}
     })
@@ -195,7 +196,9 @@ function PacienteForm(props, ref) {
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
-      <NaturalidadeAutocomplete />
+      <NaturalidadeAutocomplete
+        disabled={disabled}
+      />
 
       <TextField
         className={classes.formFields}
@@ -266,6 +269,24 @@ function PacienteForm(props, ref) {
         }}
       >
         {data.escolaridades.map((item) =>
+          <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
+      </TextField>
+
+      <TextField
+        className={classes.formFields}
+        name="tempoEstudo"
+        value={paciente?.tempoEstudo || ''}
+        onChange={handleChange}
+        label="Tempo de estudo"
+        inputProps={{
+          readOnly: disabled
+        }}
+        select
+        SelectProps={{
+          renderValue: value => value.nome
+        }}
+      >
+        {data.temposEstudo.map((item) =>
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 

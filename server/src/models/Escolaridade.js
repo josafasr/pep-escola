@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de escolaridades
+ * @title Mapeamento da tabela de escolaridades
  * @module src/models/Escolaridade
  * @author Josafá Santos dos Reis
  */
@@ -11,17 +11,17 @@ export default (sequelize, DataTypes) => {
   }, {
     schema: 'dados_gerais',
     tableName: 'escolaridade'
-  });
+  })
 
   Escolaridade.associate = (models) => {
     /**
      * Relacionamento com a tabela de pacientes
-     * @see module:models/Paciente
+     * @see module:src/models/Paciente
      */
     Escolaridade.hasMany(models.Paciente, {
       as: 'pacientes',
       foreignKey: 'escolaridadeId'
     })
-  };
-  return Escolaridade;
-};
+  }
+  return Escolaridade
+}

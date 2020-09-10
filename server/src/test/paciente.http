@@ -1,0 +1,23 @@
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+  createTempoEstudo(nome: "Incompleto") {
+    id
+    nome
+  }
+}
+
+###
+
+POST http://localhost:4000/api
+content-type: application/json
+X-Request-Type: GraphQL
+
+mutation {
+  createProfissao(nome: "Nova Profissão") {
+    id
+    nome
+  }
+}
