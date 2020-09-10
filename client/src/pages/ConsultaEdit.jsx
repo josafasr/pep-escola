@@ -246,7 +246,7 @@ function ConsultaEdit() {
           <PessoaContext.Provider value={{pessoa, setPessoa}}>
             <PessoaForm
               ref={pessoaRef}
-              disabled={!!pacienteId}
+              disabled={!pacienteId}
             />
           </PessoaContext.Provider>
         </Paper>
@@ -265,7 +265,7 @@ function ConsultaEdit() {
                 <PacienteContext.Provider value={[paciente, setPaciente]}>
                   <PacienteForm
                     ref={pacienteRef}
-                    disabled={!!pacienteId}
+                    disabled={!pacienteId}
                   />
                 </PacienteContext.Provider>
               </Paper>
@@ -281,6 +281,7 @@ function ConsultaEdit() {
               <Paper className={classes.paper} elevation={2}>
                 <ConsultaForm
                   ref={consultaRef}
+                  disabled={!pacienteId}
                   />
               </Paper>
               {buttons}

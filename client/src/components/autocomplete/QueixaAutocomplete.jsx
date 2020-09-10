@@ -19,6 +19,8 @@ import ConsultaContext from '../../contexts/ConsultaContext'
 const filter = createFilterOptions();
 
 export default function QueixaAutocomplete(props) {
+
+  const { disabled } = props
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
   const [value, setValue] = React.useState({})
@@ -161,7 +163,7 @@ export default function QueixaAutocomplete(props) {
         onClose={() => {
           setOpen(false)
         }}
-        value={consulta.queixaPrincipal || ''}
+        value={consulta?.queixaPrincipal || ''}
         onChange={handleChange}
         inputValue={inputValue}
         onInputChange={handleInputChange}
@@ -199,9 +201,11 @@ export default function QueixaAutocomplete(props) {
           <TextField
             {...params}
             label="Queixa principal"
+            placeholder="Digite para carregar"
             size="small"
             InputProps={{
               ...params.InputProps,
+              readOnly: disabled,
               endAdornment: (
                 <div>
                   {loading ? <CircularProgress color="inherit" size={30} /> : null}

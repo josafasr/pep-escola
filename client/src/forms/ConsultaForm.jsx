@@ -46,14 +46,15 @@ const useStyles = makeStyles((theme) => ({
 
 function ConsultaForm(props, ref) {
   const classes = useStyles()
+  const { disabled } = props
   const [consulta, setConsulta] = React.useContext(ConsultaContext)
 
   const handleChange = event => {
     const { name, value } = event.target
-    setConsulta({ ...consulta, [name]: value })
-    /* if (props.onChange) {
-      props.onChange({ 'name': name, 'value': value })
-    } */
+    setConsulta(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const handleReset = () => {
@@ -93,7 +94,9 @@ function ConsultaForm(props, ref) {
   return (
     <div className={classes.formFields}>
 
-      <QueixaAutocomplete />
+      <QueixaAutocomplete
+        disabled={disabled}
+      />
 
       <TextField
         className={classes.textArea}
@@ -104,6 +107,9 @@ function ConsultaForm(props, ref) {
         rows={3}
         variant="filled"
         label="Observações sobre a queixa principal"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
@@ -112,6 +118,9 @@ function ConsultaForm(props, ref) {
         value={consulta.acompanhante || ''}
         onChange={handleChange}
         label="Acompanhante"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
       <TextField
@@ -123,6 +132,9 @@ function ConsultaForm(props, ref) {
         rows={3}
         variant="filled"
         label="História da Doença Atual"
+        inputProps={{
+          readOnly: disabled
+        }}
       />
 
     </div>

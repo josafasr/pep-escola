@@ -1,5 +1,5 @@
 /**
- * @file Operações sobre a tabela de consultas
+ * @title Operações sobre a tabela de consultas
  * @module src/resolvers/consulta
  * @author Josafá Santos dos Reis
  */
@@ -167,10 +167,6 @@ export default {
             await consulta.addQueixas(queixas)
           }
           return consulta  // para 'result' receber 'consulta'
-
-          /* if (recordatorioAlimentar) {
-            await consulta.addRecordatorioAlimentar(recordatorioAlimentar)
-          } */
         }) // tx.commit
         // 'consulta' ('result') fica disponível apenas após o commit
         return {
