@@ -12,6 +12,11 @@
 } from '@material-ui/core'
 
 import QueixaAutocomplete from '../components/autocomplete/QueixaAutocomplete'
+//import AlimentoAutocomplete from '../components/autocomplete/AlimentoAutocomplete'
+/* import {
+  RecordatorioAlimentarReducer,
+  RecordatorioAlimentarContext
+} from '../components/state/recordatorio-alimentar/RecordatorioAlimentarReducer.js.sample' */
 import ConsultaContext from '../contexts/ConsultaContext'
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +53,7 @@ function ConsultaForm(props, ref) {
   const classes = useStyles()
   const { disabled } = props
   const [consulta, setConsulta] = React.useContext(ConsultaContext)
+  //const [recAlimState, recAlimDispatch] = React.useReducer(RecordatorioAlimentarReducer)
 
   const handleChange = event => {
     const { name, value } = event.target
@@ -137,6 +143,37 @@ function ConsultaForm(props, ref) {
         }}
       />
 
+      {/* <TextField
+        className={classes.textArea}
+        name="suspeitasDiagnosticas"
+        value={consulta.suspeitasDiagnosticas || ''}
+        onChange={handleChange}
+        multiline
+        rows={3}
+        variant="filled"
+        label="Suspeitas Diagnósticas"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
+
+      <TextField
+        className={classes.textArea}
+        name="planoConduta"
+        value={consulta.planoConduta || ''}
+        onChange={handleChange}
+        multiline
+        rows={3}
+        variant="filled"
+        label="Plano (Conduta)"
+        inputProps={{
+          readOnly: disabled
+        }}
+      /> */}
+
+      {/* <RecordatorioAlimentarContext.Provider value={{recAlimState, recAlimDispatch}}> */}
+        {/* <AlimentoAutocomplete /> */}
+      {/* </RecordatorioAlimentarContext.Provider> */}
     </div>
   )
 }

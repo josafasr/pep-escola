@@ -6,7 +6,10 @@ const ConsultaContext = createContext(
     queixaPrincipal: {},
     queixaPrincipalObs: '',
     historiaDoencaAtual: '',
-    queixas: []
+    recordatorioAlimentar: [],
+    queixas: [],
+    suspeitasDiagnosticas: '',
+    planoConduta: ''
   }
 )
 

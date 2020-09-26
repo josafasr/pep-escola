@@ -14,6 +14,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       field: 'historia_doenca_atual'
     },
+    suspeitasDiagnosticas: {
+      type: DataTypes.TEXT,
+      field: 'suspeitas_diagnosticas'
+    },
+    planoConduta: {
+      type: DataTypes.TEXT,
+      fields: 'plano_conduta'
+    },
     pacienteId: {
       type: DataTypes.INTEGER,
       field: 'paciente_id'

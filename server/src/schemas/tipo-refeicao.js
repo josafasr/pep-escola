@@ -1,29 +1,34 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de tipo de refeição
- * @module schemas/tipo-refeicao
- * @author Marcos Porto 
+ * @title Descritores GraphQL para as operações sobre a tabela de tipo de refeição
+ * @module src/schemas/tipo-refeicao
+ * @author Marcos Porto, Josafá Santos dos Reis
  */
 
 export default `
-type TipoRefeicao {
+  type TipoRefeicao {
     id: ID
     nome: String
-}
+  }
 
-type CreateTipoRefeicaoResponse {
+  input TipoRefeicaoInput {
+    id: ID
+    nome: String
+  }
+
+  type TipoRefeicaoResponse {
     ok: Boolean
     tipoRefeicao: TipoRefeicao
     errors: [Error]
   }
 
-type Query {
+  type Query {
     tipoRefeicao(id: ID!): TipoRefeicao
     tiposRefeicao: [TipoRefeicao]
-}
+  }
 
-type Mutation{
-    createTipoRefeicao(nome: String): CreateTipoRefeicaoResponse
-    updateTipoRefeicao(id: ID!, nome: String): CreateTipoRefeicaoResponse
+  type Mutation{
+    createTipoRefeicao(nome: String): TipoRefeicaoResponse
+    updateTipoRefeicao(id: ID!, nome: String): TipoRefeicaoResponse
     deleteTipoRefeicao(id: ID!): Boolean
-}
-`
+  }
+  `

@@ -1,5 +1,5 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de consultas
+ * @title Descritores GraphQL para as operações sobre a tabela de consultas
  * @module src/schemas/consulta
  * @author Josafá Santos dos Reis
  */
@@ -7,12 +7,14 @@ export default `
   type Consulta {
     id: ID
     acompanhante: String
-    queixaPrincipalObs: String
+    queixaPrincipalObs: String  # excluir
     historiaDoencaAtual: String
     paciente: Paciente
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixaPrincipal: Queixa
     queixas: [Queixa]
+    suspeitasDiagnosticas: String
+    planoConduta: String
     createdAt: String
   }
 
@@ -35,9 +37,11 @@ export default `
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
       pacienteId: ID!,
-      recordatorioAlimentar: [ID]
+      recordatorioAlimentar: [RecordatorioAlimentarInput]
       queixaPrincipalId: ID
-      queixas: [ID]
+      queixas: [ID],
+      suspeitasDiagnosticas: String,
+      planoConduta: String
     ): ConsultaResponse
 
     updateConsulta(
@@ -45,11 +49,13 @@ export default `
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
+      suspeitasDiagnosticas: String,
+      planoConduta: String,
       pacienteId: ID!,
-      recordatorioAlimentar: [ID]
+      recordatorioAlimentar: [RecordatorioAlimentarInput]
       queixas: [ID]
     ): ConsultaResponse
 
-    deleteConsulta(id: ID!): Int
+    deleteConsulta(id: ID!): Boolean
   }
 `

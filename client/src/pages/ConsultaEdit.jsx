@@ -26,18 +26,24 @@ import {
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
 import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import PessoaForm from '../forms/PessoaForm'
-import PacienteForm from '../forms/PacienteForm'
+//import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
-import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
 import PessoaContext from '../contexts/PessoaContext'
-import PacienteContext from '../contexts/PacienteContext'
+//import PacienteContext from '../contexts/PacienteContext'
 import ConsultaContext from '../contexts/ConsultaContext'
 import { toPtBrDate } from '../utils/format'
+import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
+import RecordatorioAlimentarForm from '../forms/RecordatorioAlimentarForm'
+import DiagnosticoForm from '../forms/DiagnosticoForm'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column'
+  },
+
+  header: {
+    marginTop: 0
   },
 
   stepper: {
@@ -112,7 +118,7 @@ function ConsultaEdit() {
   const [activeStep, setActiveStep] = React.useState(0)
 
   const pessoaRef = React.useRef()
-  const pacienteRef = React.useRef()
+  //const pacienteRef = React.useRef()
   //const contatoRef = React.useRef()
   //const enderecoRef = React.useRef()
   const consultaRef = React.useRef()
@@ -145,53 +151,57 @@ function ConsultaEdit() {
     skip: !!pacienteId
   })
 
-  const bindConsulta = (toBind) => {
+  /* const bindConsulta = (toBind) => {
     const queixaPrincipalId = parseInt(toBind.queixaPrincipal.id)
     const queixasIds = toBind.queixas.map(queixa => parseInt(queixa.id))
 
     return { queixaPrincipalId, queixasIds }
-  }
+  } */
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    const bindedFields = bindConsulta(consulta)
-    console.log(bindedFields);
+    /* const bindedFields = bindConsulta(consulta)
+    console.log(bindedFields); */
+
+    const recordatorioAlimentar = consulta.recordatorioAlimentar.map(recordatorio => {
+      const { alimento, tipoRefeicao } = recordatorio
+      delete tipoRefeicao['__typename']
+      if (alimento.__typename) {
+        delete alimento['__typename']
+      }
+
+      return {
+        ...recordatorio,
+        alimento,
+        tipoRefeicao
+      }
+    })
 
     const consultaResponse = await handleCreateConsulta({
       variables: {
-        pacienteId,
+        pacienteId: parseInt(pacienteId),
         acompanhante: consulta.acompanhante,
         queixaPrincipalObs: consulta.queixaPrincipalObs,
         historiaDoencaAtual: consulta.historiaDoencaAtual,
         queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
-        queixas: consulta.queixas.map(queixa => parseInt(queixa.id))
+        queixas: consulta.queixas.map(queixa => parseInt(queixa.id)),
+        recordatorioAlimentar, //: consulta.recordatorioAlimentar
+        suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
+        planoConduta: consulta.planoConduta
       }
     })
 
     if (consultaResponse.data.createConsulta.ok) {
       alert('Consulta criada com sucesso!')
-      handleResetForms()
+      handleGoBack()
     } else {
       alert('Não foi possível criar a consulta :(')
     }
   }
-/* 
-  const handleReset = () => {
-    pessoaRef.current.handleReset()
-    pacienteRef.current.handleReset()
-    contatoRef.current.handleReset()
-    enderecoRef.current.handleReset()
-    consultaRef.current.handleReset()
-  }
-*/
-  const handleResetForms = () => {
-    //setPessoa({})
-    //setPaciente({})
-    //setContato({})
-    //setEndereco({})
-    //setConsulta({})
+
+  const handleGoBack = () => {
     history.goBack()
   }
 
@@ -209,7 +219,7 @@ function ConsultaEdit() {
 /* 
   const handleResetSteps = () => {
     setActiveStep(0)
-    handleResetForms()
+    handleGoBack()
   }
  */
 
@@ -217,21 +227,21 @@ function ConsultaEdit() {
     <div>
       <Button
         //disabled={activeStep === 0}
-        onClick={activeStep === 0 ? handleResetForms : handleBack}
+        onClick={activeStep === 0 ? handleGoBack : handleBack}
         className={classes.button}
         size="small"
       >
         Voltar
       </Button>
       <Button
-        disabled={activeStep === 2 && !pacienteId}
+        disabled={activeStep === 3 && !pacienteId}
         variant="contained"
         color="primary"
-        onClick={activeStep === 2 ? handleSubmit : handleNext}
+        onClick={activeStep === 3 ? handleSubmit : handleNext}
         className={classes.button}
         size="small"
       >
-        {activeStep === 2 ? 'Salvar' : 'Avançar'}
+        {activeStep === 3 ? 'Salvar' : 'Avançar'}
       </Button>
     </div>
   )
@@ -243,6 +253,7 @@ function ConsultaEdit() {
       <CssBaseline />
       <ConsultaContext.Provider value={[consulta, setConsulta]}>
         <Paper className={classes.paper} elevation={2}>
+          <h2 className={classes.header}>Nova Consulta</h2>
           <PessoaContext.Provider value={{pessoa, setPessoa}}>
             <PessoaForm
               ref={pessoaRef}
@@ -256,7 +267,7 @@ function ConsultaEdit() {
           orientation="vertical"
           classes={{ root: classes.stepper }}
         >
-          <Step disabled={false}>
+          {/* <Step disabled={false}>
             <StepButton className={classes.stepButton} onClick={handleStep(0)}>
               <StepLabel className={classes.stepLabel}>Dados Pessoais</StepLabel>
             </StepButton>
@@ -271,10 +282,10 @@ function ConsultaEdit() {
               </Paper>
               {buttons}
             </StepContent>
-          </Step>
+          </Step> */}
           
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(1)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(0)}>
               <StepLabel className={classes.stepLabel}>Anamnese</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -289,13 +300,39 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(2)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(1)}>
               <StepLabel className={classes.stepLabel}>Interrogatório Sistemático</StepLabel>
             </StepButton>
 
             <StepContent classes={{ root: classes.stepContent }}>
               <Paper className={classes.paper} elevation={2}>
                 <InterrogatorioSistematicoForm />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(2)}>
+              <StepLabel className={classes.stepLabel}>Recordatório Alimentar</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <RecordatorioAlimentarForm />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(3)}>
+              <StepLabel className={classes.stepLabel}>Diagnóstico</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <DiagnosticoForm
+                  disabled={!pacienteId}
+                />
               </Paper>
               {buttons}
             </StepContent>

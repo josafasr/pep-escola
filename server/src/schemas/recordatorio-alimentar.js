@@ -1,45 +1,54 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de recordatorio alimentar
+ * @title Descritores GraphQL para as operações sobre a tabela de recordatório alimentar
  * @module src/schemas/recordatorio-alimentar
- * @author Marcos Porto 
+ * @author Marcos Porto, Josafá Santos dos Reis
  */
 
 export default `
-type RecordatorioAlimentar {
+  type RecordatorioAlimentar {
     id: ID
     quantidade: Int
+    consulta: Consulta
     tipoRefeicao: TipoRefeicao
     alimento: Alimento
-}
+  }
 
-type CreateRecordatorioAlimentarResponse {
+  input RecordatorioAlimentarInput {
+    quantidade: Int
+    tipoRefeicaoId: ID
+    tipoRefeicao: TipoRefeicaoInput
+    alimentoId: ID
+    alimento: AlimentoInput
+  }
+
+  type RecordatorioAlimentarResponse {
     ok: Boolean
     recordatorioAlimentar: RecordatorioAlimentar
     errors: [Error]
+    }
+
+  type Query {
+    recordatorioAlimentar(id: ID!): RecordatorioAlimentar
+    recordatoriosAlimentar: [RecordatorioAlimentar]
   }
 
-type Query {
-    recordatorioAlimentar(id: ID!): RecordatorioAlimentar
+  type Mutation {
+    createRecordatorioAlimentar(
+      quantidade: Int,
+      consultaId: ID!,
+      tipoRefeicaoId: ID!,
+      alimentoId: ID,
+      alimento: AlimentoInput,
+    ): RecordatorioAlimentarResponse
 
-    recordatoriosAlimentar: [RecordatorioAlimentar]
-}
-
-type Mutation {
-  createRecordatorioAlimentar(
-    quantidade: Int,
-    consultaId: ID!,
-    tipoRefeicaoId: ID!,
-    alimentoId: ID!
-  ): CreateRecordatorioAlimentarResponse
-
-  updateRecordatorioAlimentar(
-    id: ID!,
-    quantidade: Int,
-    consultaId: ID,
-    tipoRefeicaoId: ID,
-    alimentoId: ID
-  ): RecordatorioAlimentar
+    updateRecordatorioAlimentar(
+      id: ID!,
+      quantidade: Int,
+      consultaId: ID,
+      tipoRefeicaoId: ID,
+      alimentoId: ID
+    ): RecordatorioAlimentarResponse
 
     deleteRecordatorioAlimentar(id: ID!): Boolean
-}
-`
+  }
+  `

@@ -52,8 +52,9 @@ export default {
     /**
      * restorna um registro de consulta pelo id
      */
-    consulta: async (parent, { id }, { models }) => {
+    consulta: async (_, { id }, { models }) => {
       const consulta = await models.Consulta.findByPk(id, {
+        attributes: { exclude: ['updatedAt'] },
         include: [
           {
             association: 'paciente',
@@ -107,14 +108,14 @@ export default {
             ]
           }, {
             association: 'recordatorioAlimentar',
-            attributes: ['quantidade'],
+            attributes: ['id', 'quantidade'],
             include: [
               {
                 association: 'alimento',
-                attributes: ['nome']
+                attributes: ['id', 'nome']
               }, {
                 association: 'tipoRefeicao',
-                attributes: ['nome']
+                attributes: ['id', 'nome']
               }
             ]
           }, {
@@ -128,8 +129,7 @@ export default {
               attributes: ['id', 'nome']
             }
           }
-        ],
-        attributes: { exclude: ['createdAt', 'updatedAt'] }
+        ]
       })
       return consulta
     },
@@ -154,12 +154,39 @@ export default {
     /**
      * cria um novo registro de consulta
      */
-    createConsulta: async (parent, { queixas, ...ohterArgs }, { sequelize, models }) => {
+    createConsulta: async (_, { queixas, recordatorioAlimentar, ...ohterArgs }, { sequelize, models }) => {
       try {
+        const recordatorio = recordatorioAlimentar.map(item => {
+          const { alimento } = item
+          if (alimento && alimento.id) {
+            return {
+              quantidade: item.quantidade,
+              alimentoId: parseInt(item.alimento.id),
+              tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
+            }
+          } else {
+            return {
+              quantidade: item.quantidade,
+              alimento: {
+                nome: item.alimento.nome
+              },
+              tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
+            }
+          }
+        })
+
         const result = await sequelize.transaction(async (tx) => {
-          const consulta = await models.Consulta.create({ ...ohterArgs }, {
+          const consulta = await models.Consulta.create({
+            ...ohterArgs,
+            recordatorioAlimentar: recordatorio
+          }, {
             include: [
-              { association: 'recordatorioAlimentar' }
+              {
+                association: 'recordatorioAlimentar',
+                include: {
+                  association: 'alimento'
+                }
+              }
               /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
             ]
           })

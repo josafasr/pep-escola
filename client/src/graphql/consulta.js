@@ -115,25 +115,45 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      recordatorioAlimentar {
+        id
+        quantidade
+        alimento {
+          id
+          nome
+        }
+        tipoRefeicao {
+          id
+          nome
+        }
+      }
+      suspeitasDiagnosticas
+      planoConduta
     }
   }`
 
 export const CREATE_CONSULTA = gql`
   mutation CreateConsulta(
+    $pacienteId: ID!,
     $acompanhante: String,
     $queixaPrincipalObs: String,
     $historiaDoencaAtual: String,
-    $pacienteId: ID!,
     $queixaPrincipalId: ID,
-    $queixas: [ID]
+    $queixas: [ID],
+    $recordatorioAlimentar: [RecordatorioAlimentarInput],
+    $suspeitasDiagnosticas: String,
+    $planoConduta: String
   ) {
     createConsulta(
+      pacienteId: $pacienteId,
       acompanhante: $acompanhante,
       queixaPrincipalObs: $queixaPrincipalObs,
       historiaDoencaAtual: $historiaDoencaAtual,
-      pacienteId: $pacienteId,
+      recordatorioAlimentar: $recordatorioAlimentar,
       queixaPrincipalId: $queixaPrincipalId
-      queixas: $queixas
+      queixas: $queixas,
+      suspeitasDiagnosticas: $suspeitasDiagnosticas,
+      planoConduta: $planoConduta
     ) {
       ok
       consulta {
@@ -149,6 +169,20 @@ export const CREATE_CONSULTA = gql`
           id
           nome
         }
+        recordatorioAlimentar {
+          id
+          quantidade
+          alimento {
+            id
+            nome
+          }
+          tipoRefeicao {
+            id
+            nome
+          }
+        }
+        suspeitasDiagnosticas
+        planoConduta
       }
       errors {
         path
