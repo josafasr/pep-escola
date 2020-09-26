@@ -104,8 +104,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="prontuario"
-        value={paciente?.prontuario || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.prontuario || ''}
+        onBlur={handleChange}
         label="Nº Prontuário"
         inputProps={{
           readOnly: disabled
@@ -115,8 +115,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="rg"
-        value={paciente?.rg || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.rg || ''}
+        onBlur={handleChange}
         label="RG"
         inputProps={{
           readOnly: disabled
@@ -126,8 +126,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cpf"
-        value={paciente?.cpf || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.cpf || ''}
+        onBlur={handleChange}
         label="CPF"
         inputProps={{
           readOnly: disabled
@@ -137,8 +137,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cartaoFamilia"
-        value={paciente?.cartaoFamilia || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.cartaoFamilia || ''}
+        onBlur={handleChange}
         label="Cartão Familia"
         inputProps={{
           readOnly: disabled
@@ -148,8 +148,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cns"
-        value={paciente?.cns || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.cns || ''}
+        onBlur={handleChange}
         label="CNS"
         inputProps={{
           readOnly: disabled
@@ -159,8 +159,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="agenteComunitario"
-        value={paciente?.agenteComunitario || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.agenteComunitario || ''}
+        onBlur={handleChange}
         label="ACS"
         inputProps={{
           readOnly: disabled
@@ -170,8 +170,8 @@ function PacienteForm(props, ref) {
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="encaminhadoPor"
-        value={paciente?.encaminhadoPor || ''}
-        onChange={handleChange}
+        defaultValue={paciente?.encaminhadoPor || ''}
+        onBlur={handleChange}
         label="Encaminhado por"
         inputProps={{
           readOnly: disabled
