@@ -27,6 +27,8 @@ import { CREATE_WITH_INCLUDES, GET_WITH_INCLUDES } from '../graphql/paciente'
 import PacienteContext from '../contexts/PacienteContext'
 import PessoaContext from '../contexts/PessoaContext'
 import ContatoContext from '../contexts/ContatoContext'
+import contatoReducer from '../store/contato/reducer'
+import { loadData } from '../store/contato/acitons'
 import EnderecoContext from '../contexts/EnderecoContext'
 
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +82,8 @@ function PacienteEdit(props) {
   const classes = useStyles()
 
   const [pessoa, setPessoa] = React.useState({})
-  const [contato, setContato] = React.useState({})
+  //const [contato, setContato] = React.useState({})
+  const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
   const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState({})
 
@@ -110,7 +113,7 @@ function PacienteEdit(props) {
       pessoa: {
         ...pessoa,
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
-        contato: contato,
+        contato: contatoState,
         enderecos: [{
           tipoLogradouroId: endereco.tipoLogradouro?.id,
           logradouro: endereco.logradouro,
@@ -128,8 +131,11 @@ function PacienteEdit(props) {
     variables: { id },
     onCompleted: (data) => {
       setPaciente(data.paciente)
-      setPessoa(data.paciente.pessoa)
-      setContato(data.paciente.pessoa.contato)
+      setPessoa({
+        ...data.paciente.pessoa,
+        dataNascimento: new Date(`${data.paciente.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", {dateStyle: "short"})
+      })
+      contatoDispatch(loadData(data.paciente.pessoa.contato))
       setEndereco(data.paciente.pessoa.enderecos[0])
     },
     skip: !id
@@ -191,7 +197,7 @@ function PacienteEdit(props) {
           <legend>
             <Typography className={classes.boxTitle}>Contato</Typography>
           </legend>
-          <ContatoContext.Provider value={{contato, setContato}}>
+          <ContatoContext.Provider value={{contatoState, contatoDispatch}}>
             <ContatoForm
               ref={contatoRef}
               disabled={!!id}

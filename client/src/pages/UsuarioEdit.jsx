@@ -16,6 +16,8 @@ import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES } from '../graphql/usuario'
 import PessoaContext from '../contexts/PessoaContext'
 import EnderecoContext from '../contexts/EnderecoContext'
 import ContatoContext from '../contexts/ContatoContext'
+import contatoReducer from '../store/contato/reducer'
+import { loadData } from '../store/contato/acitons'
 import UsuarioContext from '../contexts/UsuarioContext'
 import PessoaForm from '../forms/PessoaForm'
 import EnderecoForm from '../forms/EnderecoForm'
@@ -29,7 +31,7 @@ export default function UsuarioEdit() {
 
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
-  const [contato, setContato] = React.useState({})
+  const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
   const [endereco, setEndereco] = React.useState({})
 
   const pessoaRef = React.useRef()
@@ -43,7 +45,7 @@ export default function UsuarioEdit() {
       pessoa: {
         ...pessoa,
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
-        contato: contato,
+        contato: contatoState,
         enderecos: [endereco]
       }
     }
@@ -86,7 +88,8 @@ export default function UsuarioEdit() {
     variables: { id },
     onCompleted: (data) => {
       setPessoa(data.usuario.pessoa)
-      setContato(data.usuario.pessoa.contato)
+      //setContato(data.usuario.pessoa.contato)
+      contatoDispatch(loadData(data.usuario.pessoa.contato))
       setEndereco(data.usuario.pessoa.enderecos[0])
       setUsuario(data.usuario)
     },
@@ -144,7 +147,7 @@ export default function UsuarioEdit() {
                 <legend>
                   <Typography>Contato</Typography>
                 </legend>
-                <ContatoContext.Provider value={{contato, setContato}}>
+                <ContatoContext.Provider value={{contatoState, contatoDispatch}}>
                   <ContatoForm
                     ref={contatoRef}
                     disabled={!!id}

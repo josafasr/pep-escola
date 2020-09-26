@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 
 import ContatoContext from '../contexts/ContatoContext'
+import { updateField, reset } from '../store/contato/acitons'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -39,18 +40,21 @@ function ContatoForm(props, ref) {
 
   const classes = useStyles()
 
-  const {contato, setContato} = React.useContext(ContatoContext)
+  const {contatoState, contatoDispatch} = React.useContext(ContatoContext)
+  //const [contato, dispatch] = React.useReducer(contatoReducer)
 
   const handleChange = event => {
     const { name, value } = event.target
-    setContato(prevState => ({
+    /* setContato(prevState => ({
       ...prevState,
       [name]: value
-    }))
+    })) */
+    contatoDispatch(updateField(name, value))
   }
 
   const handleReset = () => {
-    setContato({ celular: '', telefone: '', email: '' })
+    //setContato({ celular: '', telefone: '', email: '' })
+    contatoDispatch(reset())
   }
 
   /**
@@ -68,7 +72,7 @@ function ContatoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="celular"
-        value={contato.celular || ''}
+        value={contatoState?.celular || ''}
         onChange={handleChange}
         label="Celular"
         size="small"
@@ -80,7 +84,7 @@ function ContatoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="telefone"
-        value={contato.telefone || ''}
+        value={contatoState?.telefone || ''}
         onChange={handleChange}
         label="Telefone"
         size="small"
@@ -93,7 +97,7 @@ function ContatoForm(props, ref) {
         className={classes.formFields}
         type="email"
         name="email"
-        value={contato.email || ''}
+        value={contatoState?.email || ''}
         onChange={handleChange}
         label="E-mail"
         size="small"
