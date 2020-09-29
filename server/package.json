@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rm -rf dist/ && babel src -d dist",
     "start": "nodemon --exec babel-node src/index.js",
+    "test:e2e": "cucumber-js spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,12 +18,14 @@
     "@babel/node": "^7.10.5",
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
+    "@cucumber/cucumber": "^7.0.0-rc.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "jsdoc": "^3.6.5",
     "nodemon": "^2.0.4",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "superagent": "^6.1.0"
   },
   "dependencies": {
     "apollo-server-express": "^2.16.1",
