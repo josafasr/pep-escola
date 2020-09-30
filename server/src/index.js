@@ -22,7 +22,7 @@ const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')))
 
 const app = express()
-const url = '/api'
+const url = '/graphql'
 
 const getUser = async (req, res, next) => {
   const token = req.headers['x-token']
@@ -44,13 +44,23 @@ const getUser = async (req, res, next) => {
   next()
 }
 
-app.use(getUser)
+const requestHandler = (req, res, next) => {
+  if (req.method === 'POST' && req.url === '/graphql') {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({
+      message: 'Os argumentos não podem estar vazios'
+    }))
+    return
+  }
+  next()
+}
+
+app.use(getUser, requestHandler)
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req, res }) => {
-
+  context: ({ req, res }) => {
     return {
       models,
       sequelize: db.sequelize,

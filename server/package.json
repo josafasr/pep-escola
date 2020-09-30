@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rm -rf dist/ && babel src -d dist",
     "start": "nodemon --exec babel-node src/index.js",
-    "test:e2e": "cucumber-js spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:e2e": "dotenv cucumber-js -- spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps --publish-quiet"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
     "@cucumber/cucumber": "^7.0.0-rc.0",
+    "dotenv-cli": "^4.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",

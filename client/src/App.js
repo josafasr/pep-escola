@@ -19,7 +19,7 @@ function App(props) {
 
   const httpLink = new HttpLink({
     //uri: `https://${window.location.hostname}/api`
-    uri: `http://${window.location.hostname}:4000/api`
+    uri: `http://${window.location.hostname}:4000/graphql`
   })
 
   const authMiddleware = new ApolloLink((operation, forward) => {

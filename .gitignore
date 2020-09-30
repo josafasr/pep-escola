@@ -6,8 +6,10 @@
 
 */build/
 
-server/src/config/config.json
+*/src/config/config.json
 
 .vscode/launch.json
 
-server/src/config/
+*/src/config/
+
+.env
