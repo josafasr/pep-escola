@@ -14,14 +14,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       field: 'historia_doenca_atual'
     },
-    suspeitasDiagnosticas: {
-      type: DataTypes.TEXT,
-      field: 'suspeitas_diagnosticas'
-    },
-    planoConduta: {
-      type: DataTypes.TEXT,
-      fields: 'plano_conduta'
-    },
     pacienteId: {
       type: DataTypes.INTEGER,
       field: 'paciente_id'
@@ -29,6 +21,14 @@ export default (sequelize, DataTypes) => {
     queixaPrincipalId: {
       type: DataTypes.INTEGER,
       field: 'queixa_principal_id'
+    },
+    suspeitasDiagnosticas: {
+      type: DataTypes.TEXT,
+      field: 'suspeitas_diagnosticas'
+    },
+    planoConduta: {
+      type: DataTypes.TEXT,
+      fields: 'plano_conduta'
     }
   }, {
     schema: 'ceuas',
@@ -39,7 +39,7 @@ export default (sequelize, DataTypes) => {
     
     /**
      * Relacionamento com a tabela de pacientes
-     * @see module:models/Paciente
+     * @see module:src/models/Paciente
      */
     Consulta.belongsTo(models.Paciente, {
       as: 'paciente',
@@ -48,7 +48,7 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de recordatórrio alimentar
-     * @see module:models/RecordatorioAlimentar
+     * @see module:src/models/RecordatorioAlimentar
      */
     Consulta.hasMany(models.RecordatorioAlimentar, {
       as: 'recordatorioAlimentar',
@@ -56,8 +56,17 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
+     * Relacionamento com a tabela de queixas
+     * @see module:src/models/Queixa
+     */
+    Consulta.belongsTo(models.Queixa, {
+      as: 'queixaPrincipal',
+      foreignKey: 'queixaPrincipalId'
+    }),
+
+    /**
      * Relacionamento (M:M) com a tabela de queixas
-     * @see module:models/Queixa
+     * @see module:src/models/Queixa
      */
     Consulta.belongsToMany(models.Queixa, {
       through: models.ConsultaQueixa,
@@ -67,13 +76,16 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
-     * Relacionamento com a tabela de queixas
-     * @see module:models/Queixa
+     * Relacionamento (M:M) com a tabela de exame físico
+     * @see module:src/models/ExameFisico
      */
-    Consulta.belongsTo(models.Queixa, {
-      as: 'queixaPrincipal',
-      foreignKey: 'queixaPrincipalId'
+    Consulta.belongsToMany(models.ExameFisico, {
+      through: models.ConsultaExameFisico,
+      as: 'exameFisico',
+      foreignKey: 'consultaId',
+      otherKey: 'exameFisicoId'
     })
   }
+
   return Consulta
 }

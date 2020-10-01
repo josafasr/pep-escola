@@ -10,17 +10,6 @@ import assert from 'assert'
 
 When('o cliente cria uma requisição para a mutation createTipoExameFisico', function() {
   this.request = superagent('POST', `${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}/graphql`)
-  /*  'POST',
-    'localhost:4000/api',
-    [
-      {query: '{ mutation CreateTipoExameFisico($nome: String) createTipoExameFisico(nome: $nome) { statusCode } }'},
-      {variables: '{ "nome": ""}'}
-    ]
-  ) */
-  //request = superagent()
-  /* request
-  .send({query: '{ mutation CreateTipoExameFisico($nome: String) createTipoExameFisico(nome: $nome) { statusCode } }'})
-  .send({variables: '{ "nome": ""}'}) */
 })
 
 When('informa argumentos vazios', function() {

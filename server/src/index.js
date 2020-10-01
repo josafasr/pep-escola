@@ -55,12 +55,13 @@ const requestHandler = (req, res, next) => {
   next()
 }
 
-app.use(getUser, requestHandler)
+//app.use(getUser, requestHandler)
+app.use(getUser)
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req, res }) => {
+  context: ({ req }) => {
     return {
       models,
       sequelize: db.sequelize,

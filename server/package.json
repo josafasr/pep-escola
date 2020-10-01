@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist/ && babel src -d dist",
+    "build": "rimraf dist/ && babel src -d dist --copy-files",
+    "serve": "npm run build && node dist/index.js",
     "start": "nodemon --exec babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:e2e": "dotenv cucumber-js -- spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps --publish-quiet"
+    "test:e2e": "dotenv cucumber-js -- spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps --publish-quiet",
+    "watch": "nodemon -w src --exec npm run serve"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,7 @@
     "eslint-plugin-import": "^2.22.0",
     "jsdoc": "^3.6.5",
     "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
     "sequelize-cli": "^5.5.1",
     "superagent": "^6.1.0"
   },
