@@ -8,11 +8,7 @@ export default `
   type TipoExameFisico {
     id: ID
     nome: String
-  }
-
-  input TipoRefeicaoInput {
-    id: ID
-    nome: String
+    descricao: String
   }
 
   type TipoExameFisicoResponse {
@@ -27,8 +23,8 @@ export default `
   }
 
   type Mutation{
-    createTipoExameFisico(nome: String): TipoExameFisicoResponse
-    updateTipoExameFisico(id: ID!, nome: String): TipoExameFisicoResponse
+    createTipoExameFisico(nome: String, descricao: String): TipoExameFisicoResponse
+    updateTipoExameFisico(id: ID!, nome: String, descricao: String): TipoExameFisicoResponse
     deleteTipoExameFisico(id: ID!): Boolean
   }
   `

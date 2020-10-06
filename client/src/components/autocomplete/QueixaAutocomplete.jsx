@@ -36,7 +36,6 @@ export default function QueixaAutocomplete(props) {
     onCompleted: (data) => {
       setOptions(data.queixasByText)
     },
-    skip: !open,
     notifyOnNetworkStatusChange: true
   })
 
@@ -97,7 +96,6 @@ export default function QueixaAutocomplete(props) {
   })
 
   const handleInputChange = (_, value, reason) => {
-    
     setInputValue(value)
     setReason(reason)
   }
@@ -121,12 +119,7 @@ export default function QueixaAutocomplete(props) {
   React.useEffect(() => {
     let active = true
 
-    /* if (!loading) {
-      return undefined
-    } */
-
     if (active && (reason === 'input')) {
-      console.log(inputValue)
       if (inputValue && inputValue.length > 2) {
         handleQueixas({
           variables: {

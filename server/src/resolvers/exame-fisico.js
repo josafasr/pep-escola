@@ -12,7 +12,7 @@ export default {
   Query: {
 
     // retorna todos os exames fisicos
-    examesFisicos: (_, { models }) => models.ExameFisico.findAll({
+    examesFisicos: (_, args, { models }) => models.ExameFisico.findAll({
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: {
         association: 'tipoExameFisico',
@@ -84,7 +84,7 @@ export default {
     },
 
     // exclui um exame fisico, dado o seu id
-    deleteExameFisico: ({ id }, { models }) => models.ExameFisico.destroy({
+    deleteExameFisico: (_, { id }, { models }) => models.ExameFisico.destroy({
       where: {
         id
       }

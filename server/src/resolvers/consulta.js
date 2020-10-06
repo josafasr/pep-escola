@@ -107,6 +107,16 @@ export default {
               }
             ]
           }, {
+            association: 'queixaPrincipal',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'queixas',
+            attributes: ['id', 'nome'],
+            include: {
+              association: 'tipoQueixa',
+              attributes: ['id', 'nome']
+            }
+          }, {
             association: 'recordatorioAlimentar',
             attributes: ['id', 'quantidade'],
             include: [
@@ -119,14 +129,9 @@ export default {
               }
             ]
           }, {
-            association: 'queixaPrincipal',
-            attributes: ['id', 'nome']
-          }, {
-            association: 'queixas',
-            attributes: ['id', 'nome'],
+            association: 'exameFisico',
             include: {
-              association: 'tipoQueixa',
-              attributes: ['id', 'nome']
+              association: 'tipoExameFisico'
             }
           }
         ]
@@ -154,7 +159,7 @@ export default {
     /**
      * cria um novo registro de consulta
      */
-    createConsulta: async (_, { queixas, recordatorioAlimentar, ...ohterArgs }, { sequelize, models }) => {
+    createConsulta: async (_, { queixas, recordatorioAlimentar, exameFisico, ...ohterArgs }, { sequelize, models }) => {
       try {
         const recordatorio = recordatorioAlimentar.map(item => {
           const { alimento } = item
@@ -193,6 +198,9 @@ export default {
           if (queixas) {
             await consulta.addQueixas(queixas)
           }
+          if (exameFisico) {
+            await consulta.addExameFisico(exameFisico)
+          }
           return consulta  // para 'result' receber 'consulta'
         }) // tx.commit
         // 'consulta' ('result') fica disponível apenas após o commit
@@ -214,7 +222,7 @@ export default {
     updateConsulta: async (parent, { id, recordatorioAlimentar, queixas, ...otherArgs }, { models }) => {
       try {
         const consulta = await models.Consulta.findByPk(id)
-        if ({ ...otherArgs }) {
+        if (otherArgs.length > 0) {
           await consulta.update({ ...otherArgs }, {
             returning: true,
             plain: true

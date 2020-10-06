@@ -13,6 +13,7 @@ export default `
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixaPrincipal: Queixa
     queixas: [Queixa]
+    exameFisico: [ExameFisico]
     suspeitasDiagnosticas: String
     planoConduta: String
     createdAt: String
@@ -33,13 +34,14 @@ export default `
 
   type Mutation {
     createConsulta(
+      pacienteId: ID!,
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
-      pacienteId: ID!,
-      recordatorioAlimentar: [RecordatorioAlimentarInput]
-      queixaPrincipalId: ID
+      queixaPrincipalId: ID,
       queixas: [ID],
+      recordatorioAlimentar: [RecordatorioAlimentarInput],
+      exameFisico: [ID],
       suspeitasDiagnosticas: String,
       planoConduta: String
     ): ConsultaResponse
@@ -49,11 +51,12 @@ export default `
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
+      queixaPrincipalId: ID,
+      queixas: [ID],
+      recordatorioAlimentar: [RecordatorioAlimentarInput],
+      exameFisico: [ID],
       suspeitasDiagnosticas: String,
-      planoConduta: String,
-      pacienteId: ID!,
-      recordatorioAlimentar: [RecordatorioAlimentarInput]
-      queixas: [ID]
+      planoConduta: String
     ): ConsultaResponse
 
     deleteConsulta(id: ID!): Boolean

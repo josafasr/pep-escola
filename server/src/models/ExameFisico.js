@@ -9,9 +9,9 @@ export default (sequelize, DataTypes) => {
     nome: {
         type: DataTypes.STRING
     },
-    tipoQueixaId: {
+    tipoExameFisicoId: {
         type: DataTypes.INTEGER,
-        field: 'tipo_queixa_id'
+        field: 'tipo_exame_fisico_id'
     }
   },
   {

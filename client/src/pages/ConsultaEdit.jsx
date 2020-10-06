@@ -34,6 +34,7 @@ import ConsultaContext from '../contexts/ConsultaContext'
 import { toPtBrDate } from '../utils/format'
 import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
 import RecordatorioAlimentarForm from '../forms/RecordatorioAlimentarForm'
+import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
 
 const useStyles = makeStyles((theme) => ({
@@ -115,7 +116,7 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = React.useState(3)
 
   const pessoaRef = React.useRef()
   //const pacienteRef = React.useRef()
@@ -162,8 +163,7 @@ function ConsultaEdit() {
     event.preventDefault()
     event.stopPropagation()
 
-    /* const bindedFields = bindConsulta(consulta)
-    console.log(bindedFields); */
+    const queixas = consulta.queixas.map(queixa => parseInt(queixa.id))
 
     const recordatorioAlimentar = consulta.recordatorioAlimentar.map(recordatorio => {
       const { alimento, tipoRefeicao } = recordatorio
@@ -179,6 +179,8 @@ function ConsultaEdit() {
       }
     })
 
+    const exameFisico = consulta.exameFisico.map(exame => parseInt(exame.id))
+
     const consultaResponse = await handleCreateConsulta({
       variables: {
         pacienteId: parseInt(pacienteId),
@@ -186,8 +188,9 @@ function ConsultaEdit() {
         queixaPrincipalObs: consulta.queixaPrincipalObs,
         historiaDoencaAtual: consulta.historiaDoencaAtual,
         queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
-        queixas: consulta.queixas.map(queixa => parseInt(queixa.id)),
-        recordatorioAlimentar, //: consulta.recordatorioAlimentar
+        queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
+        recordatorioAlimentar,
+        exameFisico, //: consulta.exameFisico,
         suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
         planoConduta: consulta.planoConduta
       }
@@ -234,14 +237,14 @@ function ConsultaEdit() {
         Voltar
       </Button>
       <Button
-        disabled={activeStep === 3 && !pacienteId}
+        disabled={activeStep === 4 && !pacienteId}
         variant="contained"
         color="primary"
-        onClick={activeStep === 3 ? handleSubmit : handleNext}
+        onClick={activeStep === 4 ? handleSubmit : handleNext}
         className={classes.button}
         size="small"
       >
-        {activeStep === 3 ? 'Salvar' : 'Avançar'}
+        {activeStep === 4 ? 'Salvar' : 'Avançar'}
       </Button>
     </div>
   )
@@ -326,6 +329,18 @@ function ConsultaEdit() {
 
           <Step disabled={false}>
             <StepButton className={classes.stepButton} onClick={handleStep(3)}>
+              <StepLabel className={classes.stepLabel}>Exame Físico</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <ExameFisicoForm />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(4)}>
               <StepLabel className={classes.stepLabel}>Diagnóstico</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>

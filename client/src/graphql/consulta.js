@@ -127,6 +127,10 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      exameFisico {
+        id
+        nome
+      }
       suspeitasDiagnosticas
       planoConduta
     }
@@ -141,6 +145,7 @@ export const CREATE_CONSULTA = gql`
     $queixaPrincipalId: ID,
     $queixas: [ID],
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
+    $exameFisico: [ID],
     $suspeitasDiagnosticas: String,
     $planoConduta: String
   ) {
@@ -152,6 +157,7 @@ export const CREATE_CONSULTA = gql`
       recordatorioAlimentar: $recordatorioAlimentar,
       queixaPrincipalId: $queixaPrincipalId
       queixas: $queixas,
+      exameFisico: $exameFisico,
       suspeitasDiagnosticas: $suspeitasDiagnosticas,
       planoConduta: $planoConduta
     ) {
