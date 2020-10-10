@@ -13,6 +13,7 @@ export default `
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixaPrincipal: Queixa
     queixas: [Queixa]
+    indicadoresExameFisico: IndicadoresExameFisico
     exameFisico: [ExameFisico]
     suspeitasDiagnosticas: String
     planoConduta: String
@@ -41,6 +42,7 @@ export default `
       queixaPrincipalId: ID,
       queixas: [ID],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
+      indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
       planoConduta: String
@@ -54,6 +56,7 @@ export default `
       queixaPrincipalId: ID,
       queixas: [ID],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
+      indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
       planoConduta: String

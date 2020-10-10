@@ -76,6 +76,15 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
+     * Relacionamento com a tabela de indicativos exame físico
+     * @see module:src/models/IndicadoresExameFisico
+     */
+    Consulta.hasOne(models.IndicadoresExameFisico, {
+      as: 'indicadoresExameFisico',
+      foreignKey: 'consultaId'
+    }),
+
+    /**
      * Relacionamento (M:M) com a tabela de exame físico
      * @see module:src/models/ExameFisico
      */

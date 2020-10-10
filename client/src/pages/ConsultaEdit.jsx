@@ -34,6 +34,7 @@ import ConsultaContext from '../contexts/ConsultaContext'
 import { toPtBrDate } from '../utils/format'
 import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
 import RecordatorioAlimentarForm from '../forms/RecordatorioAlimentarForm'
+import IndicadoresExameFisicoForm from '../forms/IndicadoresExameFisicoForm'
 import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
 
@@ -190,6 +191,7 @@ function ConsultaEdit() {
         queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
         queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
         recordatorioAlimentar,
+        indicadoresExameFisico: consulta.indicadoresExameFisico,
         exameFisico, //: consulta.exameFisico,
         suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
         planoConduta: consulta.planoConduta
@@ -333,6 +335,9 @@ function ConsultaEdit() {
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
               <Paper className={classes.paper} elevation={2}>
+                <IndicadoresExameFisicoForm
+                  disabled={!pacienteId}
+                />
                 <ExameFisicoForm />
               </Paper>
               {buttons}
