@@ -19,9 +19,13 @@ import { TIPOS_EXAME_FISICO, EXAMES_FISICOS } from '../graphql/exame-fisico'
 
 const useStyles = makeStyles((theme) => ({
   exames: {
-    display: 'grid',
-    gridTemplateColumns: '50% 50%',
-    marginTop: '10px'
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up(770)]: {
+      display: 'grid',
+      gridTemplateColumns: '50% 50%',
+      marginTop: '10px'
+    }
   },
 
   tipo: {
@@ -49,8 +53,11 @@ const useStyles = makeStyles((theme) => ({
   },
 
   divider: {
-    //height: '1px',
-    backgroundColor: 'black'
+    display: 'none',
+    backgroundColor: 'black',
+    [theme.breakpoints.up(770)]: {
+      display: 'initial'
+    }
   }
 }))
 
