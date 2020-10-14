@@ -133,6 +133,8 @@ export default {
             include: {
               association: 'tipoExameFisico'
             }
+          }, {
+            association: 'indicadoresExameFisico'
           }
         ]
       })
@@ -191,8 +193,10 @@ export default {
                 include: {
                   association: 'alimento'
                 }
+              }, /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
+              {
+                association: 'indicadoresExameFisico'
               }
-              /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
             ]
           })
           if (queixas) {

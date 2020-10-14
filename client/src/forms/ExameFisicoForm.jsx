@@ -20,7 +20,8 @@ import { TIPOS_EXAME_FISICO, EXAMES_FISICOS } from '../graphql/exame-fisico'
 const useStyles = makeStyles((theme) => ({
   exames: {
     display: 'grid',
-    gridTemplateColumns: '50% 50%'
+    gridTemplateColumns: '50% 50%',
+    marginTop: '10px'
   },
 
   tipo: {
@@ -31,10 +32,8 @@ const useStyles = makeStyles((theme) => ({
   fieldSet: {
     display: 'flex',
     flexDirection: 'column',
-    //height: 'auto',
     width: '100%',
     borderStyle: 'none',
-    //minWidth: '50%'
   },
 
   legend: {

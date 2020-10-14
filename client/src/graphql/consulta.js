@@ -1,5 +1,5 @@
 /**
- * @file API GraphQL sobre os dados de consulta
+ * @title API GraphQL sobre os dados de consulta
  * @module src/graphql/consulta
  * @author Josafá Santos dos Reis
  */
@@ -127,6 +127,31 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      indicadoresExameFisico {
+        id
+        peso
+        altura
+        imc
+        quadril
+        indiceCq
+        circunferenciaAbdomen
+        circunferenciaBraco
+        bracadeiraApropriada
+        paSentadoMsd
+        paSentadoMse
+        paSentadoSeg
+        paEmPe
+        fr
+        pulso
+        fc
+        spo2
+        temperatura
+        pasDopplerMsd
+        pasDopplerMid
+        pasDopplerMie
+        pasDopplerMse
+        itb
+      }
       exameFisico {
         id
         nome
@@ -145,6 +170,7 @@ export const CREATE_CONSULTA = gql`
     $queixaPrincipalId: ID,
     $queixas: [ID],
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
+    $indicadoresExameFisico: IndicadoresExameFisicoInput,
     $exameFisico: [ID],
     $suspeitasDiagnosticas: String,
     $planoConduta: String
@@ -157,6 +183,7 @@ export const CREATE_CONSULTA = gql`
       recordatorioAlimentar: $recordatorioAlimentar,
       queixaPrincipalId: $queixaPrincipalId
       queixas: $queixas,
+      indicadoresExameFisico: $indicadoresExameFisico,
       exameFisico: $exameFisico,
       suspeitasDiagnosticas: $suspeitasDiagnosticas,
       planoConduta: $planoConduta

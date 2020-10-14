@@ -3,11 +3,13 @@ import { createContext } from 'react'
 const ConsultaContext = createContext(
   {
     acompanhante: '',
-    queixaPrincipal: {},
     queixaPrincipalObs: '',
     historiaDoencaAtual: '',
-    recordatorioAlimentar: [],
+    queixaPrincipal: {},
     queixas: [],
+    recordatorioAlimentar: [],
+    indicadoresExameFisico: {},
+    exameFisico: [],
     suspeitasDiagnosticas: '',
     planoConduta: ''
   }
