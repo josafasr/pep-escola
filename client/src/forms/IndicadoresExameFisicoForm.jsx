@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core'
 
 import ConsultaContext from '../contexts/ConsultaContext'
-//import { updateField, reset } from '../store/contato/acitons'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -31,34 +30,30 @@ const useStyles = makeStyles((theme) => ({
 
   formFields: {
     margin: theme.spacing(1, 0),
-    minWidth: '210px',
     [theme.breakpoints.up('sm')]: {
-      margin: theme.spacing(1, 2, 0, 0),
-      flexGrow: 1
-    },
+      margin: theme.spacing(1, 2, 0, 0)
+    }
     /* Chrome, Safari, Edge, Opera */
-    '& input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+    // '& input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
       //'-webkit-appearance': 'none',
-      WebkitAppearance: 'none',
-      margin: 0
-    },
+      //WebkitAppearance: 'none',
+      //margin: 0
+    //},
 
     /* Firefox */
-    '& input[type=number]': {
-      appearance: 'textfield'
-    }
+    //'& input[type=number]': {
+      //appearance: 'textfield'
+    //}
   },
 
   formControl: {
     display: 'flex',
-    //flexDirection: 'row',
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row'
     }
   },
 
   formLabel: {
-    //alignSelf: 'center',
     paddingRight: '10px',
     fontWeight: 'bold',
     marginTop: '25px'
@@ -66,8 +61,9 @@ const useStyles = makeStyles((theme) => ({
 
   formGroup: {
     display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'row'
+    [theme.breakpoints.up('sm')]: {
+      flexDirection: 'row'
+    }
   },
 
   adornment: {
@@ -79,20 +75,17 @@ const useStyles = makeStyles((theme) => ({
 
 function IndicadoresExameFisicoForm(props, ref) {
   const classes = useStyles()
-
   const { disabled } = props
   const [consulta, setConsulta] = React.useContext(ConsultaContext)
-  console.log(consulta.indicadoresExameFisico?.peso)
 
   const handleChange = event => {
     if (event.target.value) {
-      const { name, value, type } = event.target
-      console.log(value.replace(',', '.'));
+      const { name, value } = event.target
       setConsulta({
         ...consulta,
         indicadoresExameFisico: {
           ...consulta.indicadoresExameFisico,
-          [name]: type !== 'string' ? Number(value.replace(',', '.')) : value
+          [name]: ['bracadeiraApropriada'].includes(name) ? value : Number(value.replace(',', '.'))
         }
       })
     }
@@ -119,7 +112,6 @@ function IndicadoresExameFisicoForm(props, ref) {
     undefined
     ) : (<div className={classes.fields}>
       <TextField
-        type="number"
         className={classes.formFields}
         name="peso"
         defaultValue={consulta.indicadoresExameFisico?.peso}
@@ -135,7 +127,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="altura"
         defaultValue={consulta.indicadoresExameFisico?.altura}
@@ -151,7 +142,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="imc"
         defaultValue={consulta.indicadoresExameFisico?.imc}
@@ -167,7 +157,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="quadril"
         defaultValue={consulta.indicadoresExameFisico?.quadril}
@@ -183,7 +172,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="indiceCq"
         defaultValue={consulta.indicadoresExameFisico?.indiceCq}
@@ -196,7 +184,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="circunferenciaAbdomen"
         defaultValue={consulta.indicadoresExameFisico?.circunferenciaAbdomen}
@@ -212,7 +199,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="circunferenciaBraco"
         defaultValue={consulta.indicadoresExameFisico?.circunferenciaBraco}
@@ -228,7 +214,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="text"
         className={classes.formFields}
         name="bracadeiraApropriada"
         defaultValue={consulta.indicadoresExameFisico?.bracadeiraApropriada}
@@ -245,7 +230,6 @@ function IndicadoresExameFisicoForm(props, ref) {
         <FormLabel className={classes.formLabel} component="legend">PA Sentado:</FormLabel>
         <FormGroup className={classes.formGroup}>
           <TextField
-            type="number"
             className={classes.formFields}
             name="paSentadoMsd"
             defaultValue={consulta.indicadoresExameFisico?.paSentadoMsd}
@@ -261,7 +245,6 @@ function IndicadoresExameFisicoForm(props, ref) {
           />
 
           <TextField
-            type="number"
             className={classes.formFields}
             name="paSentadoMse"
             defaultValue={consulta.indicadoresExameFisico?.paSentadoMse}
@@ -277,7 +260,6 @@ function IndicadoresExameFisicoForm(props, ref) {
           />
 
           <TextField
-            type="number"
             className={classes.formFields}
             name="paSentadoSeg"
             defaultValue={consulta.indicadoresExameFisico?.paSentadoSeg}
@@ -296,7 +278,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       </FormControl>
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="paEmPe"
         defaultValue={consulta.indicadoresExameFisico?.paEmPe}
@@ -312,7 +293,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="fr"
         defaultValue={consulta.indicadoresExameFisico?.fr}
@@ -328,7 +308,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="pulso"
         defaultValue={consulta.indicadoresExameFisico?.pulso}
@@ -344,7 +323,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="fc"
         defaultValue={consulta.indicadoresExameFisico?.fc}
@@ -360,7 +338,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="spo2"
         defaultValue={consulta.indicadoresExameFisico?.spo2}
@@ -376,7 +353,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       />
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="temperatura"
         defaultValue={consulta.indicadoresExameFisico?.temperatura}
@@ -395,7 +371,6 @@ function IndicadoresExameFisicoForm(props, ref) {
         <FormLabel className={classes.formLabel} component="legend">PAS Doppler:</FormLabel>
         <FormGroup className={classes.formGroup}>
           <TextField
-            type="number"
             className={classes.formFields}
             name="pasDopplerMsd"
             defaultValue={consulta.indicadoresExameFisico?.pasDopplerMsd}
@@ -403,14 +378,11 @@ function IndicadoresExameFisicoForm(props, ref) {
             label="MSD"
             size="small"
             InputProps={{
-              readOnly: disabled/* ,
-              endAdornment: <InputAdornment 
-                position="end">mmHg</InputAdornment> */
+              readOnly: disabled
             }}
           />
 
           <TextField
-            type="number"
             className={classes.formFields}
             name="pasDopplerMid"
             defaultValue={consulta.indicadoresExameFisico?.pasDopplerMid}
@@ -423,7 +395,6 @@ function IndicadoresExameFisicoForm(props, ref) {
           />
 
           <TextField
-            type="number"
             className={classes.formFields}
             name="pasDopplerMie"
             defaultValue={consulta.indicadoresExameFisico?.pasDopplerMie}
@@ -436,7 +407,6 @@ function IndicadoresExameFisicoForm(props, ref) {
           />
 
           <TextField
-            type="number"
             className={classes.formFields}
             name="pasDopplerMse"
             defaultValue={consulta.indicadoresExameFisico?.pasDopplerMse}
@@ -451,7 +421,6 @@ function IndicadoresExameFisicoForm(props, ref) {
       </FormControl>
 
       <TextField
-        type="number"
         className={classes.formFields}
         name="itb"
         defaultValue={consulta.indicadoresExameFisico?.itb}
