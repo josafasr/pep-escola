@@ -29,6 +29,18 @@ export const GET_BY_ID = gql`
   }
 `
 
+export const USUARIOS_BY_TEXT = gql`
+  query UsuariosByText($text: String!) {
+    usuariosByText(text: $text) {
+      id
+      pessoa {
+        id
+        nome
+      }
+    }
+  }
+`
+
 export const GET_ALL = gql`
   {
     usuarios {

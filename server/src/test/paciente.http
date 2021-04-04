@@ -21,3 +21,15 @@ mutation {
     nome
   }
 }
+
+###
+
+POST http://localhost:4000/graphql HTTP/1.1
+X-Request-Type: GraphQL
+
+query {
+  pessoas {
+    id
+    nome
+  }
+}

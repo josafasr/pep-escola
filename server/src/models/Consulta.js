@@ -93,6 +93,26 @@ export default (sequelize, DataTypes) => {
       as: 'exameFisico',
       foreignKey: 'consultaId',
       otherKey: 'exameFisicoId'
+    }),
+
+    /**
+     * Relacionamento (M:M) com a tabela de usuários
+     * @see module:src/models/Usuario
+     */
+    Consulta.belongsToMany(models.Usuario, {
+      through: models.ResponsavelConsulta,
+      as: 'responsaveis',
+      foreignKey: 'consultaId',
+      otherKey: 'usuarioId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de avaliação de atendimento
+     * @see module:src/models/AvaliacaoAtendimento
+     */
+    Consulta.hasOne(models.AvaliacaoAtendimento, {
+      as: 'avaliacao',
+      foreignKey: 'consultaId'
     })
   }
 

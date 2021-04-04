@@ -1,10 +1,11 @@
 /**
- * @file Operações sobre a tabela de usuarios
+ * @title Operações sobre a tabela de usuarios
  * @module src/resolvers/usuario
  * @author Josafá Santos dos Reis
  */
 
 import _ from 'lodash'
+import { Op } from 'sequelize'
 import { formatErrors } from '../format-errors'
 import { tryLogin } from '../auth'
 
@@ -84,6 +85,20 @@ export default {
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuario
+    },
+
+    usuariosByText: async (_, { text }, { models }) => {
+      const usuarios = await models.Usuario.findAll({
+        attributes: ['id'],
+        include: {
+          association: 'pessoa',
+          attributes: ['id', 'nome'],
+          where: {
+            nome: { [Op.like]: `${text}%` }
+          }
+        }
+      })
+      return usuarios
     },
 
     login: async (parent, { nome, senha }, { models, SECRET, SECRET2 }) => tryLogin(nome, senha, models, SECRET, SECRET2)
