@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de usuários
+ * @title Mapeamento da tabela de usuários
  * @module src/models/Usuario
  * @author Josafá Santos dos Reis
  */
@@ -43,12 +43,12 @@ export default (sequelize, DataTypes) => {
         }
       }
     }
-  });
+  })
 
   Usuario.associate = (models) => {
     /**
      * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * @see module:src/models/Pessoa
      */
     Usuario.belongsTo(models.Pessoa, {
       as: 'pessoa',
@@ -57,14 +57,35 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de grupos
-     * @see module:models/Grupo
+     * @see module:src/models/Grupo
      */
     Usuario.belongsToMany(models.Grupo, {
       through: models.UsuarioGrupo,
       as: 'grupos',
       foreignKey: 'usuarioId',
       otherKey: 'grupoId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de consultas
+     * @see module:src/models/Consulta
+     */
+    Usuario.belongsToMany(models.Consulta, {
+      through: models.ResponsavelConsulta,
+      as: 'consultas',
+      foreignKey: 'usuarioId',
+      otherKey: 'consultaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de avaliação de atendimento
+     * @see module:src/models/AvaliacaoAtendimento
+     */
+    Usuario.hasMany(models.AvaliacaoAtendimento, {
+      as: 'avaliacoes',
+      foreignKey: 'usuarioId'
     })
-  };
-  return Usuario;
-};
+  }
+
+  return Usuario
+}

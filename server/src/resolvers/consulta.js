@@ -135,6 +135,21 @@ export default {
             }
           }, {
             association: 'indicadoresExameFisico'
+          }, {
+            association: 'responsaveis',
+            include: {
+              association: 'pessoa',
+              attributes: ['id', 'nome']
+            }
+          }, {
+            association: 'avaliacao',
+            include: {
+              association: 'avaliador',
+              include: {
+                association: 'pessoa',
+                attributes: ['id', 'nome']
+              }
+            }
           }
         ]
       })
@@ -223,26 +238,43 @@ export default {
     /**
      * atualiza um registro de consulta, dado o id
      */
-    updateConsulta: async (parent, { id, recordatorioAlimentar, queixas, ...otherArgs }, { models }) => {
+    updateConsulta: async (
+      _,
+      {
+        id,
+        queixas,
+        recordatorioAlimentar,
+        responsaveis,
+        ...otherArgs
+      }, { sequelize, models }) => {
       try {
-        const consulta = await models.Consulta.findByPk(id)
-        if (otherArgs.length > 0) {
-          await consulta.update({ ...otherArgs }, {
-            returning: true,
-            plain: true
-          })
-        }
+        const result = await sequelize.transaction(async (tx) => {
+          const consulta = await models.Consulta.findByPk(id)
+          if (otherArgs.length > 0) {
+            await consulta.update({ ...otherArgs }, {
+              returning: true,
+              plain: true
+            })
+          }
 
-        if (recordatorioAlimentar) {
-          consulta.addRecordatorioAlimentar(recordatorioAlimentar)
-        }
+          if (recordatorioAlimentar) {
+            await consulta.addRecordatorioAlimentar(recordatorioAlimentar)
+          }
 
-        if (queixas) {
-          consulta.addQueixas(queixas)
-        }
+          if (queixas) {
+            await consulta.addQueixas(queixas)
+          }
+
+          if(responsaveis && responsaveis.length > 0) {
+            await consulta.addResponsaveis(responsaveis)
+          }
+
+          return consulta
+        })
+        
         return {
           ok: true,
-          consulta
+          consulta: result[1]
         }
       } catch (err) {
         return {

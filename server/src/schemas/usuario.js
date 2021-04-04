@@ -28,6 +28,7 @@ export default `
   type Query {
     usuario(id: ID!): Usuario
     usuarios: [Usuario]
+    usuariosByText(text: String!): [Usuario]
     findAllFields(id: ID!): Usuario
     login(nome: String!, senha: String!): LoginResponse
   }

@@ -37,6 +37,7 @@ import RecordatorioAlimentarForm from '../forms/RecordatorioAlimentarForm'
 import IndicadoresExameFisicoForm from '../forms/IndicadoresExameFisicoForm'
 import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
+import ResponsavelConsultaForm from '../forms/ResponsavelConsultaForm'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,7 +118,7 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(3)
+  const [activeStep, setActiveStep] = React.useState(0)
 
   const pessoaRef = React.useRef()
   //const pacienteRef = React.useRef()
@@ -239,14 +240,14 @@ function ConsultaEdit() {
         Voltar
       </Button>
       <Button
-        disabled={activeStep === 4 && !pacienteId}
+        disabled={activeStep === 5 && !pacienteId}
         variant="contained"
         color="primary"
-        onClick={activeStep === 4 ? handleSubmit : handleNext}
+        onClick={activeStep === 5 ? handleSubmit : handleNext}
         className={classes.button}
         size="small"
       >
-        {activeStep === 4 ? 'Salvar' : 'Avançar'}
+        {activeStep === 5 ? 'Salvar' : 'Avançar'}
       </Button>
     </div>
   )
@@ -353,6 +354,18 @@ function ConsultaEdit() {
                 <DiagnosticoForm
                   disabled={!pacienteId}
                 />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(5)}>
+              <StepLabel className={classes.stepLabel}>Alunos</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <ResponsavelConsultaForm />
               </Paper>
               {buttons}
             </StepContent>

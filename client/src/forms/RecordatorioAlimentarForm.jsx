@@ -9,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TIPOS_REFEICAO, ALIMENTOS_BY_TEXT } from '../graphql/recordatorio-alimentar'
 import ConsultaContext from '../contexts/ConsultaContext'
 
-export default function AlimentoAutocomplete(props) {
+const RecordatorioAlimentarForm = (props) => {
 
   //const { disabled } = props
   const [inputValue, setInputValue] = React.useState({})
@@ -204,3 +204,5 @@ export default function AlimentoAutocomplete(props) {
       )}
   </div>
 }
+
+export default RecordatorioAlimentarForm

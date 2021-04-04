@@ -158,6 +158,13 @@ export const GET_WITH_INCLUDES = gql`
       }
       suspeitasDiagnosticas
       planoConduta
+      responsaveis {
+        id
+        pessoa {
+          id
+          nome
+        }
+      }
     }
   }`
 

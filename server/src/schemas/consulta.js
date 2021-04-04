@@ -17,6 +17,8 @@ export default `
     exameFisico: [ExameFisico]
     suspeitasDiagnosticas: String
     planoConduta: String
+    responsaveis: [Usuario]
+    avaliacao: AvaliacaoAtendimento
     createdAt: String
   }
 
@@ -45,7 +47,8 @@ export default `
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
-      planoConduta: String
+      planoConduta: String,
+      responsaveis: [ID]
     ): ConsultaResponse
 
     updateConsulta(
@@ -59,7 +62,8 @@ export default `
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
-      planoConduta: String
+      planoConduta: String,
+      responsaveis: [ID]
     ): ConsultaResponse
 
     deleteConsulta(id: ID!): Boolean

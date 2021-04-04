@@ -13,21 +13,27 @@ export default {
     /**
      * retorna todos os registros de pessoa
      */
-    pessoas: (parent, args, { models }) => models.Pessoa.findAll({
-      include: [
-        {
-          association: 'contato',
-          // model: models.Contato,
-          attributes: ['celular', 'email']
-        },
-        {
-          association: 'enderecos',
-          // model: models.Endereco,
-          attributes: ['logradouro']
-        }
-      ],
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    }),
+    pessoas: async (parent, args, { models }) => {
+      try {
+        const pessoas = await models.Pessoa.findAll({
+          include: [
+            {
+              association: 'contato',
+              attributes: ['celular', 'email']
+            },
+            {
+              association: 'enderecos',
+              attributes: ['logradouro']
+            }
+          ],
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
+
+        return pessoas
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     /**
      * restorna um registro de pessoa pelo id
