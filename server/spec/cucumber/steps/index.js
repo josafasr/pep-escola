@@ -1,6 +1,6 @@
 /**
- * @title Steps dos testes E2E com Cucumber
- * @module spec/cocumber/steps/index
+ * @title Steps dos testes E2E para login
+ * @module spec/cucumber/steps/index
  * @author Josafá Santos dos Reis
  */
 
@@ -8,18 +8,20 @@ import superagent from 'superagent'
 import { When, Then } from '@cucumber/cucumber'
 import assert from 'assert'
 
-When('o cliente cria uma requisição para a mutation createTipoExameFisico', function() {
-  this.request = superagent('POST', `${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}/graphql`)
+When('o cliente cria uma requisição com a query login', function() {
+  this.request = superagent.post(`${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}/graphql?query`)
+    .set('Content-Type', 'application/json')
 })
 
-When('informa argumentos vazios', function() {
-  return undefined
+When('informa argumentos corretos', function() {
+  this.request
+    .send('{ "query": "query { login(nome: \\"user.dez\\", senha: \\"user.10\\") { ok token errors { path message } } }" }')
 })
 
 When('envia a requisição', function(callback) {
   this.request
     .then((response) => {
-      this.response = response.res
+      this.response = JSON.parse(response.text)
       callback()
     })
     .catch((errResponse) => {
@@ -28,11 +30,11 @@ When('envia a requisição', function(callback) {
     })
 })
 
-Then('a API deve responder com um código de estado HTTP 400', function() {
-  assert.strictEqual(this.response.statusCode, 400)
+Then('a API deve responder com a propriedade "ok" igual a true', function() {
+  assert.strictEqual(this.response.data.login.ok, true)
 })
 
-Then('o formato da resposta deve ser um objeto JSON', function() {
+/* Then('o formato da resposta deve ser um objeto JSON', function() {
 
   // checa o Content-Type header
   const contentType = this.response.headers['Content-Type'] || this.response.headers['content-type']
@@ -46,8 +48,8 @@ Then('o formato da resposta deve ser um objeto JSON', function() {
   } catch (e) {
     throw new Error('A resposta não é um objeto JSON válido')
   }
-})
+}) */
 
-Then('contém uma propriedade message dizendo "Os argumentos não podem estar vazios"', function() {
-  assert.strictEqual(this.responsePayload.message, 'Os argumentos não podem estar vazios')
+Then('conter uma propriedade token não vazia', function() {
+  assert.notStrictEqual(this.response.data.login.token.length, 0)
 })

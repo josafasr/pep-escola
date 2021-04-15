@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && babel src -d dist --copy-files",
-    "serve": "npm run build && node dist/index.js",
+    "serve": "npm run build && dotenv node dist/index.js",
     "start": "nodemon --exec babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:e2e": "dotenv cucumber-js -- spec/cucumber/features --require-module @babel/register --require spec/cucumber/steps --publish-quiet",

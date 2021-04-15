@@ -15,7 +15,7 @@ import db from './models/index'
 import { refreshTokens } from './auth'
 
 /***** trocar por chaves de verdade *****/
-const SECRET = 'kwvowudvj33739fnq9cn9938'
+const SECRET = process.env.PRIVATE_KEY
 const SECRET2 = 'kwvowudvj33739fnq9cn9938sjg9w73'
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
@@ -74,4 +74,4 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: url, cors: true })
 
-app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${url}`))
+app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at ${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}${url}`))
