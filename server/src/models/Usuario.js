@@ -84,6 +84,15 @@ export default (sequelize, DataTypes) => {
     Usuario.hasMany(models.AvaliacaoAtendimento, {
       as: 'avaliacoes',
       foreignKey: 'usuarioId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de seções
+     * @see module:src/models/Secao
+     */
+     Usuario.hasMany(models.Secao, {
+      as: 'secoes',
+      foreignKey: 'usuarioId'
     })
   }
 

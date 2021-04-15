@@ -44,7 +44,7 @@ const getUser = async (req, res, next) => {
   next()
 }
 
-const requestHandler = (req, res, next) => {
+/* const requestHandler = (req, res, next) => {
   if (req.method === 'POST' && req.url === '/graphql') {
     res.writeHead(400, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({
@@ -53,9 +53,9 @@ const requestHandler = (req, res, next) => {
     return
   }
   next()
-}
-
+} */
 //app.use(getUser, requestHandler)
+
 app.use(getUser)
 
 const server = new ApolloServer({
