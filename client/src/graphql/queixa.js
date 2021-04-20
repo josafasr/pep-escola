@@ -56,3 +56,18 @@ export const CREATE_QUEIXA = gql`
       }
     }
   }`
+
+export const COMPLEMENTOS_QUEIXAS_BY_CONSULTA = gql`
+  query ComplementosQueixasByConsulta($consultaId: ID!) {
+    complementosQueixasByConsulta(consultaId: $consultaId) {
+      id
+      complemento
+      consulta {
+        id
+      }
+      tipoQueixa {
+        id
+        nome
+      }
+    }
+  }`

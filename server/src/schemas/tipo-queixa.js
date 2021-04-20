@@ -5,26 +5,32 @@
  */
 
 export default `
-type TipoQueixa {
-  id: ID
-  nome: String
-  descricao: String
-}
+  type TipoQueixa {
+    id: ID
+    nome: String
+    descricao: String
+  }
 
-type CreateTipoQueixaResponse {
-  ok: Boolean
-  tipoQueixa: TipoQueixa
-  errors: [Error]
-}
+  input TipoQueixaInput {
+    id: ID
+    nome: String
+    descricao: String
+  }
 
-type Query {
-  tiposQueixa: [TipoQueixa]
-  tipoQueixa(id: ID!): TipoQueixa
-}
+  type CreateTipoQueixaResponse {
+    ok: Boolean
+    tipoQueixa: TipoQueixa
+    errors: [Error]
+  }
 
-type Mutation {
-  createTipoQueixa(nome: String, descricao: String): CreateTipoQueixaResponse
-  updateTipoQueixa(id: ID!, nome: String, descricao: String): CreateTipoQueixaResponse
-  deleteTipoQueixa(id: ID!): Boolean
-}
+  type Query {
+    tiposQueixa: [TipoQueixa]
+    tipoQueixa(id: ID!): TipoQueixa
+  }
+
+  type Mutation {
+    createTipoQueixa(nome: String, descricao: String): CreateTipoQueixaResponse
+    updateTipoQueixa(id: ID!, nome: String, descricao: String): CreateTipoQueixaResponse
+    deleteTipoQueixa(id: ID!): Boolean
+  }
 `

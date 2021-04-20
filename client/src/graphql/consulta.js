@@ -115,6 +115,14 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      complementosQueixas {
+        id
+        complemento
+        tipoQueixa {
+          id
+          nome
+        }
+      }
       recordatorioAlimentar {
         id
         quantidade
@@ -176,6 +184,7 @@ export const CREATE_CONSULTA = gql`
     $historiaDoencaAtual: String,
     $queixaPrincipalId: ID,
     $queixas: [ID],
+    $complementosQueixas: [ComplementoConsultaTipoQueixaInput],
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
     $indicadoresExameFisico: IndicadoresExameFisicoInput,
     $exameFisico: [ID],
@@ -190,6 +199,7 @@ export const CREATE_CONSULTA = gql`
       recordatorioAlimentar: $recordatorioAlimentar,
       queixaPrincipalId: $queixaPrincipalId
       queixas: $queixas,
+      complementosQueixas: $complementosQueixas
       indicadoresExameFisico: $indicadoresExameFisico,
       exameFisico: $exameFisico,
       suspeitasDiagnosticas: $suspeitasDiagnosticas,

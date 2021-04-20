@@ -7,6 +7,7 @@ const ConsultaContext = createContext(
     historiaDoencaAtual: '',
     queixaPrincipal: {},
     queixas: [],
+    complementosQaueixas: [],
     recordatorioAlimentar: [],
     indicadoresExameFisico: {},
     exameFisico: [],

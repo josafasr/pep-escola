@@ -6,18 +6,19 @@
 export default `
   type Consulta {
     id: ID
+    responsaveis: [Usuario]
+    paciente: Paciente
     acompanhante: String
     queixaPrincipalObs: String  # excluir
     historiaDoencaAtual: String
-    paciente: Paciente
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixaPrincipal: Queixa
     queixas: [Queixa]
-    indicadoresExameFisico: IndicadoresExameFisico
+    complementosQueixas: [ComplementoConsultaTipoQueixa]
     exameFisico: [ExameFisico]
+    indicadoresExameFisico: IndicadoresExameFisico
     suspeitasDiagnosticas: String
     planoConduta: String
-    responsaveis: [Usuario]
     avaliacao: AvaliacaoAtendimento
     createdAt: String
   }
@@ -37,33 +38,35 @@ export default `
 
   type Mutation {
     createConsulta(
+      responsaveis: [ID]
       pacienteId: ID!,
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
       queixaPrincipalId: ID,
       queixas: [ID],
+      complementosQueixas: [ComplementoConsultaTipoQueixaInput],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
-      indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
+      indicadoresExameFisico: IndicadoresExameFisicoInput,
       suspeitasDiagnosticas: String,
       planoConduta: String,
-      responsaveis: [ID]
     ): ConsultaResponse
 
     updateConsulta(
       id: ID!,
+      responsaveis: [ID]
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
       queixaPrincipalId: ID,
       queixas: [ID],
+      complementosQueixas: [ID],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
       planoConduta: String,
-      responsaveis: [ID]
     ): ConsultaResponse
 
     deleteConsulta(id: ID!): Boolean

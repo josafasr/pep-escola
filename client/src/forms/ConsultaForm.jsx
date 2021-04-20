@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row',
+      //flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'flex-start',
     }
@@ -100,6 +100,17 @@ function ConsultaForm(props, ref) {
   return (
     <div className={classes.formFields}>
 
+      <TextField
+        className={clsx(classes.fields, classes.fieldGrow)}
+        name="acompanhante"
+        value={consulta.acompanhante || ''}
+        onChange={handleChange}
+        label="Acompanhante"
+        inputProps={{
+          readOnly: disabled
+        }}
+      />
+
       <QueixaAutocomplete
         disabled={disabled}
       />
@@ -113,17 +124,6 @@ function ConsultaForm(props, ref) {
         rows={3}
         variant="filled"
         label="Observações sobre a queixa principal"
-        inputProps={{
-          readOnly: disabled
-        }}
-      />
-
-      <TextField
-        className={clsx(classes.fields, classes.fieldGrow)}
-        name="acompanhante"
-        value={consulta.acompanhante || ''}
-        onChange={handleChange}
-        label="Acompanhante"
         inputProps={{
           readOnly: disabled
         }}

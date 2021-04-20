@@ -118,7 +118,7 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = React.useState(2)
 
   const pessoaRef = React.useRef()
   //const pacienteRef = React.useRef()
@@ -191,6 +191,7 @@ function ConsultaEdit() {
         historiaDoencaAtual: consulta.historiaDoencaAtual,
         queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
         queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
+        complementosQueixas: consulta.complementosQueixas,
         recordatorioAlimentar,
         indicadoresExameFisico: consulta.indicadoresExameFisico,
         exameFisico, //: consulta.exameFisico,
@@ -289,9 +290,21 @@ function ConsultaEdit() {
               {buttons}
             </StepContent>
           </Step> */}
-          
+
           <Step disabled={false}>
             <StepButton className={classes.stepButton} onClick={handleStep(0)}>
+              <StepLabel className={classes.stepLabel}>Alunos</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <ResponsavelConsultaForm />
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+          
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(1)}>
               <StepLabel className={classes.stepLabel}>Anamnese</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -306,7 +319,7 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(1)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(2)}>
               <StepLabel className={classes.stepLabel}>Interrogatório Sistemático</StepLabel>
             </StepButton>
 
@@ -319,7 +332,7 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(2)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(3)}>
               <StepLabel className={classes.stepLabel}>Recordatório Alimentar</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -331,7 +344,7 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(3)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(4)}>
               <StepLabel className={classes.stepLabel}>Exame Físico</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -346,7 +359,7 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(4)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(5)}>
               <StepLabel className={classes.stepLabel}>Diagnóstico</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -354,18 +367,6 @@ function ConsultaEdit() {
                 <DiagnosticoForm
                   disabled={!pacienteId}
                 />
-              </Paper>
-              {buttons}
-            </StepContent>
-          </Step>
-
-          <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(5)}>
-              <StepLabel className={classes.stepLabel}>Alunos</StepLabel>
-            </StepButton>
-            <StepContent classes={{ root: classes.stepContent }}>
-              <Paper className={classes.paper} elevation={2}>
-                <ResponsavelConsultaForm />
               </Paper>
               {buttons}
             </StepContent>

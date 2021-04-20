@@ -57,6 +57,12 @@ export default {
         attributes: { exclude: ['updatedAt'] },
         include: [
           {
+            association: 'responsaveis',
+            include: {
+              association: 'pessoa',
+              attributes: ['id', 'nome']
+            }
+          }, {
             association: 'paciente',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [
@@ -117,6 +123,13 @@ export default {
               attributes: ['id', 'nome']
             }
           }, {
+            association: 'complementosQueixas',
+            attributes: ['id', 'complemento'],
+            include: {
+              association: 'tipoQueixa',
+              attributes: ['id', 'nome']
+            }
+          }, {
             association: 'recordatorioAlimentar',
             attributes: ['id', 'quantidade'],
             include: [
@@ -135,12 +148,6 @@ export default {
             }
           }, {
             association: 'indicadoresExameFisico'
-          }, {
-            association: 'responsaveis',
-            include: {
-              association: 'pessoa',
-              attributes: ['id', 'nome']
-            }
           }, {
             association: 'avaliacao',
             include: {
@@ -176,7 +183,13 @@ export default {
     /**
      * cria um novo registro de consulta
      */
-    createConsulta: async (_, { queixas, recordatorioAlimentar, exameFisico, ...ohterArgs }, { sequelize, models }) => {
+    createConsulta: async (_, {
+      queixas,
+      recordatorioAlimentar,
+      complementosQueixas,
+      exameFisico,
+      ...ohterArgs
+    }, { sequelize, models }) => {
       try {
         const recordatorio = recordatorioAlimentar.map(item => {
           const { alimento } = item
@@ -197,10 +210,21 @@ export default {
           }
         })
 
+        const complementos = complementosQueixas.map(item => {
+          const { tipoQueixa } = item
+          if (tipoQueixa && tipoQueixa.id) {
+            return {
+              complemento: item.complemento,
+              tipoQueixaId: parseInt(item.tipoQueixa.id)
+            }
+          }
+        })
+
         const result = await sequelize.transaction(async (tx) => {
           const consulta = await models.Consulta.create({
             ...ohterArgs,
-            recordatorioAlimentar: recordatorio
+            recordatorioAlimentar: recordatorio,
+            complementosQueixas: complementos
           }, {
             include: [
               {
@@ -211,6 +235,9 @@ export default {
               }, /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
               {
                 association: 'indicadoresExameFisico'
+              },
+              {
+                association: 'complementosQueixas'
               }
             ]
           })

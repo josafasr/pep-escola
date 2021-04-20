@@ -11,7 +11,8 @@ import {
   Box,
   Divider,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  TextField
 } from '@material-ui/core'
 
 import ConsultaContext from '../contexts/ConsultaContext'
@@ -36,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '0'
   },
 
+  textArea: {
+    width: '100%',
+    marginBottom: '10px'
+  },
+
   divider: {
     height: '1px',
     backgroundColor: 'black'
@@ -47,6 +53,7 @@ const InterrogatorioSistematicoForm = () => {
   const [consulta, setConsulta] = React.useContext(ConsultaContext)
   const [tiposQueixa, setTiposQueixas] = React.useState([])
   const [queixas, setQueixas] = React.useState([])
+  //const [complementosQueixas, setComplementosQueixas] = React.useState([])
 
   const tiposQueixaResponse = useQuery(TIPOS_QUEIXA, {
     onCompleted: (data) => {
@@ -59,6 +66,14 @@ const InterrogatorioSistematicoForm = () => {
       setQueixas(data.queixas)
     }
   })
+
+/*   const complementosQueixasResponse = useQuery(COMPLEMENTOS_QUEIXAS_BY_CONSULTA, {
+    variables: { consultaId: consulta.id },
+    onCompleted: (data) => {
+      setComplementosQueixas(data.complementosQueixasByConsulta)
+    },
+    skip: !consulta.id
+  }) */
 
   const isChecked = (queixa) => {
     if (consulta.queixas) {
@@ -86,6 +101,34 @@ const InterrogatorioSistematicoForm = () => {
     }
   }
 
+  const handleChangeComplementos = (event) => {
+    const { id, value } = event.target
+    const exists = consulta.complementosQueixas?.some(item => item.tipoQueixa.id === id)
+
+    if (exists) {
+      const thisComplemento = consulta.complementosQueixas.find(item => item.tipoQueixa.id === id)
+      const others = consulta.complementosQueixas.filter(item => item.tipoQueixa.id !== id)
+
+      setConsulta({
+        ...consulta,
+        complementosQueixas: [
+          ...others,
+          { ...thisComplemento, complemento: value }
+        ]
+      })
+    } else {
+      setConsulta({
+        ...consulta,
+        complementosQueixas: consulta.complementosQueixas ? [
+          ...consulta.complementosQueixas,
+          { complemento: value, tipoQueixa: { id } }
+        ] : [
+          { complemento: value, tipoQueixa: { id } }
+        ]
+      })
+    }
+  }
+
   const isLast = (array, item) => {
     const index = array.indexOf(item)
     if (index === (array.length - 1)) {
@@ -99,9 +142,12 @@ const InterrogatorioSistematicoForm = () => {
 
   return (
     <div>
-      {tiposQueixa.map(tipo =>
-          <Box className={classes.fieldSet} key={tipo.id} component="fieldset">
-            <legend className={classes.legend}>Queixas {tipo.nome}</legend>
+      {tiposQueixa.map(tipo => {
+        const complementoQueixa = consulta.complementosQueixas?.find(item => item.tipoQueixa.id === tipo.id)
+        return (
+        <Box className={classes.fieldSet} key={tipo.id} component="fieldset">
+          <legend className={classes.legend}>Queixas {tipo.nome}</legend>
+          <div>
             {queixas.filter(item => (item.tipoQueixa.id === tipo.id))
               .map(queixa =>
                 <FormControlLabel
@@ -121,9 +167,24 @@ const InterrogatorioSistematicoForm = () => {
                 />
               )
             }
-            {!isLast(tiposQueixa, tipo) && <Divider className={classes.divider} />}
-          </Box>
-      )}
+          </div>
+          <TextField
+            className={classes.textArea}
+            id={tipo.id}
+            name="complementoQueixa"
+            defaultValue={complementoQueixa?.complemento || ''}
+            onBlur={handleChangeComplementos}
+            multiline
+            //rows={2}
+            variant="filled"
+            label="Observações"
+            /* inputProps={{
+              readOnly: disabled
+            }} */
+          />
+          {!isLast(tiposQueixa, tipo) && <Divider className={classes.divider} />}
+        </Box>)
+      })}
     </div>
   )
 }

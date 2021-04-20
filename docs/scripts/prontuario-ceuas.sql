@@ -1417,12 +1417,24 @@ CREATE TABLE ceuas.secao
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
 
-ALTER TABLE ceuas.secao
-    OWNER to postgres;
+-- Table: ceuas.complemento_consulta_tipo_queixa
+-- DROP TABLE ceuas.complemento_consulta_tipo_queixa;
+CREATE TABLE ceuas.complemento_consulta_tipo_queixa
+(
+    id bigint NOT NULL DEFAULT nextval('ceuas.complemento_consulta_tipo_queixa_id_seq'::regclass),
+    complemento text COLLATE pg_catalog."default",
+    consulta_id bigint,
+    tipo_queixa_id smallint,
+    CONSTRAINT complemento_consulta_tipo_queixa_pk PRIMARY KEY (id),
+    CONSTRAINT complemento_consulta_tipo_queixa_consulta_fk FOREIGN KEY (consulta_id)
+        REFERENCES ceuas.consulta (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT complemento_consulta_tipo_queixa_tipo_queixa_fk FOREIGN KEY (tipo_queixa_id)
+        REFERENCES ceuas.tipo_queixa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
 
 -- Última alteração: 15/04/2021
