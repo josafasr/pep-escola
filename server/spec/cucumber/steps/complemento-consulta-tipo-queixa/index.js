@@ -19,7 +19,6 @@ When('enviar a requisição', function(callback) {
       callback()
     })
     .catch((errResponse) => {
-      console.log(errResponse.response);
       this.response = errResponse.response
       callback()
     })

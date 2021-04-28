@@ -55,7 +55,7 @@ const InterrogatorioSistematicoForm = () => {
   const [queixas, setQueixas] = React.useState([])
   //const [complementosQueixas, setComplementosQueixas] = React.useState([])
 
-  const tiposQueixaResponse = useQuery(TIPOS_QUEIXA, {
+  useQuery(TIPOS_QUEIXA, {
     onCompleted: (data) => {
       setTiposQueixas(data.tiposQueixa)
     }

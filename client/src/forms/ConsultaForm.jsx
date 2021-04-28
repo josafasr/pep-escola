@@ -5,7 +5,7 @@
  */
 
  import React from 'react'
- import clsx from 'clsx'
+// import clsx from 'clsx'
  import {
   makeStyles,
   TextField
@@ -65,7 +65,7 @@ function ConsultaForm(props, ref) {
 
   const handleReset = () => {
     setConsulta({
-      acompanhante: '',
+      //acompanhante: '',
       queixaPrincipalObs: '',
       historiaDoencaAtual: ''//,
       //queixas: []
@@ -99,8 +99,7 @@ function ConsultaForm(props, ref) {
 
   return (
     <div className={classes.formFields}>
-
-      <TextField
+      {/* <TextField
         className={clsx(classes.fields, classes.fieldGrow)}
         name="acompanhante"
         value={consulta.acompanhante || ''}
@@ -109,7 +108,7 @@ function ConsultaForm(props, ref) {
         inputProps={{
           readOnly: disabled
         }}
-      />
+      /> */}
 
       <QueixaAutocomplete
         disabled={disabled}

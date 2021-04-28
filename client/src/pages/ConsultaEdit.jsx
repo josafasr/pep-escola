@@ -16,8 +16,10 @@ import {
   StepContent,
   StepButton,
   Paper,
-  Button
+  Button,
+  TextField
  } from '@material-ui/core'
+ import clsx from 'clsx'
 // import PersonIcon from '@material-ui/icons/Person'
 // import ContactPhoneIcon from '@material-ui/icons/ContactPhone'
 // import HomeIcon from '@material-ui/icons/Home'
@@ -26,10 +28,10 @@ import {
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
 import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import PessoaForm from '../forms/PessoaForm'
-//import PacienteForm from '../forms/PacienteForm'
+import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
 import PessoaContext from '../contexts/PessoaContext'
-//import PacienteContext from '../contexts/PacienteContext'
+import PacienteContext from '../contexts/PacienteContext'
 import ConsultaContext from '../contexts/ConsultaContext'
 import { toPtBrDate } from '../utils/format'
 import InterrogatorioSistematicoForm from '../forms/InterrogatorioSistematicoForm'
@@ -95,6 +97,19 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
       marginRight: '10px'
     }
+  },
+
+  fields: {
+    margin: theme.spacing(1, 0),
+    minWidth: '240px',
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      margin: theme.spacing(2, 2, 0, 0)
+    }
+  },
+
+  fieldGrow: {
+    flexGrow: 1
   }
 }))
 
@@ -118,10 +133,10 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(2)
+  const [activeStep, setActiveStep] = React.useState(0)
 
   const pessoaRef = React.useRef()
-  //const pacienteRef = React.useRef()
+  const pacienteRef = React.useRef()
   //const contatoRef = React.useRef()
   //const enderecoRef = React.useRef()
   const consultaRef = React.useRef()
@@ -223,6 +238,13 @@ function ConsultaEdit() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
+
+  const handleChange = event => {
+    setConsulta({
+      ...consulta,
+      acompanhante: event.target.value
+    })
+  }
 /* 
   const handleResetSteps = () => {
     setActiveStep(0)
@@ -267,6 +289,24 @@ function ConsultaEdit() {
               disabled={!pacienteId}
             />
           </PessoaContext.Provider>
+
+          <PacienteContext.Provider value={[paciente, setPaciente]}>
+            <PacienteForm
+              ref={pacienteRef}
+              disabled={!pacienteId}
+            />
+          </PacienteContext.Provider>
+
+          <TextField
+            className={clsx(classes.fields, classes.fieldGrow)}
+            name="acompanhante"
+            value={consulta.acompanhante || ''}
+            onChange={handleChange}
+            label="Acompanhante"
+            inputProps={{
+              readOnly: !pacienteId
+            }}
+          />
         </Paper>
 
         <Stepper

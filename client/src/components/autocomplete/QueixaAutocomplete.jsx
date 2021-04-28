@@ -23,7 +23,7 @@ export default function QueixaAutocomplete(props) {
   const { disabled } = props
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
-  const [value, setValue] = React.useState({})
+  const [_, setValue] = React.useState({})
 
   const [inputValue, setInputValue] = React.useState('')
   const [reason, setReason] = React.useState()

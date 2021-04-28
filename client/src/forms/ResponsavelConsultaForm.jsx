@@ -111,7 +111,7 @@ const ResponsavelConsultaForm = () => {
           {...params}
           multiline
           variant="outlined"
-          placeholder="Digite para inserir"
+          placeholder="Digite para pesquisar..."
         />
       )}
     />

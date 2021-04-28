@@ -6,7 +6,6 @@ Funcionalidade: Criação de complemento para queixas em consulta
   sobre a/s queixa/s listadas no interrogatório sistemático da consulta, 
   para cada tipo de queixa.
 
-  @complementoQueixa
   Cenário: Envio de dados corretos
 
   Quando o cliente criar uma requisição para a mutation "createComplementoConsultaTipoQueixa"
