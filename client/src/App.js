@@ -65,7 +65,7 @@ function App(props) {
             afterMiddleware,
             httpLink
           ]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache()/* ,
     queryDeduplication: true,
     defaultOptions: {
       watchQuery: {
@@ -74,7 +74,7 @@ function App(props) {
         errorPolicy: 'all',
         returnPartialData: true
       }
-    }
+    } */
   })
 
   return (
