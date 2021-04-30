@@ -1,8 +1,9 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de pacientes
+ * @title Descritores GraphQL para as operações sobre a tabela de pacientes
  * @module src/schemas/paciente
  * @author Josafá Santos dos Reis
  */
+
 export default `
   type Paciente {
     id: ID
@@ -25,11 +26,7 @@ export default `
     profissao: Profissao
     situacaoProfissional: SituacaoProfissional
     especialidades: [Especialidade]
-  }
-
-  type Query {
-    pacientes: [Paciente]
-    paciente(id: ID!): Paciente
+    antecedentesPatologicos: [Patologia]
   }
 
   type PacienteResponse {
@@ -37,6 +34,12 @@ export default `
     paciente: Paciente
     errors: [Error]
   }
+
+  type Query {
+    pacientes: [Paciente]
+    paciente(id: ID!): Paciente
+  }
+
 
   type Mutation {
     createPaciente(
@@ -58,7 +61,8 @@ export default `
       tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
-      especialidades: [ID]
+      especialidades: [ID],
+      antecedentesPatologicos: [PatologiaInput]
     ): PacienteResponse
 
     createWithIncludes(
@@ -80,7 +84,8 @@ export default `
       tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
-      especialidades: [ID]
+      especialidades: [ID],
+      antecedentesPatologicos: [PatologiaInput]
     ): PacienteResponse
 
     updatePaciente(
@@ -103,7 +108,8 @@ export default `
       tempoEstudoId: ID,
       profissaoId: ID,
       situacaoProfissionalId: ID,
-      especialidades: [ID]
+      especialidades: [ID],
+      antecedentesPatologicos: [PatologiaInput]
     ): PacienteResponse
 
     deletePaciente(id: ID!): Boolean

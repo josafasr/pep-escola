@@ -57,15 +57,22 @@ function App(props) {
       }
       return response
     })
-  }) 
+  })
+
+  const cache = new InMemoryCache()
 
   const client = new ApolloClient({
+    cache,
     link: from([
-            authMiddleware,
-            afterMiddleware,
-            httpLink
-          ]),
-    cache: new InMemoryCache()/* ,
+      authMiddleware,
+      afterMiddleware,
+      httpLink
+    ]),
+    resolvers: {
+      Query: {
+        isLoggedIn: () => true
+      }
+    } /* ,
     queryDeduplication: true,
     defaultOptions: {
       watchQuery: {
@@ -76,6 +83,12 @@ function App(props) {
       }
     } */
   })
+
+  /* const data = {
+    isLoggedIn: true
+  }
+
+  cache.writeData({ data }) */
 
   return (
     <ApolloProvider client={client}>

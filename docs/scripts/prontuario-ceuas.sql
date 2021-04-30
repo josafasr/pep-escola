@@ -1422,19 +1422,52 @@ CREATE TABLE ceuas.secao
 -- DROP TABLE ceuas.complemento_consulta_tipo_queixa;
 CREATE TABLE ceuas.complemento_consulta_tipo_queixa
 (
-    id bigint NOT NULL DEFAULT nextval('ceuas.complemento_consulta_tipo_queixa_id_seq'::regclass),
-    complemento text COLLATE pg_catalog."default",
-    consulta_id bigint,
-    tipo_queixa_id smallint,
-    CONSTRAINT complemento_consulta_tipo_queixa_pk PRIMARY KEY (id),
-    CONSTRAINT complemento_consulta_tipo_queixa_consulta_fk FOREIGN KEY (consulta_id)
-        REFERENCES ceuas.consulta (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT complemento_consulta_tipo_queixa_tipo_queixa_fk FOREIGN KEY (tipo_queixa_id)
-        REFERENCES ceuas.tipo_queixa (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+	id bigint NOT NULL DEFAULT nextval('ceuas.complemento_consulta_tipo_queixa_id_seq'::regclass),
+	complemento text COLLATE pg_catalog."default",
+	consulta_id bigint,
+	tipo_queixa_id smallint,
+	CONSTRAINT complemento_consulta_tipo_queixa_pk PRIMARY KEY (id),
+	CONSTRAINT complemento_consulta_tipo_queixa_consulta_fk FOREIGN KEY (consulta_id)
+			REFERENCES ceuas.consulta (id) MATCH SIMPLE
+			ON UPDATE NO ACTION
+			ON DELETE NO ACTION,
+	CONSTRAINT complemento_consulta_tipo_queixa_tipo_queixa_fk FOREIGN KEY (tipo_queixa_id)
+			REFERENCES ceuas.tipo_queixa (id) MATCH SIMPLE
+			ON UPDATE NO ACTION
+			ON DELETE NO ACTION
 )
 
--- Última alteração: 15/04/2021
+-- Table: ceuas.patologia
+-- DROP TABLE ceuas.patologia;
+CREATE TABLE ceuas.patologia
+(
+	id integer NOT NULL DEFAULT nextval('ceuas.patologia_id_seq'::regclass),
+	nome character varying COLLATE pg_catalog."default" NOT NULL,
+	descricao text COLLATE pg_catalog."default",
+	tipo_patologia_id smallint NOT NULL,
+	CONSTRAINT patologia_pk PRIMARY KEY (id),
+	CONSTRAINT patologia_tipo_patologia_fk FOREIGN KEY (tipo_patologia_id)
+		REFERENCES ceuas.tipo_patologia (id) MATCH FULL
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+);
+
+-- Table: ceuas.paciente_antecedente_patologico
+-- DROP TABLE ceuas.paciente_antecedente_patologico;
+CREATE TABLE ceuas.paciente_antecedente_patologico
+(
+	paciente_id bigint NOT NULL DEFAULT nextval('ceuas.paciente_antecedente_patologico_paciente_id_seq'::regclass),
+	patologia_id integer NOT NULL,
+	tempo_diagnostico character varying COLLATE pg_catalog."default",
+	CONSTRAINT paciente_antecedente_patologico_pk PRIMARY KEY (paciente_id, patologia_id),
+	CONSTRAINT paciente_antecedente_patologico_paciente_fk FOREIGN KEY (paciente_id)
+		REFERENCES ceuas.paciente (id) MATCH FULL
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT paciente_antecedente_patologico_patologia_fk FOREIGN KEY (patologia_id)
+		REFERENCES ceuas.patologia (id) MATCH FULL
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+);
+
+-- Última alteração: 30/04/2021

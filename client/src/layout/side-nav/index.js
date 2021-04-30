@@ -1,5 +1,8 @@
 import React from 'react'
-import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { useApolloClient } from 'react-apollo'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom'
 import clsx from 'clsx'
 import {
   makeStyles,
@@ -140,6 +143,8 @@ export default function SideNav(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const client = useApolloClient()
+
   const toggleDrawer = (mobileOpen) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return
@@ -165,6 +170,17 @@ export default function SideNav(props) {
     localStorage.removeItem('reloadToken')
     history.push('/login')
   }
+
+  const { data: authData } = useQuery(gql`
+    query IsLoggedI {
+      isLoggedIn @client
+    }`
+  )
+
+  React.useEffect(() => {
+    //console.log(client.cache.data.data)
+    console.log(authData?.isLoggedIn)
+  })
 
   const drawer = (
     <div>

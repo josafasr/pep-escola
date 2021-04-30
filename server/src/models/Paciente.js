@@ -180,6 +180,17 @@ export default (sequelize, DataTypes) => {
       as: 'especialidades',
       foreignKey: 'pacienteId',
       otherKey: 'especialidadeId'
+    }),
+
+    /**
+     * Relacionamento M:M com a tabela de patologias
+     * @see module: src/models/Patologia
+     */
+    Paciente.belongsToMany(models.Paciente, {
+      through: models.PacienteAntecedentePatologico,
+      as:'antecentesPatologicos',
+      foreignKey: 'pacienteId',
+      otherKey: 'patologiaId'
     })
   }
   return Paciente

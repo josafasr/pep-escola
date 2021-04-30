@@ -13,7 +13,7 @@ export default {
     /**
      * retorna todos os registros de paciente
      */
-    pacientes: async (parent, args, { models }) => {
+    pacientes: async (_, __, { models }) => {
       const pacientes = await models.Paciente.findAll({
         include: [
           {
@@ -36,7 +36,7 @@ export default {
     /**
      * restorna um registro de paciente pelo id
      */
-    paciente: async (parent, { id }, { models }) => {
+    paciente: async (_, { id }, { models }) => {
       const paciente = await models.Paciente.findByPk(id, {
         include: [
           {
@@ -85,6 +85,9 @@ export default {
             attributes: ['id', 'nome']
           }, {
             association: 'especialidades',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'antecedentesPatologicos',
             attributes: ['id', 'nome']
           }
         ],
