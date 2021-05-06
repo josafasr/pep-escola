@@ -46,7 +46,15 @@ export default function UsuarioEdit() {
         ...pessoa,
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
         contato: contatoState,
-        enderecos: [endereco]
+        enderecos: [{
+          tipoLogradouroId: parseInt(endereco.tipoLogradouro?.id),
+          logradouro: endereco.logradouro,
+          numero: parseInt(endereco.numero),
+          bairro: endereco.bairro,
+          endereco: endereco.complemento,
+          cep: endereco.cep,
+          cidadeId: parseInt(endereco.cidade?.id)
+        }]
       }
     }
   })
@@ -63,7 +71,7 @@ export default function UsuarioEdit() {
       alert('Usuário criado com sucesso!')
       handleBack()
     } else {
-      alert('Não foi possível criar o paciente :(')
+      alert('Não foi possível criar o usuário :(')
     }
   }
 

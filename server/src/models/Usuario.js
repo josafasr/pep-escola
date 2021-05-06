@@ -48,7 +48,7 @@ export default (sequelize, DataTypes) => {
   Usuario.associate = (models) => {
     /**
      * Relacionamento com a tabela de pessoas
-     * @see module:src/models/Pessoa
+     * @see module: src/models/Pessoa
      */
     Usuario.belongsTo(models.Pessoa, {
       as: 'pessoa',
@@ -57,7 +57,7 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de grupos
-     * @see module:src/models/Grupo
+     * @see module: src/models/Grupo
      */
     Usuario.belongsToMany(models.Grupo, {
       through: models.UsuarioGrupo,
@@ -68,7 +68,7 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de consultas
-     * @see module:src/models/Consulta
+     * @see module: src/models/Consulta
      */
     Usuario.belongsToMany(models.Consulta, {
       through: models.ResponsavelConsulta,
@@ -79,7 +79,7 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de avaliação de atendimento
-     * @see module:src/models/AvaliacaoAtendimento
+     * @see module: src/models/AvaliacaoAtendimento
      */
     Usuario.hasMany(models.AvaliacaoAtendimento, {
       as: 'avaliacoes',

@@ -53,12 +53,12 @@ export default {
     /**
      * restorna um registro de usuário pelo id
      */
-    usuario: async (parent, { id }, { models }) => {
+    usuario: async (_, { id }, { models }) => {
       const usuario = await models.Usuario.findByPk(id, {
         include: [
         {
           association: 'pessoa',
-          attributes: ['id', 'nome', 'dataNascimento', 'sexo'],
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
           include: [
           {
             association: 'contato',

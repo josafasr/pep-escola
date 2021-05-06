@@ -66,13 +66,13 @@ function EnderecoForm(props, ref) {
 
   const handleReset = () => {
     setEndereco({
-      tipoLogradouro: '',
+      tipoLogradouro: {},
       logradouro: '',
       numero: '',
       bairro: '',
       complemento: '',
       cep: '',
-      cidade: ''
+      cidade: {}
     })
   }
 

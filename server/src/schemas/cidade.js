@@ -11,6 +11,12 @@ export default `
     estado: Estado
   }
 
+  input CidadeInput {
+    id: ID
+    nome: String
+    codigoIBGE: String
+  }
+
   type Query {
     cidade(id: ID!): Cidade
     cidades: [Cidade]

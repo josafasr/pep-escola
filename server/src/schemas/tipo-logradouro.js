@@ -9,6 +9,11 @@ export default `
     nome: String
   }
 
+  input TipoLogradouroInput {
+    id: ID
+    nome: String
+  }
+
   type Query {
     tiposLogradouro: [TipoLogradouro]
     tipoLogradouro(id: ID!): TipoLogradouro
