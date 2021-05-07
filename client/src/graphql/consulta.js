@@ -99,6 +99,14 @@ export const GET_WITH_INCLUDES = gql`
           id
           nome
         }
+        antecedentesPatologicos {
+          id
+          nome
+          tipoPatologia {
+            id
+            nome
+          }
+        }
       }
       acompanhante
       queixaPrincipal {

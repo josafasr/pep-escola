@@ -17,7 +17,8 @@ import {
   StepButton,
   Paper,
   Button,
-  TextField
+  TextField,
+  Divider
  } from '@material-ui/core'
  import clsx from 'clsx'
 // import PersonIcon from '@material-ui/icons/Person'
@@ -40,6 +41,7 @@ import IndicadoresExameFisicoForm from '../forms/IndicadoresExameFisicoForm'
 import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
 import ResponsavelConsultaForm from '../forms/ResponsavelConsultaForm'
+import AntecedentesPatologicosForm from '../forms/AntecedentesPatologicosForm'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,6 +112,10 @@ const useStyles = makeStyles((theme) => ({
 
   fieldGrow: {
     flexGrow: 1
+  },
+
+  final: {
+    margin: '20px 0 0 20px'
   }
 }))
 
@@ -133,7 +139,7 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = React.useState(4)
 
   const pessoaRef = React.useRef()
   const pacienteRef = React.useRef()
@@ -255,22 +261,24 @@ function ConsultaEdit() {
   const buttons = (
     <div>
       <Button
-        //disabled={activeStep === 0}
-        onClick={activeStep === 0 ? handleGoBack : handleBack}
+        disabled={activeStep === 0}
+        variant="contained"
+        color="primary"
+        onClick={handleGoBack}
         className={classes.button}
         size="small"
       >
         Voltar
       </Button>
       <Button
-        disabled={activeStep === 5 && !pacienteId}
+        disabled={activeStep === 6}
         variant="contained"
         color="primary"
-        onClick={activeStep === 5 ? handleSubmit : handleNext}
+        onClick={handleNext}
         className={classes.button}
         size="small"
       >
-        {activeStep === 5 ? 'Salvar' : 'Avançar'}
+        Avançar
       </Button>
     </div>
   )
@@ -282,7 +290,12 @@ function ConsultaEdit() {
       <CssBaseline />
       <ConsultaContext.Provider value={[consulta, setConsulta]}>
         <Paper className={classes.paper} elevation={2}>
-          <h2 className={classes.header}>Nova Consulta</h2>
+          <h2 className={classes.header}>
+            {!!pacienteId ? 
+            'Nova Consulta' : 
+            `Consulta realizada em ${new Date(parseInt(consulta?.createdAt))
+              .toLocaleString("pt-BR", { dateStyle: "short" })}`}
+          </h2>
           <PessoaContext.Provider value={{pessoa, setPessoa}}>
             <PessoaForm
               ref={pessoaRef}
@@ -385,6 +398,20 @@ function ConsultaEdit() {
 
           <Step disabled={false}>
             <StepButton className={classes.stepButton} onClick={handleStep(4)}>
+              <StepLabel className={classes.stepLabel}>Antecedentes Médicos Patológicos</StepLabel>
+            </StepButton>
+            <StepContent classes={{ root: classes.stepContent }}>
+              <Paper className={classes.paper} elevation={2}>
+                <PacienteContext.Provider value={[paciente, setPaciente]}>
+                  <AntecedentesPatologicosForm />
+                </PacienteContext.Provider>
+              </Paper>
+              {buttons}
+            </StepContent>
+          </Step>
+
+          <Step disabled={false}>
+            <StepButton className={classes.stepButton} onClick={handleStep(5)}>
               <StepLabel className={classes.stepLabel}>Exame Físico</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -399,7 +426,7 @@ function ConsultaEdit() {
           </Step>
 
           <Step disabled={false}>
-            <StepButton className={classes.stepButton} onClick={handleStep(5)}>
+            <StepButton className={classes.stepButton} onClick={handleStep(6)}>
               <StepLabel className={classes.stepLabel}>Diagnóstico</StepLabel>
             </StepButton>
             <StepContent classes={{ root: classes.stepContent }}>
@@ -413,6 +440,27 @@ function ConsultaEdit() {
           </Step>
         </Stepper>
       </ConsultaContext.Provider>
+      <Divider />
+      <div className={classes.final}>
+        <Button
+          //disabled={activeStep === 0}
+          onClick={handleGoBack}
+          className={classes.button}
+          size="small"
+        >
+          Cancelar
+        </Button>
+        <Button
+          //disabled={activeStep === 5 && !pacienteId}
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          className={classes.button}
+          size="small"
+        >
+          Salvar
+        </Button>
+      </div>
     </div>
   )
 }

@@ -88,7 +88,11 @@ export default {
             attributes: ['id', 'nome']
           }, {
             association: 'antecedentesPatologicos',
-            attributes: ['id', 'nome']
+            attributes: ['id', 'nome'],
+            include: {
+              association: 'tipoPatologia',
+              attributes: ['id', 'nome']
+            }
           }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
@@ -162,7 +166,7 @@ export default {
     /**
      * atualiza um registro de paciente, dado o id
      */
-    updatePaciente: async (parent, { id, especialidades, ...otherArgs }, { models }) => {
+    updatePaciente: async (parent, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { models }) => {
       try {
         const paciente = await models.Paciente.findByPk(id)
         if ({ ...otherArgs }) {
@@ -176,6 +180,11 @@ export default {
         if (especialidades) {
           paciente.addEspecialidades(especialidades)
         }
+
+        if (antecedentesPatologicos) {
+          paciente.addAntecedentesPatologicos(antecedentesPatologicos)
+        }
+
         return {
           ok: true,
           paciente

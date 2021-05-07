@@ -62,7 +62,7 @@ export default `
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID],
-      antecedentesPatologicos: [PatologiaInput]
+      antecedentesPatologicos: [Int]
     ): PacienteResponse
 
     createWithIncludes(
@@ -109,7 +109,7 @@ export default `
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID],
-      antecedentesPatologicos: [PatologiaInput]
+      antecedentesPatologicos: [Int]
     ): PacienteResponse
 
     deletePaciente(id: ID!): Boolean

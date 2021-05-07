@@ -118,11 +118,9 @@ const RecordatorioAlimentarForm = (props) => {
   }
 
   const handleInputChange = (event, value, reason) => {
-    //console.log(value);
     setReason(reason)
     setText(value)
     if (event) {
-      //console.log(event.target.id);
       setTargetId(event.target.id)
       setInputValue({
         ...inputValue,

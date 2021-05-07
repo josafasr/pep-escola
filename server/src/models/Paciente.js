@@ -186,9 +186,9 @@ export default (sequelize, DataTypes) => {
      * Relacionamento M:M com a tabela de patologias
      * @see module: src/models/Patologia
      */
-    Paciente.belongsToMany(models.Paciente, {
+    Paciente.belongsToMany(models.Patologia, {
       through: models.PacienteAntecedentePatologico,
-      as:'antecentesPatologicos',
+      as:'antecedentesPatologicos',
       foreignKey: 'pacienteId',
       otherKey: 'patologiaId'
     })

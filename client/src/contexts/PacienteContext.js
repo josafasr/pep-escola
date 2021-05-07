@@ -18,7 +18,8 @@ const PacienteContext = createContext(
     escolaridade: {},
     tempoEstudo: {},
     profissao: {},
-    situacaoProfissional: {}
+    situacaoProfissional: {},
+    antecedentesPatologicos: []
   }
 )
 

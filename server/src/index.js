@@ -16,7 +16,7 @@ import { refreshTokens } from './auth'
 
 /***** trocar por chaves de verdade *****/
 const SECRET = process.env.PRIVATE_KEY
-const SECRET2 = 'kwvowudvj33739fnq9cn9938sjg9w73'
+const SECRET2 = process.env.PUBLIC_KEY // 'kwvowudvj33739fnq9cn9938sjg9w73'
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')))

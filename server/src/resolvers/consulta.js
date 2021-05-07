@@ -110,6 +110,13 @@ export default {
               }, {
                 association: 'especialidades',
                 attributes: ['id', 'nome']
+              }, {
+                association: 'antecedentesPatologicos',
+                attributes: ['id', 'nome'],
+                include: {
+                  association: 'tipoPatologia',
+                  attributes: ['id', 'nome']
+                }
               }
             ]
           }, {

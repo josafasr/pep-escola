@@ -115,13 +115,13 @@ function PacienteEdit(props) {
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
         contato: contatoState,
         enderecos: [{
-          tipoLogradouroId: endereco.tipoLogradouro?.id,
+          tipoLogradouroId: parseInt(endereco.tipoLogradouro?.id),
           logradouro: endereco.logradouro,
           numero: parseInt(endereco.numero),
           bairro: endereco.bairro,
           complemento: endereco.complemento,
           cep: endereco.cep,
-          cidadeId: endereco.cidade?.id
+          cidadeId: parseInt(endereco.cidade?.id)
         }]
       }
     }
@@ -166,7 +166,10 @@ function PacienteEdit(props) {
       <span>Carregando...</span>
     </>
   )
-  if (error) return 'Error :('
+  if (error) {
+    console.log('Deu ruim!');
+    return 'Error :('
+  }
 
   return (
     <div className={classes.root}>

@@ -124,6 +124,17 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
     overflowX: 'auto'
+  },
+
+  home: {
+    position: 'fixed',
+    left: 0,
+    height: '75vh',
+    width: '100%',
+    opacity: '30%',
+    display: 'flex',
+    //alignItems: 'center',
+    justifyContent: 'center',
   }
 }))
 
@@ -177,10 +188,10 @@ export default function SideNav(props) {
     }`
   )
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     //console.log(client.cache.data.data)
     console.log(authData?.isLoggedIn)
-  })
+  }) */
 
   const drawer = (
     <div>
@@ -355,6 +366,9 @@ export default function SideNav(props) {
           {/* <Route exact path="/usuarios/criar" component={Usuario} />
           <Route exact path="/usuarios/:id" children={<Usuario />} /> */}
           <Route path="/usuarios" component={UsuarioView} />
+          <Route path="/" render={() => <div className={classes.home}>
+            <img src="/images/medicina.png" alt="Brasão do Curso de Medicina" />
+          </div>} />
         </Switch>
       </main>
     </div>
