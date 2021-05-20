@@ -14,7 +14,8 @@ export default (sequelize, DataTypes) => {
     }
   }, {
     schema: 'ceuas',
-    tableName: 'patologia'
+    tableName: 'patologia',
+    timestamps: false
   })
 
   Patologia.associate = (models) => {
@@ -28,14 +29,12 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
-     * Relacionamento M:M com a tabela de pacientes
-     * @see module: src/models/Paciente
+     * Relacionamento com a tabela de antecedentes patológicos
+     * @see module: src/models/AntecedentePatologico
      */
-    Patologia.belongsToMany(models.Paciente, {
-      through: models.PacienteAntecedentePatologico,
-      as:'pacientes',
-      foreignKey: 'patologiaId',
-      otherKey: 'pacienteId'
+    Patologia.hasMany(models.AntecedentePatologico, {
+      as:'antecedentes',
+      foreignKey: 'patologiaId'
     })
   }
 

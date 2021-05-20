@@ -235,10 +235,14 @@ export const GET_WITH_INCLUDES = gql`
       }
       antecedentesPatologicos {
         id
-        nome
-        tipoPatologia {
+        tempoDiagnostico
+        patologia {
           id
           nome
+          tipoPatologia {
+            id
+            nome
+          }
         }
       }
     }
@@ -285,3 +289,21 @@ export const DELETE_PACIENTE = gql`
   mutation($id: ID!) {
     deletePaciente(id: $id)
   }`
+
+export const UPDATE_ANTECEDENTES = gql`
+  mutation UpdateAntecedentes($id: ID!, $antecedentesPatologicos: [PatologiaInput]) {
+    updatePaciente(id: $id, antecedentesPatologicos: $antecedentesPatologicos) {
+      ok
+      paciente {
+        id
+        antecedentesPatologicos {
+          id nome
+        }
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`

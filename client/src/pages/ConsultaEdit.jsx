@@ -27,7 +27,7 @@ import {
 // import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
-import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
+import { GET_WITH_INCLUDES as GET_PACIENTE, UPDATE_ANTECEDENTES } from '../graphql/paciente'
 import PessoaForm from '../forms/PessoaForm'
 import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
@@ -148,6 +148,7 @@ function ConsultaEdit() {
   const consultaRef = React.useRef()
 
   const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
+  const [handleUpdateAntecedentes] = useMutation(UPDATE_ANTECEDENTES)
 
   /* const pacienteData =  */useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
@@ -186,9 +187,9 @@ function ConsultaEdit() {
     event.preventDefault()
     event.stopPropagation()
 
-    const queixas = consulta.queixas.map(queixa => parseInt(queixa.id))
+    const queixas = consulta.queixas?.map(queixa => parseInt(queixa.id))
 
-    const recordatorioAlimentar = consulta.recordatorioAlimentar.map(recordatorio => {
+    const recordatorioAlimentar = consulta.recordatorioAlimentar?.map(recordatorio => {
       const { alimento, tipoRefeicao } = recordatorio
       delete tipoRefeicao['__typename']
       if (alimento.__typename) {
@@ -202,7 +203,22 @@ function ConsultaEdit() {
       }
     })
 
-    const exameFisico = consulta.exameFisico.map(exame => parseInt(exame.id))
+    const exameFisico = consulta.exameFisico?.map(exame => parseInt(exame.id))
+
+    const pacienteResponse = await handleUpdateAntecedentes({
+      variables: {
+        id: pacienteId,
+        antecedentesPatologicos: consulta.paciente?.antecedentesPatologicos
+      }
+    })
+
+    const { ok, paciente, errors } = pacienteResponse.data.updatePaciente
+
+    if (ok) {
+      alert('Antecedentes atualizados com sucesso!')
+    } else {
+      alert(`Não foi possível atualizar os antecedentes :( ${errors}`)
+    }
 
     const consultaResponse = await handleCreateConsulta({
       variables: {
@@ -210,7 +226,7 @@ function ConsultaEdit() {
         acompanhante: consulta.acompanhante,
         queixaPrincipalObs: consulta.queixaPrincipalObs,
         historiaDoencaAtual: consulta.historiaDoencaAtual,
-        queixaPrincipalId: parseInt(consulta.queixaPrincipal.id),
+        queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
         queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
         complementosQueixas: consulta.complementosQueixas,
         recordatorioAlimentar,

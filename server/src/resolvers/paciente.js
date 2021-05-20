@@ -88,11 +88,18 @@ export default {
             attributes: ['id', 'nome']
           }, {
             association: 'antecedentesPatologicos',
-            attributes: ['id', 'nome'],
+            attributes: ['id', 'tempoDiagnostico'],
             include: {
-              association: 'tipoPatologia',
-              attributes: ['id', 'nome']
-            }
+              association: 'patologia',
+              attributes: ['id', 'nome'],
+              include: {
+                association: 'tipoPatologia',
+                attributes: ['id', 'nome']
+              }
+            } /* ,
+            through: {
+              attributes: ['createdAt', 'updatedAt']
+            } */
           }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
@@ -166,20 +173,50 @@ export default {
     /**
      * atualiza um registro de paciente, dado o id
      */
-    updatePaciente: async (parent, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { models }) => {
+    updatePaciente: async (_, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { sequelize, models }) => {
       try {
-        const paciente = await models.Paciente.findByPk(id)
-        if ({ ...otherArgs }) {
-          await paciente.update({ ...otherArgs }, {
-            // where: { id },
-            returning: true,
-            plain: true
-          })
+        const result = await sequelize.transaction(async (tx) => {
+          const paciente = await models.Paciente.findByPk(id)
+
+          if ({ ...otherArgs }) {
+            await paciente.update({ ...otherArgs }, {
+              // where: { id },
+              returning: true,
+              plain: true
+            })
+          }
+
+          if (especialidades) {
+            await paciente.addEspecialidades(especialidades)
+          }
+
+          if (antecedentesPatologicos) {
+            console.log(antecedentesPatologicos);
+            await paciente.addAntecedentesPatologicos(antecedentesPatologicos)
+          }
+          return paciente
+        })
+
+        return {
+          ok: true,
+          paciente: result
         }
 
-        if (especialidades) {
-          paciente.addEspecialidades(especialidades)
+      } catch (err) {
+        console.log(err);
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
         }
+      }
+    },
+
+    /**
+     * atualiza um registro de paciente, dado o id
+     */
+     /* updateAntecedentesPatologicos: async (parent, { id, antecedentesPatologicos }, { models }) => {
+      try {
+        const paciente = await models.Paciente.findByPk(id)
 
         if (antecedentesPatologicos) {
           paciente.addAntecedentesPatologicos(antecedentesPatologicos)
@@ -195,7 +232,7 @@ export default {
           errors: formatErrors(err, models)
         }
       }
-    },
+    }, */
 
 
 

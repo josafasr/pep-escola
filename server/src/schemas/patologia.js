@@ -16,7 +16,7 @@ export default `
     id: ID
     nome: String
     descricao: String
-    tipoPatologia: TipoPatologiaInput
+    tipoPatologiaId: Int
   }
 
   type PatologiaResponse {

@@ -167,7 +167,6 @@ function PacienteEdit(props) {
     </>
   )
   if (error) {
-    console.log('Deu ruim!');
     return 'Error :('
   }
 

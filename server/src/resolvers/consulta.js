@@ -112,10 +112,14 @@ export default {
                 attributes: ['id', 'nome']
               }, {
                 association: 'antecedentesPatologicos',
-                attributes: ['id', 'nome'],
+                attributes: ['id', 'tempoDiagnostico'],
                 include: {
-                  association: 'tipoPatologia',
-                  attributes: ['id', 'nome']
+                  association: 'patologia',
+                  attributes: ['id', 'nome'],
+                  include: {
+                    association: 'tipoPatologia',
+                    attributes: ['id', 'nome']
+                  }
                 }
               }
             ]
@@ -198,34 +202,38 @@ export default {
       ...ohterArgs
     }, { sequelize, models }) => {
       try {
-        const recordatorio = recordatorioAlimentar.map(item => {
-          const { alimento } = item
-          if (alimento && alimento.id) {
-            return {
-              quantidade: item.quantidade,
-              alimentoId: parseInt(item.alimento.id),
-              tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
-            }
-          } else {
-            return {
-              quantidade: item.quantidade,
-              alimento: {
-                nome: item.alimento.nome
-              },
-              tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
-            }
-          }
-        })
+        const recordatorio = recordatorioAlimentar.length > 0
+          ? recordatorioAlimentar.map(item => {
+              const { alimento } = item
+              if (alimento && alimento.id) {
+                return {
+                  quantidade: item.quantidade,
+                  alimentoId: parseInt(item.alimento.id),
+                  tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
+                }
+              } else {
+                return {
+                  quantidade: item.quantidade,
+                  alimento: {
+                    nome: item.alimento.nome
+                  },
+                  tipoRefeicaoId: parseInt(item.tipoRefeicao.id)
+                }
+              }
+            })
+          : []
 
-        const complementos = complementosQueixas.map(item => {
-          const { tipoQueixa } = item
-          if (tipoQueixa && tipoQueixa.id) {
-            return {
-              complemento: item.complemento,
-              tipoQueixaId: parseInt(item.tipoQueixa.id)
-            }
-          }
-        })
+        const complementos = complementosQueixas.length > 0
+          ? complementosQueixas.map(item => {
+              const { tipoQueixa } = item
+              if (tipoQueixa && tipoQueixa.id) {
+                return {
+                  complemento: item.complemento,
+                  tipoQueixaId: parseInt(item.tipoQueixa.id)
+                }
+              }
+            })
+          : []
 
         const result = await sequelize.transaction(async (tx) => {
           const consulta = await models.Consulta.create({

@@ -101,10 +101,14 @@ export const GET_WITH_INCLUDES = gql`
         }
         antecedentesPatologicos {
           id
-          nome
-          tipoPatologia {
+          tempoDiagnostico
+          patologia {
             id
             nome
+            tipoPatologia {
+              id
+              nome
+            }
           }
         }
       }
