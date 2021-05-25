@@ -4,7 +4,9 @@
  * @author Josafá Santos dos Reis
  */
 
-export default `
+import { gql } from 'apollo-server-express'
+
+export default gql`
   type AntecedentePatologico {
     id: Int
     patologia: Patologia
@@ -15,5 +17,23 @@ export default `
     pacienteId: ID
     patologiaId: ID
     tempoDiagnostico: String
+  }
+
+  type AntecedentePatologicoResponse {
+    ok: Boolean
+    antecedentePatologico: AntecedentePatologico
+    errors: [Error]
+  }
+
+  type Query {
+    antecedentesPatologicosByPaciente(pacienteId: ID!): [AntecedentePatologico]!
+  }
+
+  type Mutation {
+    createAntecedentePatologico(
+      pacienteId: ID!,
+      patologiaId: ID!,
+      tempoDiagnostico: String
+    ): AntecedentePatologicoResponse
   }
 `
