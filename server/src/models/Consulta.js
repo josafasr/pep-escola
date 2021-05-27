@@ -122,6 +122,15 @@ export default (sequelize, DataTypes) => {
      Consulta.hasMany(models.ComplementoConsultaTipoQueixa, {
       as: 'complementosQueixas',
       foreignKey: 'consultaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de complemento de exame físico
+     * @see {@link src/models/ComplementoConsultaExameFisico}
+     */
+     Consulta.hasMany(models.ComplementoConsultaExameFisico, {
+      as: 'complementosExameFisico',
+      foreignKey: 'consultaId'
     })
   }
 

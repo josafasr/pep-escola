@@ -154,8 +154,17 @@ export default {
             ]
           }, {
             association: 'exameFisico',
+            attributes: ['id', 'nome'],
             include: {
-              association: 'tipoExameFisico'
+              association: 'tipoExameFisico',
+              attributes: ['id', 'nome']
+            }
+          }, {
+            association: 'complementosExameFisico',
+            attributes: ['id', 'complemento'],
+            include: {
+              association: 'tipoExameFisico',
+              attributes: ['id', 'nome']
             }
           }, {
             association: 'indicadoresExameFisico'

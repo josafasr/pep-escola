@@ -175,7 +175,6 @@ const InterrogatorioSistematicoForm = () => {
             defaultValue={complementoQueixa?.complemento || ''}
             onBlur={handleChangeComplementos}
             multiline
-            //rows={2}
             variant="filled"
             label="Observações"
             /* inputProps={{

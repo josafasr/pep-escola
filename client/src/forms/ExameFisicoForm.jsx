@@ -11,7 +11,8 @@ import {
   Paper,
   Divider,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  TextField
 } from '@material-ui/core'
 
 import ConsultaContext from '../contexts/ConsultaContext'
@@ -105,6 +106,34 @@ const ExameFisicoForm = () => {
     }
   }
 
+  const handleChangeComplementos = (event) => {
+    const { id, value } = event.target
+    const exists = consulta.complementosExameFisico?.some(item => item.tipoExameFisico.id === id)
+
+    if (exists) {
+      const thisComplemento = consulta.complementosExameFisico.find(item => item.tipoExameFisico.id === id)
+      const others = consulta.complementosExameFisico.filter(item => item.tipoExameFisico.id !== id)
+
+      setConsulta({
+        ...consulta,
+        complementosExameFisico: [
+          ...others,
+          { ...thisComplemento, complemento: value }
+        ]
+      })
+    } else {
+      setConsulta({
+        ...consulta,
+        complementosExameFisico: consulta.complementosExameFisico ? [
+          ...consulta.complementosExameFisico,
+          { complemento: value, tipoExameFisico: { id } }
+        ] : [
+          { complemento: value, tipoExameFisico: { id } }
+        ]
+      })
+    }
+  }
+
   const isLast = (array, item) => {
     const index = array.indexOf(item)
     //if (index === (array.length - 1)) {
@@ -119,33 +148,48 @@ const ExameFisicoForm = () => {
 
   return (
     <div className={classes.exames}>
-      {tiposExameFisico.map(tipo =>
-        <div className={classes.tipo} key={tipo.id}>
-          <Paper className={classes.fieldSet} component="fieldset">
-            <legend className={classes.legend}>Alterações {tipo.nome === 'Geral' ? 'Gerais' : tipo.nome}:</legend>
-            {examesFisicos.filter(item => (item.tipoExameFisico.id === tipo.id))
-              .map(exame =>
-                <FormControlLabel
-                  className={classes.checkLabel}
-                  key={exame.id}
-                  control={
-                    <Checkbox
-                      className={classes.checkbox}
-                      id={exame.id}
-                      onChange={handleChange}
-                      checked={isChecked(exame)}
-                      color="primary"
-                      size="small"
-                    />
-                  }
-                  label={exame.nome}
-                />
-              )
-            }
-          </Paper>
-          {!isLast(tiposExameFisico, tipo) && <Divider className={classes.divider} orientation="vertical" flexItem />}
-        </div>
-      )}
+      {tiposExameFisico.map(tipo => {
+        const complementoExameFisico = consulta.complementosExameFisico?.find(item => item.tipoExameFisico.id === tipo.id)
+        return (
+          <div className={classes.tipo} key={tipo.id}>
+            <Paper className={classes.fieldSet} component="fieldset">
+              <legend className={classes.legend}>Alterações {tipo.nome === 'Geral' ? 'Gerais' : tipo.nome}:</legend>
+              {examesFisicos.filter(item => (item.tipoExameFisico.id === tipo.id))
+                .map(exame =>
+                  <FormControlLabel
+                    className={classes.checkLabel}
+                    key={exame.id}
+                    control={
+                      <Checkbox
+                        className={classes.checkbox}
+                        id={exame.id}
+                        onChange={handleChange}
+                        checked={isChecked(exame)}
+                        color="primary"
+                        size="small"
+                      />
+                    }
+                    label={exame.nome}
+                  />
+                )
+              }
+              <TextField
+                id={tipo.id}
+                name="complementoExameFisico"
+                defaultValue={complementoExameFisico?.complemento || ''}
+                onBlur={handleChangeComplementos}
+                multiline
+                variant="filled"
+                label="Observações"
+                size="small"
+                /* inputProps={{
+                  readOnly: disabled
+                }} */
+              />
+            </Paper>
+            {!isLast(tiposExameFisico, tipo) && <Divider className={classes.divider} orientation="vertical" flexItem />}
+          </div>)
+      })}
     </div>
   )
 }

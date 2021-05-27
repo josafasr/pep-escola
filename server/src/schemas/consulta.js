@@ -16,6 +16,7 @@ export default `
     queixas: [Queixa]
     complementosQueixas: [ComplementoConsultaTipoQueixa]
     exameFisico: [ExameFisico]
+    complementosExameFisico: [ComplementoConsultaExameFisico]
     indicadoresExameFisico: IndicadoresExameFisico
     suspeitasDiagnosticas: String
     planoConduta: String
@@ -48,6 +49,7 @@ export default `
       complementosQueixas: [ComplementoConsultaTipoQueixaInput],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
       exameFisico: [ID],
+      complementosExameFisico: [ComplementoConsultaExameFisicoInput]
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       suspeitasDiagnosticas: String,
       planoConduta: String,

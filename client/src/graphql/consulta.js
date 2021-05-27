@@ -175,6 +175,17 @@ export const GET_WITH_INCLUDES = gql`
       exameFisico {
         id
         nome
+        tipoExameFisico {
+          id nome
+        }
+      }
+      complementosExameFisico {
+        id
+        complemento
+        tipoExameFisico {
+          id
+          nome
+        }
       }
       suspeitasDiagnosticas
       planoConduta
