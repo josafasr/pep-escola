@@ -72,16 +72,16 @@ function App(props) {
       Query: {
         isLoggedIn: () => true
       }
-    } /* ,
-    queryDeduplication: true,
+    },
+    //queryDeduplication: true,
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'network-only',
-        nextFetchPolicy: 'cache-first',
-        errorPolicy: 'all',
-        returnPartialData: true
+        fetchPolicy: 'cache-and-network'
+        //nextFetchPolicy: 'cache-first',
+        //errorPolicy: 'all',
+        //returnPartialData: true
       }
-    } */
+    }
   })
 
   /* const data = {

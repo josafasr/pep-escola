@@ -189,6 +189,24 @@ export default (sequelize, DataTypes) => {
      Paciente.hasMany(models.AntecedentePatologico, {
       as:'antecedentesPatologicos',
       foreignKey: 'pacienteId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de pacientes-antecedentes
+     * @see {@link src/models/PacienteAntecedente}
+     */
+    /* Paciente.hasMany(models.PacienteAntecedente, {
+      as: 'antecedentes',
+      foreignKey: 'pacienteId'
+    }), */
+
+    /**
+     * Relacionamento com a tabela de valores de atributos de antecedentes
+     * @see {@link src/models/PacienteAntecedenteAtributo}
+     */
+     Paciente.hasMany(models.PacienteAntecedenteAtributo, {
+      as: 'antecedentesAtributos',
+      foreignKey: 'pacienteId'
     })
   }
   return Paciente

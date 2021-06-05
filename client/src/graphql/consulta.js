@@ -111,6 +111,21 @@ export const GET_WITH_INCLUDES = gql`
             }
           }
         }
+        # PacienteAntecedenteAtributo
+        antecedentesAtributos {
+          id atributoValor
+          # AntecedenteAtributo
+          antecedenteAtributo {
+            id nome tipoDado
+            # Antecedente
+            tipoAntecedente {
+              id nome
+            }
+          }
+          antecedente {
+            id nome
+          }
+        }
       }
       acompanhante
       queixaPrincipal {

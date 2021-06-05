@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => {
          * @see module:models/Queixa
          */
         TipoQueixa.hasMany(models.Queixa, {
-            as: 'queixa',
+            as: 'queixas',
             foreignKey: 'tipoQueixaId'
         }),
 

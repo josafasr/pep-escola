@@ -121,6 +121,18 @@ export default {
                     attributes: ['id', 'nome']
                   }
                 }
+              }, {
+                association: 'antecedentesAtributos',
+                include: [
+                  {
+                    association: 'antecedenteAtributo',
+                    include: {
+                      association: 'tipoAntecedente'
+                    }
+                  }, {
+                    association: 'antecedente'
+                  }
+                ]
               }
             ]
           }, {
@@ -211,7 +223,7 @@ export default {
       ...ohterArgs
     }, { sequelize, models }) => {
       try {
-        const recordatorio = recordatorioAlimentar.length > 0
+        const recordatorio = (recordatorioAlimentar && recordatorioAlimentar.length > 0)
           ? recordatorioAlimentar.map(item => {
               const { alimento } = item
               if (alimento && alimento.id) {
@@ -232,7 +244,7 @@ export default {
             })
           : []
 
-        const complementos = complementosQueixas.length > 0
+        const complementos = (complementosQueixas && complementosQueixas.length > 0)
           ? complementosQueixas.map(item => {
               const { tipoQueixa } = item
               if (tipoQueixa && tipoQueixa.id) {

@@ -9,6 +9,7 @@ export default `
     id: ID
     nome: String
     descricao: String
+    queixas: [Queixa]
   }
 
   input TipoQueixaInput {

@@ -1,10 +1,12 @@
 /**
- * @title Descritores GraphQL para as operações sobre a tabela de pacientes
+ * @description Descritores GraphQL para as operações sobre a tabela de pacientes
  * @module src/schemas/paciente
  * @author Josafá Santos dos Reis
  */
 
-export default `
+import { gql } from 'apollo-server-express'
+
+export default gql`
   type Paciente {
     id: ID
     prontuario: String
@@ -27,6 +29,8 @@ export default `
     situacaoProfissional: SituacaoProfissional
     especialidades: [Especialidade]
     antecedentesPatologicos: [AntecedentePatologico]
+    antecedentes: [Antecedente]
+    antecedentesAtributos: [PacienteAntecedenteAtributo]
   }
 
   type PacienteResponse {
@@ -110,6 +114,8 @@ export default `
       situacaoProfissionalId: ID,
       especialidades: [ID],
       antecedentesPatologicos: [AntecedentePatologicoInput]
+      antecedentes: [Int]
+      antecedentesAtributos: [Int]
     ): PacienteResponse
 
     deletePaciente(id: ID!): Boolean

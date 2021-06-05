@@ -122,7 +122,7 @@ function ConsultaForm(props, ref) {
         multiline
         rows={3}
         variant="filled"
-        label="Observações sobre a queixa principal"
+        label="Observações"
         inputProps={{
           readOnly: disabled
         }}

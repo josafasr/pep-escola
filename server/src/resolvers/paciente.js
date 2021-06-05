@@ -100,6 +100,18 @@ export default {
             through: {
               attributes: ['createdAt', 'updatedAt']
             } */
+          }, {
+            association: 'antecedentesAtributos',
+            include: [
+              {
+                association: 'antecedenteAtributo',
+                include: {
+                  association: 'tipoAntecedente'
+                }
+              }, {
+                association: 'antecedente'
+              }
+            ]
           }
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }

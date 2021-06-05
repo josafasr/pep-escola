@@ -3,6 +3,7 @@
  * @module resolvers/tipo-queixa
  * @author Marcos Porto 
  */
+import { Op } from 'sequelize'
 
 import { formatErrors } from '../format-errors';
 
@@ -12,7 +13,14 @@ import { formatErrors } from '../format-errors';
          /**
           * retorna todos os registros de tipo de queixa
           */
-         tiposQueixa: (parent, args, { models }) => models.TipoQueixa.findAll(),
+         tiposQueixa: (parent, args, { models }) => models.TipoQueixa.findAll({
+           include: {
+             association: 'queixas'
+           },
+           where: {
+            id: { [Op.in]: [1, 2, 6, 7, 8] }
+          }
+         }),
     
          /**
           * restorna um registro de tipo de queixa pelo id

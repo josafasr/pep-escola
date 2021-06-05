@@ -19,7 +19,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Button
+  Button,
+  LinearProgress
  } from '@material-ui/core'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
@@ -75,7 +76,7 @@ export default function PacienteList() {
   };
 
   const pacientesResponse = useQuery(GET_ALL)
-  if (pacientesResponse.loading) return 'Carregando...'
+  if (pacientesResponse.loading) return <LinearProgress color="secondary" />
   if (pacientesResponse.error) return pacientesResponse.error.message
 
   return (

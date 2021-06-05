@@ -11,7 +11,7 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'url(/images/pexels-photo-48604.webp) no-repeat',
+    background: 'url(/images/prontuario-eletronico.png) no-repeat',
     backgroundSize: '100% auto',
     overflowY: 'auto',
     '@media (min-height: 456px)': {

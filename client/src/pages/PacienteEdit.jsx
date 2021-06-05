@@ -14,7 +14,8 @@ import {
   Box,
   Typography,
   Paper,
-  Button
+  Button,
+  LinearProgress
  } from '@material-ui/core'
 
 import PessoaForm from '../forms/PessoaForm'
@@ -115,13 +116,13 @@ function PacienteEdit(props) {
         dataNascimento: toDatabaseDate(pessoa.dataNascimento),
         contato: contatoState,
         enderecos: [{
-          tipoLogradouroId: parseInt(endereco.tipoLogradouro?.id),
-          logradouro: endereco.logradouro,
-          numero: parseInt(endereco.numero),
-          bairro: endereco.bairro,
-          complemento: endereco.complemento,
-          cep: endereco.cep,
-          cidadeId: parseInt(endereco.cidade?.id)
+          tipoLogradouroId: parseInt(endereco?.tipoLogradouro?.id),
+          logradouro: endereco?.logradouro,
+          numero: parseInt(endereco?.numero),
+          bairro: endereco?.bairro,
+          complemento: endereco?.complemento,
+          cep: endereco?.cep,
+          cidadeId: parseInt(endereco?.cidade?.id)
         }]
       }
     }
@@ -160,15 +161,8 @@ function PacienteEdit(props) {
     history.push('/pacientes')
   }
 
-  if (loading) return (
-    <>
-      <CircularProgress />
-      <span>Carregando...</span>
-    </>
-  )
-  if (error) {
-    return 'Error :('
-  }
+  if (loading) return <LinearProgress color="secondary" />
+  if (error) return 'Error :('
 
   return (
     <div className={classes.root}>

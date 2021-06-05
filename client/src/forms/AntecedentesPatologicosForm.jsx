@@ -198,7 +198,6 @@ const AntecedentesPatologicosForm = (props) => {
           <AccordionDetails className={classes.container}>
             {patologias.filter(patologia => patologia.tipoPatologia.id === tipo.id)
               .map(patologia => {
-                console.log(paciente.antecedentesPatologicos);
                 const antecedentePatologico = paciente.antecedentesPatologicos.find(item => item.patologia.id === patologia.id)
                 const { tempoDiagnostico } = antecedentePatologico ? antecedentePatologico : ''
                 return <React.Fragment key={patologia.id}>

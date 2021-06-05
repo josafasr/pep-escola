@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
       }
     }, {
       schema: 'ceuas',
-      tableName: 'complemento_consulta_tipo_queixa',
+      tableName: 'complemento_consulta_exame_fisico',
       timestamps: false
     })
 

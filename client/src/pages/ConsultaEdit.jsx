@@ -18,7 +18,8 @@ import {
   Paper,
   Button,
   TextField,
-  Divider
+  Divider,
+  LinearProgress
  } from '@material-ui/core'
  import clsx from 'clsx'
 // import PersonIcon from '@material-ui/icons/Person'
@@ -28,6 +29,7 @@ import {
 
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
 import { GET_WITH_INCLUDES as GET_PACIENTE, UPDATE_ANTECEDENTES } from '../graphql/paciente'
+import { BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO } from '../graphql/antecedente'
 import PessoaForm from '../forms/PessoaForm'
 import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
@@ -41,7 +43,8 @@ import IndicadoresExameFisicoForm from '../forms/IndicadoresExameFisicoForm'
 import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
 import ResponsavelConsultaForm from '../forms/ResponsavelConsultaForm'
-import AntecedentesPatologicosForm from '../forms/AntecedentesPatologicosForm'
+// import AntecedentesPatologicosForm from '../forms/AntecedentesPatologicosForm'
+import AntecedentesForm from '../forms/AntecedentesForm'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,7 +142,7 @@ function ConsultaEdit() {
   //const [endereco, setEndereco] = React.useState({})
   const [paciente, setPaciente] = React.useState()
   const [consulta, setConsulta] = React.useState({})
-  const [activeStep, setActiveStep] = React.useState(4)
+  const [activeStep, setActiveStep] = React.useState(0)
 
   const pessoaRef = React.useRef()
   const pacienteRef = React.useRef()
@@ -148,7 +151,7 @@ function ConsultaEdit() {
   const consultaRef = React.useRef()
 
   const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
-  const [handleUpdateAntecedentes] = useMutation(UPDATE_ANTECEDENTES)
+  const [handleCreateAntecedentes] = useMutation(BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO)
 
   /* const pacienteData =  */useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
@@ -205,7 +208,7 @@ function ConsultaEdit() {
 
     const exameFisico = consulta.exameFisico?.map(exame => parseInt(exame.id))
 
-    const pacienteResponse = await handleUpdateAntecedentes({
+    /* const pacienteResponse = await handleUpdateAntecedentes({
       variables: {
         id: pacienteId,
         antecedentesPatologicos: consulta.paciente?.antecedentesPatologicos
@@ -218,30 +221,47 @@ function ConsultaEdit() {
       alert('Antecedentes atualizados com sucesso!')
     } else {
       alert(`Não foi possível atualizar os antecedentes :( ${errors}`)
-    }
+    } */
 
-    const consultaResponse = await handleCreateConsulta({
-      variables: {
-        pacienteId: parseInt(pacienteId),
-        acompanhante: consulta.acompanhante,
-        queixaPrincipalObs: consulta.queixaPrincipalObs,
-        historiaDoencaAtual: consulta.historiaDoencaAtual,
-        queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
-        queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
-        complementosQueixas: consulta.complementosQueixas,
-        recordatorioAlimentar,
-        indicadoresExameFisico: consulta.indicadoresExameFisico,
-        exameFisico, //: consulta.exameFisico,
-        suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
-        planoConduta: consulta.planoConduta
+    const pacienteAntecedenteAtributos = paciente.antecedentesAtributos.map(item => {
+      return {
+        atributoValor: item.atributoValor,
+        pacienteId: parseInt(paciente.id),
+        antecedenteId: parseInt(item.antecedente.id),
+        antecedenteAtributoId: parseInt(item.antecedenteAtributo.id)
       }
     })
 
-    if (consultaResponse.data.createConsulta.ok) {
-      alert('Consulta criada com sucesso!')
-      handleGoBack()
-    } else {
-      alert('Não foi possível criar a consulta :(')
+    const pacienteAntecedenteAtributosResponse = await handleCreateAntecedentes({
+      variables: { pacienteAntecedenteAtributos }
+    })
+
+    const { ok } = pacienteAntecedenteAtributosResponse.data.bulkCreatePacienteAntecedenteAtributo
+
+    if (ok) {
+      const consultaResponse = await handleCreateConsulta({
+        variables: {
+          pacienteId: parseInt(pacienteId),
+          acompanhante: consulta.acompanhante,
+          queixaPrincipalObs: consulta.queixaPrincipalObs,
+          historiaDoencaAtual: consulta.historiaDoencaAtual,
+          queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
+          queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
+          complementosQueixas: consulta.complementosQueixas,
+          recordatorioAlimentar,
+          indicadoresExameFisico: consulta.indicadoresExameFisico,
+          exameFisico, //: consulta.exameFisico,
+          suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
+          planoConduta: consulta.planoConduta
+        }
+      })
+  
+      if (consultaResponse.data.createConsulta.ok) {
+        alert('Consulta criada com sucesso!')
+        handleGoBack()
+      } else {
+        alert('Não foi possível criar a consulta :(')
+      }
     }
   }
 
@@ -280,7 +300,7 @@ function ConsultaEdit() {
         disabled={activeStep === 0}
         variant="contained"
         color="primary"
-        onClick={handleGoBack}
+        onClick={handleBack}
         className={classes.button}
         size="small"
       >
@@ -299,7 +319,7 @@ function ConsultaEdit() {
     </div>
   )
 
-  if (loading) return 'Carregando...'
+  if (loading) return <LinearProgress color="secondary" />
 
   return (
     <div className={classes.root}>
@@ -419,7 +439,8 @@ function ConsultaEdit() {
             <StepContent classes={{ root: classes.stepContent }}>
               <Paper className={classes.paper} elevation={2}>
                 <PacienteContext.Provider value={[paciente, setPaciente]}>
-                  <AntecedentesPatologicosForm />
+                  {/* <AntecedentesPatologicosForm /> */}
+                  <AntecedentesForm />
                 </PacienteContext.Provider>
               </Paper>
               {buttons}

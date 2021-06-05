@@ -11,7 +11,8 @@ import {
   makeStyles,
   CircularProgress,
   TextField,
-  MenuItem
+  MenuItem,
+  LinearProgress
 } from '@material-ui/core'
 
 import { LOAD_DROP_DOWNS } from '../graphql/paciente'
@@ -96,7 +97,7 @@ function PacienteForm(props, ref) {
     }))
   }
 
-  if (loading) return (<CircularProgress />)
+  if (loading) return <LinearProgress color="secondary" />
   if (error) return 'Error :('
 
   return (

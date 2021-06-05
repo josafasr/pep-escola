@@ -17,7 +17,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Button
+  Button,
+  LinearProgress
  } from '@material-ui/core'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
@@ -73,7 +74,7 @@ export default function PacienteList() {
   const consultasResponse = useQuery(GET_BY_PACIENTE, {
     variables: { pacienteId: id }
   })
-  if (consultasResponse.loading) return 'Carregando...'
+  if (consultasResponse.loading) return <LinearProgress color="secondary" />
   if (consultasResponse.error) return consultasResponse.error.message
 
   return (

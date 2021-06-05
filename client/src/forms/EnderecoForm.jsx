@@ -94,7 +94,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="tipoLogradouro"
-        value={endereco.tipoLogradouro || ''}
+        value={endereco?.tipoLogradouro || ''}
         onChange={handleChange}
         label="Tipo de Logradouro"
         select
@@ -114,7 +114,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="logradouro"
-        value={endereco.logradouro || ''}
+        value={endereco?.logradouro || ''}
         onChange={handleChange}
         label="Logradouro"
         inputProps={{
@@ -126,7 +126,7 @@ function EnderecoForm(props, ref) {
         className={classes.formFields}
         type="number"
         name="numero"
-        value={endereco.numero || ''}
+        value={endereco?.numero || ''}
         onChange={handleChange}
         label="Número"
         inputProps={{
@@ -137,7 +137,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="bairro"
-        value={endereco.bairro || ''}
+        value={endereco?.bairro || ''}
         onChange={handleChange}
         label="Bairro"
         inputProps={{
@@ -148,7 +148,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="complemento"
-        value={endereco.complemento || ''}
+        value={endereco?.complemento || ''}
         onChange={handleChange}
         label="Complemento"
         inputProps={{
@@ -159,7 +159,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cep"
-        value={endereco.cep || ''}
+        value={endereco?.cep || ''}
         onChange={handleChange}
         label="CEP"
         inputProps={{
@@ -170,7 +170,7 @@ function EnderecoForm(props, ref) {
       <TextField
         className={classes.formFields}
         name="cidade"
-        value={endereco.cidade || ''}
+        value={endereco?.cidade || ''}
         onChange={handleChange}
         label="Cidade"
         inputProps={{
