@@ -19,6 +19,9 @@ export const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down(1062)]: {
       backgroundSize: 'auto 100%'
+    },
+    [theme.breakpoints.down(460)]: {
+      background: 'none'
     }
   },
 
@@ -56,7 +59,8 @@ export const useStyles = makeStyles((theme) => ({
   },
 
   cardContent: {
-    width: '100%'
+    width: '100%',
+    padding: '16px 0'
   },
 
   media: {
@@ -77,7 +81,8 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    padding: 0
   },
 
   textField: {

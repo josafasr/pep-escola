@@ -28,6 +28,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import PacienteContext from '../contexts/PacienteContext'
 import { TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, CREATE_ANTECEDENTE } from '../graphql/antecedente'
+import { useTiposAntecedente } from '../hooks/useTiposAntecedentes'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -86,8 +87,9 @@ const AntecedentesForm = (props) => {
     tipoAntecedente: ''
   })
 
+  const tiposAntecedenteData = useTiposAntecedente()
 
-  useQuery(TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, {
+  /* useQuery(TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, {
     onCompleted: data => {
       setTiposAntecedente(data.tiposAntecedenteWithAssociations)
       const antecedenteArrays = data.tiposAntecedenteWithAssociations.map(tipoAntecedente => {
@@ -96,9 +98,20 @@ const AntecedentesForm = (props) => {
       const antecedenteArray = [].concat(...antecedenteArrays)
       setAntecedentes(antecedenteArray)
     }
-  })
+  }) */
 
   const [handleCreateAntecedente] = useMutation(CREATE_ANTECEDENTE)
+
+  React.useEffect(() => {
+    if (tiposAntecedenteData) {
+      setTiposAntecedente(tiposAntecedenteData.tipos)
+      const antecedenteArrays = tiposAntecedenteData.tipos.map(tipoAntecedente => {
+        return [].concat(tipoAntecedente.antecedentes)
+      })
+      const antecedenteArray = [].concat(...antecedenteArrays)
+      setAntecedentes(antecedenteArray)
+    }
+  })
 
   const handleChange = event => {
     const { id, checked } = event.target

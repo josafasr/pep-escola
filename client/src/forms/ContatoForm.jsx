@@ -41,19 +41,13 @@ function ContatoForm(props, ref) {
   const classes = useStyles()
 
   const {contatoState, contatoDispatch} = React.useContext(ContatoContext)
-  //const [contato, dispatch] = React.useReducer(contatoReducer)
 
   const handleChange = event => {
     const { name, value } = event.target
-    /* setContato(prevState => ({
-      ...prevState,
-      [name]: value
-    })) */
     contatoDispatch(updateField(name, value))
   }
 
   const handleReset = () => {
-    //setContato({ celular: '', telefone: '', email: '' })
     contatoDispatch(reset())
   }
 
