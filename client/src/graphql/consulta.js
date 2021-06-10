@@ -202,6 +202,14 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      complementosAntecedentes {
+        id
+        complemento
+        tipoAntecedente {
+          id
+          nome
+        }
+      }
       suspeitasDiagnosticas
       planoConduta
       responsaveis {
@@ -226,6 +234,7 @@ export const CREATE_CONSULTA = gql`
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
     $indicadoresExameFisico: IndicadoresExameFisicoInput,
     $exameFisico: [ID],
+    $complementosAntecedentes: [ComplementoConsultaAntecedenteInput]
     $suspeitasDiagnosticas: String,
     $planoConduta: String
   ) {
@@ -240,6 +249,7 @@ export const CREATE_CONSULTA = gql`
       complementosQueixas: $complementosQueixas
       indicadoresExameFisico: $indicadoresExameFisico,
       exameFisico: $exameFisico,
+      complementosAntecedentes: $complementosAntecedentes,
       suspeitasDiagnosticas: $suspeitasDiagnosticas,
       planoConduta: $planoConduta
     ) {

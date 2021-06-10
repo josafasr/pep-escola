@@ -119,7 +119,7 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de complemento de queixas
      * @see module: src/models/ComplementoConsultaTipoQueixa
      */
-     Consulta.hasMany(models.ComplementoConsultaTipoQueixa, {
+    Consulta.hasMany(models.ComplementoConsultaTipoQueixa, {
       as: 'complementosQueixas',
       foreignKey: 'consultaId'
     }),
@@ -128,8 +128,17 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de complemento de exame físico
      * @see {@link src/models/ComplementoConsultaExameFisico}
      */
-     Consulta.hasMany(models.ComplementoConsultaExameFisico, {
+    Consulta.hasMany(models.ComplementoConsultaExameFisico, {
       as: 'complementosExameFisico',
+      foreignKey: 'consultaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de complemento de complementos de antecedentes
+     * @see {@link src/models/ComplementoConsultaAntecedente}
+     */
+    Consulta.hasMany(models.ComplementoConsultaAntecedente, {
+      as: 'complementosAntecedentes',
       foreignKey: 'consultaId'
     })
   }

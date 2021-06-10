@@ -58,6 +58,20 @@ export const BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO = gql`
   }
 `
 
+export const BULK_CREATE_COMPLEMENTOS_ANTECEDENTES = gql`
+  mutation BulkCreateComplementosAntecedentes($complementosAntecedentes: [ComplementoConsultaAntecedenteInput]!) {
+    bulkCreateComplementosAntecedentes(complementosAntecedentes: $complementosAntecedentes) {
+      ok
+      complementosAntecedentes {
+        id complemento
+      }
+      errors {
+        path message
+      }
+    }
+  }
+`
+
 export const TIPOS_ANTECEDENTE = gql`
   query TiposAntecedente {
     tiposAntecedente {

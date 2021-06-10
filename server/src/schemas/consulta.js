@@ -1,15 +1,18 @@
 /**
- * @title Descritores GraphQL para as operações sobre a tabela de consultas
+ * @description Descritores GraphQL para as operações sobre a tabela de consultas
  * @module src/schemas/consulta
  * @author Josafá Santos dos Reis
  */
-export default `
+
+import { gql } from 'apollo-server-express'
+
+export default gql`
   type Consulta {
     id: ID
     responsaveis: [Usuario]
     paciente: Paciente
     acompanhante: String
-    queixaPrincipalObs: String  # excluir
+    queixaPrincipalObs: String  ########## excluir
     historiaDoencaAtual: String
     recordatorioAlimentar: [RecordatorioAlimentar]
     queixaPrincipal: Queixa
@@ -21,6 +24,7 @@ export default `
     suspeitasDiagnosticas: String
     planoConduta: String
     avaliacao: AvaliacaoAtendimento
+    complementosAntecedentes: [ComplementoConsultaAntecedente]
     createdAt: String
   }
 
@@ -50,6 +54,7 @@ export default `
       recordatorioAlimentar: [RecordatorioAlimentarInput],
       exameFisico: [ID],
       complementosExameFisico: [ComplementoConsultaExameFisicoInput]
+      complementosAntecedentes: [ComplementoConsultaAntecedenteInput]
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       suspeitasDiagnosticas: String,
       planoConduta: String,

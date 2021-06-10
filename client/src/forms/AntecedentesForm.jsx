@@ -27,8 +27,9 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import PacienteContext from '../contexts/PacienteContext'
+import ConsultaContext from '../contexts/ConsultaContext'
 import { TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, CREATE_ANTECEDENTE } from '../graphql/antecedente'
-import { useTiposAntecedente } from '../hooks/useTiposAntecedentes'
+//import { useTiposAntecedente } from '../hooks/useTiposAntecedentes'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -77,6 +78,7 @@ const AntecedentesForm = (props) => {
   const classes = useStyles()
   const { disabled } = props
   const [paciente, setPaciente] = React.useContext(PacienteContext)
+  const [consulta, setConsulta] = React.useContext(ConsultaContext)
   const [tiposAntecedente, setTiposAntecedente] = React.useState([])
   const [antecedentes, setAntecedentes] = React.useState([])
   
@@ -87,9 +89,9 @@ const AntecedentesForm = (props) => {
     tipoAntecedente: ''
   })
 
-  const tiposAntecedenteData = useTiposAntecedente()
+  //const tiposAntecedenteData = useTiposAntecedente()
 
-  /* useQuery(TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, {
+  useQuery(TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, {
     onCompleted: data => {
       setTiposAntecedente(data.tiposAntecedenteWithAssociations)
       const antecedenteArrays = data.tiposAntecedenteWithAssociations.map(tipoAntecedente => {
@@ -98,11 +100,11 @@ const AntecedentesForm = (props) => {
       const antecedenteArray = [].concat(...antecedenteArrays)
       setAntecedentes(antecedenteArray)
     }
-  }) */
+  })
 
   const [handleCreateAntecedente] = useMutation(CREATE_ANTECEDENTE)
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (tiposAntecedenteData) {
       setTiposAntecedente(tiposAntecedenteData.tipos)
       const antecedenteArrays = tiposAntecedenteData.tipos.map(tipoAntecedente => {
@@ -111,7 +113,7 @@ const AntecedentesForm = (props) => {
       const antecedenteArray = [].concat(...antecedenteArrays)
       setAntecedentes(antecedenteArray)
     }
-  })
+  }) */
 
   const handleChange = event => {
     const { id, checked } = event.target
@@ -149,12 +151,12 @@ const AntecedentesForm = (props) => {
   const changeText = event => {
     const { id, value } = event.target
     if (id && value) {
-      const antecedenteId = id.split('-')[1]
-      const atributoId = id.split('-')[3]
+      const antecedenteId = parseInt(id.split('-')[1])
+      const atributoId = parseInt(id.split('-')[3])
 
       let atributo, atributos
       atributo = paciente.antecedentesAtributos.find(item =>
-        item.antecedente?.id === parseInt(antecedenteId) && item.antecedenteAtributo?.id === parseInt(atributoId)
+        item.antecedente?.id === antecedenteId && item.antecedenteAtributo?.id === atributoId
       )
 
       if (atributo) {
@@ -163,7 +165,7 @@ const AntecedentesForm = (props) => {
           )
         } else if (atributo.antecedenteAtributo) {
           atributos = paciente.antecedentesAtributos.filter(item =>
-            item.antecedente.id !== parseInt(antecedenteId) || item.antecedenteAtributo.id !== parseInt(atributoId)
+            item.antecedente.id !== antecedenteId || item.antecedenteAtributo.id !== atributoId
           )
         }
       } else {
@@ -192,23 +194,59 @@ const AntecedentesForm = (props) => {
               {
                 atributoValor: value,
                 antecedenteAtributo: {
-                  id: parseInt(atributoId)
+                  id: atributoId
                 },
                 antecedente: {
-                  id: parseInt(antecedenteId)
+                  id: antecedenteId
                 }
               }
           : // valor de atributo inexistente
             {
               atributoValor: value,
               antecedenteAtributo: {
-                id: parseInt(atributoId)
+                id: atributoId
               },
               antecedente: {
-                id: parseInt(antecedenteId)
+                id: antecedenteId
               }
             }
           ]
+      })
+    }
+  }
+
+  const changeComplemento = event => {
+    const { id, value } = event.target
+    if (id && value) {
+      const tipoId = parseInt(id)
+      const complemento = consulta.complementosAntecedentes?.find(item => item.id === tipoId)
+      const complementos = consulta.complementosAntecedentes?.filter(item => item.id !== tipoId)
+      setConsulta({
+        ...consulta,
+        complementosAntecedentes:
+          complementos
+          ? [
+              ...complementos,
+              complemento
+              ? {
+                  ...complemento,
+                  complemento: value
+                }
+                
+              : {
+                  tipoAntecedente: { id: tipoId },
+                  complemento: value
+                }
+            ]
+          : complemento
+            ? [{
+                ...complemento,
+                complemento: value
+              }]
+            : [{
+                tipoAntecedente: { id: tipoId },
+                complemento: value
+              }]
       })
     }
   }
@@ -270,8 +308,12 @@ const AntecedentesForm = (props) => {
 
   return (
     <div>
-      {tiposAntecedente.map(tipo =>
-        <Accordion key={tipo.id}>
+      {tiposAntecedente.map(tipo => {
+        const readOnly = !!consulta.id
+        const complementoAntecedente = consulta.complementosAntecedentes?.find(item =>
+          item.tipoAntecedente?.id === tipo.id
+        )
+        return <Accordion key={tipo.id}>
           <AccordionSummary
             className={classes.header}
             expandIcon={<ExpandMoreIcon />}
@@ -282,60 +324,62 @@ const AntecedentesForm = (props) => {
 
           <AccordionDetails className={classes.container}>
             {tipo.antecedentes.map(antecedente => {
-                return <React.Fragment key={antecedente.id}>
-                  <Grid className={classes.items} container>
-                    <Grid className={classes.item} item sm>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            id={`${antecedente.id}`}
-                            onChange={handleChange}
-                            checked={isChecked(antecedente.id)}
-                            size="small"
-                          />
-                        }
-                        label={antecedente.nome}
+              return <React.Fragment key={antecedente.id}>
+                <Grid className={classes.items} container>
+                  <Grid className={classes.item} item sm>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          id={`${antecedente.id}`}
+                          onChange={!readOnly ? handleChange : undefined}
+                          checked={isChecked(antecedente.id)}
+                          size="small"
+                          readOnly={readOnly}
+                        />
+                      }
+                      label={antecedente.nome}
+                    />
+                  </Grid>
+
+                  {tipo.atributos.map(atributo => {
+                    const antecedenteAtributo = paciente.antecedentesAtributos?.find(item =>
+                      item.antecedente?.id === parseInt(antecedente.id)
+                      && item.antecedenteAtributo?.id === parseInt(atributo.id)
+                    )
+                    return <Grid key={atributo.id} className={classes.item} item sm>
+                      <TextField
+                        className={classes.textField}
+                        id={`antecedente-${antecedente.id}-atributo-${atributo.id}`}
+                        defaultValue={isChecked(antecedente.id) ? antecedenteAtributo?.atributoValor : ''}
+                        onBlur={changeText}
+                        label={atributo.nome}
+                        size="small"
+                        InputProps={{
+                          disabled: (!isChecked(antecedente.id) || readOnly)
+                        }}
                       />
                     </Grid>
+                  })}
+                </Grid>
+                <Divider />
+              </React.Fragment>
+            })}
 
-                    {tipo.atributos.map(atributo => {
-                      const antecedenteAtributo = paciente.antecedentesAtributos?.find(item =>
-                        item.antecedente?.id === parseInt(antecedente.id)
-                        && item.antecedenteAtributo?.id === parseInt(atributo.id)
-                      )
-
-                      return <Grid key={atributo.id} className={classes.item} item sm>
-                        <TextField
-                          //type={atributo.tipoDado}
-                          className={classes.textField}
-                          id={`antecedente-${antecedente.id}-atributo-${atributo.id}`}
-                          defaultValue={isChecked(antecedente.id) ? antecedenteAtributo?.atributoValor : ''}
-                          onBlur={changeText}
-                          label={atributo.nome}
-                          size="small"
-                          /* inputProps={{
-                            readOnly: !isChecked(antecedente.id)
-                          }} */
-                          InputProps={{
-                            disabled: !isChecked(antecedente.id)
-                          }}
-                        />
-                      </Grid>
-                    })}
-                  </Grid>
-                  <Divider />
-                </React.Fragment>
-              })
-            }
             <TextField
               className={classes.textArea}
+              id={`${tipo.id}`}
+              defaultValue={complementoAntecedente?.complemento || ''}
+              onBlur={changeComplemento}
               multiline
+              label="Complemento"
               variant="filled"
+              inputProps={{
+                readOnly: !!consulta.id
+              }}
             />
           </AccordionDetails>
 
           <Button
-            //fullWidth
             className={classes.buttomOpenDialog}
             variant="outlined"
             color="primary"
@@ -344,70 +388,71 @@ const AntecedentesForm = (props) => {
           >
             Novo Item
           </Button>
-        </Accordion>)}
+        </Accordion>
+      })}
 
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Inserir Novo Item</DialogTitle>
-          <DialogContent>
-            <TextField
-              name="nomeAntecedente"
-              defaultValue={dialog.nomeAntecedente}
-              onBlur={dialogChange}
-              label="Nome"
-              fullWidth
-            />
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Inserir Novo Item</DialogTitle>
+        <DialogContent>
+          <TextField
+            name="nomeAntecedente"
+            defaultValue={dialog.nomeAntecedente}
+            onBlur={dialogChange}
+            label="Nome"
+            fullWidth
+          />
 
-            <TextField
-              name="descricaoAntecedente"
-              defaultValue={dialog.descricaoAntecedente}
-              onBlur={dialogChange}
-              label="Descrição"
-              fullWidth
-              multiline
-            />
+          <TextField
+            name="descricaoAntecedente"
+            defaultValue={dialog.descricaoAntecedente}
+            onBlur={dialogChange}
+            label="Descrição"
+            fullWidth
+            multiline
+          />
 
-            <TextField
-              name="tipoAntecedente"
-              defaultValue={dialog.tipoAntecedente}
-              onBlur={dialogChange}
-              label="Tipo"
-              fullWidth
-              select
-              SelectProps={{
-                renderValue: value => value.nome
-              }}
-            >
-              {tiposAntecedente.map(tipoAntecedente =>
-                <MenuItem
-                  key={tipoAntecedente.id}
-                  value={tipoAntecedente}
-                >
-                  {tipoAntecedente.nome}
-                </MenuItem>
-              )}
-            </TextField>
-          </DialogContent>
+          <TextField
+            name="tipoAntecedente"
+            defaultValue={dialog.tipoAntecedente}
+            onBlur={dialogChange}
+            label="Tipo"
+            fullWidth
+            select
+            SelectProps={{
+              renderValue: value => value.nome
+            }}
+          >
+            {tiposAntecedente.map(tipoAntecedente =>
+              <MenuItem
+                key={tipoAntecedente.id}
+                value={tipoAntecedente}
+              >
+                {tipoAntecedente.nome}
+              </MenuItem>
+            )}
+          </TextField>
+        </DialogContent>
 
-          <DialogActions>
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              onClick={handleClose}
-            >
-              Cancelar
-            </Button>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleClose}
+          >
+            Cancelar
+          </Button>
 
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              onClick={submitDialog}
-            >
-              Salvar
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={submitDialog}
+          >
+            Salvar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

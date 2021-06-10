@@ -28,8 +28,11 @@ import {
 // import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
-import { GET_WITH_INCLUDES as GET_PACIENTE, UPDATE_ANTECEDENTES } from '../graphql/paciente'
-import { BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO } from '../graphql/antecedente'
+import { GET_WITH_INCLUDES as GET_PACIENTE/* , UPDATE_ANTECEDENTES */ } from '../graphql/paciente'
+import {
+  BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO/* ,
+  BULK_CREATE_COMPLEMENTOS_ANTECEDENTES */
+} from '../graphql/antecedente'
 import PessoaForm from '../forms/PessoaForm'
 import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
@@ -152,6 +155,7 @@ function ConsultaEdit() {
 
   const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
   const [handleCreateAntecedentes] = useMutation(BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO)
+  //const [handleCreateComplementosAntecedentes] = useMutation(BULK_CREATE_COMPLEMENTOS_ANTECEDENTES)
 
   /* const pacienteData =  */useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
@@ -232,13 +236,27 @@ function ConsultaEdit() {
       }
     })
 
+    const complementosAntecedentes = consulta.complementosAntecedentes.map(item => {
+      return {
+        complemento: item.complemento,
+        //pacienteId: parseInt(paciente.id),
+        tipoAntecedenteId: parseInt(item.tipoAntecedente.id)
+      }
+    })
+
     const pacienteAntecedenteAtributosResponse = await handleCreateAntecedentes({
       variables: { pacienteAntecedenteAtributos }
     })
 
-    const { ok } = pacienteAntecedenteAtributosResponse.data.bulkCreatePacienteAntecedenteAtributo
+    /* const complementosAntecedentesResponse = await handleCreateComplementosAntecedentes({
+      variables: { complementosAntecedentes }
+    }) */
 
-    if (ok) {
+    const createPacienteAntecedentesAtributos = pacienteAntecedenteAtributosResponse.data.bulkCreatePacienteAntecedenteAtributo
+
+    //const createComplementosAntecedentes = complementosAntecedentesResponse.data.bulkCreateComplementosAntecedentes
+
+    if (createPacienteAntecedentesAtributos.ok) {
       const consultaResponse = await handleCreateConsulta({
         variables: {
           pacienteId: parseInt(pacienteId),
@@ -251,6 +269,7 @@ function ConsultaEdit() {
           recordatorioAlimentar,
           indicadoresExameFisico: consulta.indicadoresExameFisico,
           exameFisico, //: consulta.exameFisico,
+          complementosAntecedentes,
           suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
           planoConduta: consulta.planoConduta
         }

@@ -1,5 +1,5 @@
 /**
- * @title Operações sobre a tabela de consultas
+ * @description Operações sobre a tabela de consultas
  * @module src/resolvers/consulta
  * @author Josafá Santos dos Reis
  */
@@ -189,6 +189,12 @@ export default {
                 attributes: ['id', 'nome']
               }
             }
+          }, {
+            association: 'complementosAntecedentes',
+            attributes: ['id', 'complemento'],
+            include: {
+              association: 'tipoAntecedente'
+            }
           }
         ]
       })
@@ -256,6 +262,7 @@ export default {
             })
           : []
 
+        // eslint-disable-next-line no-unused-vars
         const result = await sequelize.transaction(async (tx) => {
           const consulta = await models.Consulta.create({
             ...ohterArgs,
@@ -274,6 +281,9 @@ export default {
               },
               {
                 association: 'complementosQueixas'
+              },
+              {
+                association: 'complementosAntecedentes'
               }
             ]
           })
