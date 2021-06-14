@@ -100,7 +100,7 @@ export default {
             through: {
               attributes: ['createdAt', 'updatedAt']
             } */
-          }, {
+          }/* , {
             association: 'antecedentesAtributos',
             include: [
               {
@@ -112,7 +112,7 @@ export default {
                 association: 'antecedente'
               }
             ]
-          }
+          } */
         ],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })

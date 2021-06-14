@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
@@ -28,11 +28,7 @@ import {
 // import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
 import { GET_WITH_INCLUDES, CREATE_CONSULTA } from '../graphql/consulta'
-import { GET_WITH_INCLUDES as GET_PACIENTE/* , UPDATE_ANTECEDENTES */ } from '../graphql/paciente'
-import {
-  BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO/* ,
-  BULK_CREATE_COMPLEMENTOS_ANTECEDENTES */
-} from '../graphql/antecedente'
+import { GET_WITH_INCLUDES as GET_PACIENTE } from '../graphql/paciente'
 import PessoaForm from '../forms/PessoaForm'
 import PacienteForm from '../forms/PacienteForm'
 import ConsultaForm from '../forms/ConsultaForm'
@@ -125,21 +121,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function ConsultaEdit() {
+const ConsultaEdit = () => {
 
   const classes = useStyles()
 
-  const { id } = useParams()
-  let pacienteId
+  const { pacienteId, consultaId } = useParams()
 
   const history = useHistory()
 
-  const { url } = useRouteMatch()
-
-  if (url.indexOf('criar') !== -1) {
-    pacienteId = id
-  }
- 
   const [pessoa, setPessoa] = React.useState({})
   //const [contato, setContato] = React.useState({})
   //const [endereco, setEndereco] = React.useState({})
@@ -153,11 +142,7 @@ function ConsultaEdit() {
   //const enderecoRef = React.useRef()
   const consultaRef = React.useRef()
 
-  const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
-  const [handleCreateAntecedentes] = useMutation(BULK_CREATE_PACIENTE_ANTECEDENTE_ATRIBUTO)
-  //const [handleCreateComplementosAntecedentes] = useMutation(BULK_CREATE_COMPLEMENTOS_ANTECEDENTES)
-
-  /* const pacienteData =  */useQuery(GET_PACIENTE, {
+  useQuery(GET_PACIENTE, {
     variables: { id: pacienteId },
     onCompleted: (data) => {
       setPessoa({
@@ -171,7 +156,7 @@ function ConsultaEdit() {
   })
 
   const { loading } = useQuery(GET_WITH_INCLUDES, {
-    variables: { id },
+    variables: { id: consultaId },
     onCompleted: (data) => {
       setPessoa({
         ...data.consulta.paciente.pessoa,
@@ -183,12 +168,7 @@ function ConsultaEdit() {
     skip: !!pacienteId
   })
 
-  /* const bindConsulta = (toBind) => {
-    const queixaPrincipalId = parseInt(toBind.queixaPrincipal.id)
-    const queixasIds = toBind.queixas.map(queixa => parseInt(queixa.id))
-
-    return { queixaPrincipalId, queixasIds }
-  } */
+  const [handleCreateConsulta] = useMutation(CREATE_CONSULTA)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -212,75 +192,58 @@ function ConsultaEdit() {
 
     const exameFisico = consulta.exameFisico?.map(exame => parseInt(exame.id))
 
-    /* const pacienteResponse = await handleUpdateAntecedentes({
-      variables: {
-        id: pacienteId,
-        antecedentesPatologicos: consulta.paciente?.antecedentesPatologicos
-      }
-    })
-
-    const { ok, paciente, errors } = pacienteResponse.data.updatePaciente
-
-    if (ok) {
-      alert('Antecedentes atualizados com sucesso!')
-    } else {
-      alert(`Não foi possível atualizar os antecedentes :( ${errors}`)
-    } */
-
-    const pacienteAntecedenteAtributos = paciente.antecedentesAtributos.map(item => {
-      return {
-        atributoValor: item.atributoValor,
-        pacienteId: parseInt(paciente.id),
-        antecedenteId: parseInt(item.antecedente.id),
-        antecedenteAtributoId: parseInt(item.antecedenteAtributo.id)
-      }
-    })
-
-    const complementosAntecedentes = consulta.complementosAntecedentes.map(item => {
+    const complementosExameFisico = consulta.complementosExameFisico.map(item => {
       return {
         complemento: item.complemento,
-        //pacienteId: parseInt(paciente.id),
-        tipoAntecedenteId: parseInt(item.tipoAntecedente.id)
+        tipoExameFisicoId: parseInt(item.tipoExameFisico.id)
       }
     })
 
-    const pacienteAntecedenteAtributosResponse = await handleCreateAntecedentes({
-      variables: { pacienteAntecedenteAtributos }
+    const antecedentesAtributos = consulta.primeira && consulta.antecedentesAtributos.length > 0
+      ? consulta.antecedentesAtributos.map(item => {
+          return {
+            atributoValor: item.atributoValor,
+            antecedenteId: parseInt(item.antecedente.id),
+            antecedenteAtributoId: parseInt(item.antecedenteAtributo.id)
+          }
+        })
+      : []
+
+    const complementosAntecedentes = consulta.primeira && consulta.complementosAntecedentes.length > 0
+      ? consulta.complementosAntecedentes.map(item => {
+          return {
+            complemento: item.complemento,
+            tipoAntecedenteId: parseInt(item.tipoAntecedente.id)
+          }
+        })
+      : []
+
+    const consultaResponse = await handleCreateConsulta({
+      variables: {
+        primeira: consulta.primeira,
+        pacienteId: parseInt(pacienteId),
+        acompanhante: consulta.acompanhante,
+        queixaPrincipalObs: consulta.queixaPrincipalObs,
+        historiaDoencaAtual: consulta.historiaDoencaAtual,
+        queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
+        queixas,
+        complementosQueixas: consulta.complementosQueixas,
+        recordatorioAlimentar,
+        indicadoresExameFisico: consulta.indicadoresExameFisico,
+        exameFisico,
+        complementosExameFisico,
+        antecedentesAtributos,
+        complementosAntecedentes,
+        suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
+        planoConduta: consulta.planoConduta
+      }
     })
 
-    /* const complementosAntecedentesResponse = await handleCreateComplementosAntecedentes({
-      variables: { complementosAntecedentes }
-    }) */
-
-    const createPacienteAntecedentesAtributos = pacienteAntecedenteAtributosResponse.data.bulkCreatePacienteAntecedenteAtributo
-
-    //const createComplementosAntecedentes = complementosAntecedentesResponse.data.bulkCreateComplementosAntecedentes
-
-    if (createPacienteAntecedentesAtributos.ok) {
-      const consultaResponse = await handleCreateConsulta({
-        variables: {
-          pacienteId: parseInt(pacienteId),
-          acompanhante: consulta.acompanhante,
-          queixaPrincipalObs: consulta.queixaPrincipalObs,
-          historiaDoencaAtual: consulta.historiaDoencaAtual,
-          queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
-          queixas, //: consulta.queixas.map(queixa => parseInt(queixa.id)),
-          complementosQueixas: consulta.complementosQueixas,
-          recordatorioAlimentar,
-          indicadoresExameFisico: consulta.indicadoresExameFisico,
-          exameFisico, //: consulta.exameFisico,
-          complementosAntecedentes,
-          suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
-          planoConduta: consulta.planoConduta
-        }
-      })
-  
-      if (consultaResponse.data.createConsulta.ok) {
-        alert('Consulta criada com sucesso!')
-        handleGoBack()
-      } else {
-        alert('Não foi possível criar a consulta :(')
-      }
+    if (consultaResponse.data.createConsulta.ok) {
+      alert('Consulta criada com sucesso!')
+      handleGoBack()
+    } else {
+      alert('Não foi possível criar a consulta :(')
     }
   }
 
@@ -306,12 +269,6 @@ function ConsultaEdit() {
       acompanhante: event.target.value
     })
   }
-/* 
-  const handleResetSteps = () => {
-    setActiveStep(0)
-    handleGoBack()
-  }
- */
 
   const buttons = (
     <div>
@@ -346,10 +303,11 @@ function ConsultaEdit() {
       <ConsultaContext.Provider value={[consulta, setConsulta]}>
         <Paper className={classes.paper} elevation={2}>
           <h2 className={classes.header}>
-            {!!pacienteId ? 
-            'Nova Consulta' : 
-            `Consulta realizada em ${new Date(parseInt(consulta?.createdAt))
-              .toLocaleString("pt-BR", { dateStyle: "short" })}`}
+            {!!pacienteId
+              ? 'Nova Consulta'
+              : `Consulta realizada em ${new Date(parseInt(consulta?.createdAt))
+                .toLocaleString("pt-BR", { dateStyle: "short" })}`
+            }
           </h2>
           <PessoaContext.Provider value={{pessoa, setPessoa}}>
             <PessoaForm
@@ -504,7 +462,7 @@ function ConsultaEdit() {
           className={classes.button}
           size="small"
         >
-          Cancelar
+          {pacienteId ? 'Cancelar' : 'Voltar'}
         </Button>
         <Button
           //disabled={activeStep === 5 && !pacienteId}

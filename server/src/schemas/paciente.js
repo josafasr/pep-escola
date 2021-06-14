@@ -28,9 +28,9 @@ export default gql`
     profissao: Profissao
     situacaoProfissional: SituacaoProfissional
     especialidades: [Especialidade]
-    antecedentesPatologicos: [AntecedentePatologico]
-    antecedentes: [Antecedente]
-    antecedentesAtributos: [PacienteAntecedenteAtributo]
+    # antecedentesPatologicos: [AntecedentePatologico]
+    # antecedentes: [Antecedente]
+    # antecedentesAtributos: [PacienteAntecedenteAtributo]
   }
 
   type PacienteResponse {
@@ -66,7 +66,7 @@ export default gql`
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID],
-      antecedentesPatologicos: [AntecedentePatologicoInput]
+      # antecedentesPatologicos: [AntecedentePatologicoInput]
     ): PacienteResponse
 
     createWithIncludes(
@@ -89,7 +89,7 @@ export default gql`
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID],
-      antecedentesPatologicos: [AntecedentePatologicoInput]
+      # antecedentesPatologicos: [AntecedentePatologicoInput]
     ): PacienteResponse
 
     updatePaciente(
@@ -113,9 +113,9 @@ export default gql`
       profissaoId: ID,
       situacaoProfissionalId: ID,
       especialidades: [ID],
-      antecedentesPatologicos: [AntecedentePatologicoInput]
-      antecedentes: [Int]
-      antecedentesAtributos: [Int]
+      # antecedentesPatologicos: [AntecedentePatologicoInput]
+      # antecedentes: [Int]
+      # antecedentesAtributos: [Int]
     ): PacienteResponse
 
     deletePaciente(id: ID!): Boolean

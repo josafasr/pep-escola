@@ -5,6 +5,7 @@
  */
 export default (sequelize, DataTypes) => {
   const Consulta = sequelize.define('Consulta', {
+    primeira: DataTypes.BOOLEAN,
     acompanhante: DataTypes.STRING,
     queixaPrincipalObs: {
       type: DataTypes.TEXT,
@@ -130,6 +131,15 @@ export default (sequelize, DataTypes) => {
      */
     Consulta.hasMany(models.ComplementoConsultaExameFisico, {
       as: 'complementosExameFisico',
+      foreignKey: 'consultaId'
+    }),
+
+    /**
+     * Relacionamento com a tabela de valores de atributos de antecedentes
+     * @see {@link src/models/ConsultaAntecedenteAtributo}
+     */
+     Consulta.hasMany(models.ConsultaAntecedenteAtributo, {
+      as: 'antecedentesAtributos',
       foreignKey: 'consultaId'
     }),
 

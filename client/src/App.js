@@ -76,6 +76,7 @@ function App(props) {
     //queryDeduplication: true,
     defaultOptions: {
       watchQuery: {
+        //fetchPolicy: 'network-only'
         fetchPolicy: 'cache-and-network'
         //nextFetchPolicy: 'cache-first',
         //errorPolicy: 'all',

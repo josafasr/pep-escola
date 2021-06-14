@@ -108,29 +108,35 @@ const ExameFisicoForm = () => {
 
   const handleChangeComplementos = (event) => {
     const { id, value } = event.target
-    const exists = consulta.complementosExameFisico?.some(item => item.tipoExameFisico.id === id)
+    if (id && value) {
+      const tipoId = parseInt(id)
+      const exists = consulta.complementosExameFisico?.some(item => item.tipoExameFisico.id === tipoId)
 
-    if (exists) {
-      const thisComplemento = consulta.complementosExameFisico.find(item => item.tipoExameFisico.id === id)
-      const others = consulta.complementosExameFisico.filter(item => item.tipoExameFisico.id !== id)
+      if (exists) {
+        const thisComplemento = consulta.complementosExameFisico.find(item => item.tipoExameFisico.id === tipoId)
+        const others = consulta.complementosExameFisico.filter(item => item.tipoExameFisico.id !== tipoId)
 
-      setConsulta({
-        ...consulta,
-        complementosExameFisico: [
-          ...others,
-          { ...thisComplemento, complemento: value }
-        ]
-      })
-    } else {
-      setConsulta({
-        ...consulta,
-        complementosExameFisico: consulta.complementosExameFisico ? [
-          ...consulta.complementosExameFisico,
-          { complemento: value, tipoExameFisico: { id } }
-        ] : [
-          { complemento: value, tipoExameFisico: { id } }
-        ]
-      })
+        setConsulta({
+          ...consulta,
+          complementosExameFisico: [
+            ...others,
+            { ...thisComplemento, complemento: value }
+          ]
+        })
+      } else {
+        setConsulta({
+          ...consulta,
+          complementosExameFisico:
+            consulta.complementosExameFisico
+            ? [
+                ...consulta.complementosExameFisico,
+                { complemento: value, tipoExameFisico: { id: tipoId } }
+              ]
+            : [
+                { complemento: value, tipoExameFisico: { id: tipoId } }
+              ]
+        })
+      }
     }
   }
 
@@ -149,6 +155,7 @@ const ExameFisicoForm = () => {
   return (
     <div className={classes.exames}>
       {tiposExameFisico.map(tipo => {
+        const readOnly = !!consulta.id
         const complementoExameFisico = consulta.complementosExameFisico?.find(item => item.tipoExameFisico.id === tipo.id)
         return (
           <div className={classes.tipo} key={tipo.id}>
@@ -163,9 +170,9 @@ const ExameFisicoForm = () => {
                       <Checkbox
                         className={classes.checkbox}
                         id={exame.id}
-                        onChange={handleChange}
+                        onChange={!readOnly ? handleChange : undefined}
                         checked={isChecked(exame)}
-                        color="primary"
+                        //color="primary"
                         size="small"
                       />
                     }
@@ -177,14 +184,14 @@ const ExameFisicoForm = () => {
                 id={tipo.id}
                 name="complementoExameFisico"
                 defaultValue={complementoExameFisico?.complemento || ''}
-                onBlur={handleChangeComplementos}
+                onBlur={!readOnly ? handleChangeComplementos : undefined}
                 multiline
                 variant="filled"
                 label="Observações"
                 size="small"
-                /* inputProps={{
-                  readOnly: disabled
-                }} */
+                inputProps={{
+                  readOnly: readOnly
+                }}
               />
             </Paper>
             {!isLast(tiposExameFisico, tipo) && <Divider className={classes.divider} orientation="vertical" flexItem />}

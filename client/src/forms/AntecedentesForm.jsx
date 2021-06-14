@@ -5,6 +5,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
@@ -26,10 +27,9 @@ import {
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-import PacienteContext from '../contexts/PacienteContext'
 import ConsultaContext from '../contexts/ConsultaContext'
 import { TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, CREATE_ANTECEDENTE } from '../graphql/antecedente'
-//import { useTiposAntecedente } from '../hooks/useTiposAntecedentes'
+import { PRIMEIRA_CONSULTA_OF_PACIENTE } from '../graphql/consulta'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -74,14 +74,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const AntecedentesForm = (props) => {
+const AntecedentesForm = () => {
   const classes = useStyles()
-  const { disabled } = props
-  const [paciente, setPaciente] = React.useContext(PacienteContext)
+  const { pacienteId } = useParams()
   const [consulta, setConsulta] = React.useContext(ConsultaContext)
   const [tiposAntecedente, setTiposAntecedente] = React.useState([])
   const [antecedentes, setAntecedentes] = React.useState([])
-  
+  const [readOnly, setReadOnly] = React.useState(true)
+
   const [open, setOpen] = React.useState(false)
   const [dialog, setDialog] = React.useState({
     nomeAntecedente: '',
@@ -89,7 +89,19 @@ const AntecedentesForm = (props) => {
     tipoAntecedente: ''
   })
 
-  //const tiposAntecedenteData = useTiposAntecedente()
+  const { loading, data } = useQuery(PRIMEIRA_CONSULTA_OF_PACIENTE, {
+    variables: {
+      pacienteId: pacienteId ? parseInt(pacienteId) : parseInt(consulta.paciente.id)
+    },
+    onCompleted: data => {
+      if (data.primeiraConsultaOfPaciente !== null) {
+        setConsulta({
+          ...consulta,
+          antecedentesAtributos: data.primeiraConsultaOfPaciente.antecedentesAtributos
+        })
+      }
+    }
+  })
 
   useQuery(TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, {
     onCompleted: data => {
@@ -104,27 +116,16 @@ const AntecedentesForm = (props) => {
 
   const [handleCreateAntecedente] = useMutation(CREATE_ANTECEDENTE)
 
-  /* React.useEffect(() => {
-    if (tiposAntecedenteData) {
-      setTiposAntecedente(tiposAntecedenteData.tipos)
-      const antecedenteArrays = tiposAntecedenteData.tipos.map(tipoAntecedente => {
-        return [].concat(tipoAntecedente.antecedentes)
-      })
-      const antecedenteArray = [].concat(...antecedenteArrays)
-      setAntecedentes(antecedenteArray)
-    }
-  }) */
-
   const handleChange = event => {
     const { id, checked } = event.target
     let toCheck = []
     if (checked) {
       toCheck = antecedentes?.filter(item => item.id === parseInt(id))
-      setPaciente({
-        ...paciente,
-        antecedentesAtributos: paciente.antecedentesAtributos
+      setConsulta({
+        ...consulta,
+        antecedentesAtributos: consulta.antecedentesAtributos
         ? [
-            ...paciente.antecedentesAtributos,
+            ...consulta.antecedentesAtributos,
             {
               antecedente: toCheck[0]
             }
@@ -132,17 +133,17 @@ const AntecedentesForm = (props) => {
         : [{ antecedente: toCheck[0] }]
       })
     } else {
-      toCheck = paciente.antecedentesAtributos.filter(item => item.antecedente?.id !== parseInt(id))
-      setPaciente({
-        ...paciente,
+      toCheck = consulta.antecedentesAtributos.filter(item => item.antecedente?.id !== parseInt(id))
+      setConsulta({
+        ...consulta,
         antecedentesAtributos: toCheck
       })
     }
   }
 
   const isChecked = antecedenteId => {
-    if (paciente && paciente.antecedentesAtributos) {
-      return paciente.antecedentesAtributos.some(item => item.antecedente?.id === antecedenteId)
+    if (consulta && consulta.antecedentesAtributos) {
+      return consulta.antecedentesAtributos.some(item => item.antecedente?.id === antecedenteId)
     }
     return false
   }
@@ -155,31 +156,31 @@ const AntecedentesForm = (props) => {
       const atributoId = parseInt(id.split('-')[3])
 
       let atributo, atributos
-      atributo = paciente.antecedentesAtributos.find(item =>
+      atributo = consulta.antecedentesAtributos.find(item =>
         item.antecedente?.id === antecedenteId && item.antecedenteAtributo?.id === atributoId
       )
 
       if (atributo) {
         if (atributo.id) {
-          atributos = paciente.antecedentesAtributos.filter(item => item.id !== atributo?.id
+          atributos = consulta.antecedentesAtributos.filter(item => item.id !== atributo?.id
           )
         } else if (atributo.antecedenteAtributo) {
-          atributos = paciente.antecedentesAtributos.filter(item =>
+          atributos = consulta.antecedentesAtributos.filter(item =>
             item.antecedente.id !== antecedenteId || item.antecedenteAtributo.id !== atributoId
           )
         }
       } else {
-        const hasEmptyAntecedente = paciente.antecedentesAtributos.some(item => item.antecedenteAtributo === undefined)
+        const hasEmptyAntecedente = consulta.antecedentesAtributos.some(item => item.antecedenteAtributo === undefined)
         if (hasEmptyAntecedente) {
-          atributo = paciente.antecedentesAtributos.find(item => item.antecedenteAtributo === undefined)
-          atributos = paciente.antecedentesAtributos.filter(item => item.antecedenteAtributo !== undefined)
+          atributo = consulta.antecedentesAtributos.find(item => item.antecedenteAtributo === undefined)
+          atributos = consulta.antecedentesAtributos.filter(item => item.antecedenteAtributo !== undefined)
         } else {
-          atributos = paciente.antecedentesAtributos
+          atributos = consulta.antecedentesAtributos
         }
       }
 
-      setPaciente({
-        ...paciente,
+      setConsulta({
+        ...consulta,
         antecedentesAtributos: [
           ...atributos,
           atributo
@@ -302,14 +303,23 @@ const AntecedentesForm = (props) => {
     }
   }
 
-  if (tiposAntecedente.length < 1) {
-    return <LinearProgress color="secondary" />
-  }
+  React.useEffect(() => {
+    if (data && data.primeiraConsultaOfPaciente === null) {
+      setReadOnly(false)
+      setConsulta({
+        ...consulta,
+        primeira: true
+      })
+    }
+  }, [data, readOnly])
 
   return (
-    <div>
+    loading
+    ? <LinearProgress color="secondary" />
+    : (tiposAntecedente.length < 1)
+      ? <LinearProgress color="secondary" />
+      : <div>
       {tiposAntecedente.map(tipo => {
-        const readOnly = !!consulta.id
         const complementoAntecedente = consulta.complementosAntecedentes?.find(item =>
           item.tipoAntecedente?.id === tipo.id
         )
@@ -324,6 +334,7 @@ const AntecedentesForm = (props) => {
 
           <AccordionDetails className={classes.container}>
             {tipo.antecedentes.map(antecedente => {
+
               return <React.Fragment key={antecedente.id}>
                 <Grid className={classes.items} container>
                   <Grid className={classes.item} item sm>
@@ -331,10 +342,9 @@ const AntecedentesForm = (props) => {
                       control={
                         <Checkbox
                           id={`${antecedente.id}`}
-                          onChange={!readOnly ? handleChange : undefined}
+                          onChange={(readOnly === false) ? handleChange : undefined}
                           checked={isChecked(antecedente.id)}
                           size="small"
-                          readOnly={readOnly}
                         />
                       }
                       label={antecedente.nome}
@@ -342,20 +352,21 @@ const AntecedentesForm = (props) => {
                   </Grid>
 
                   {tipo.atributos.map(atributo => {
-                    const antecedenteAtributo = paciente.antecedentesAtributos?.find(item =>
+                    const antecedenteAtributo = consulta.antecedentesAtributos?.find(item =>
                       item.antecedente?.id === parseInt(antecedente.id)
                       && item.antecedenteAtributo?.id === parseInt(atributo.id)
                     )
+
                     return <Grid key={atributo.id} className={classes.item} item sm>
                       <TextField
                         className={classes.textField}
                         id={`antecedente-${antecedente.id}-atributo-${atributo.id}`}
-                        defaultValue={isChecked(antecedente.id) ? antecedenteAtributo?.atributoValor : ''}
-                        onBlur={changeText}
+                        defaultValue={antecedenteAtributo?.atributoValor || ''}
+                        onBlur={!readOnly ? changeText : undefined}
                         label={atributo.nome}
                         size="small"
                         InputProps={{
-                          disabled: (!isChecked(antecedente.id) || readOnly)
+                          readOnly: (!isChecked(antecedente.id) || readOnly)
                         }}
                       />
                     </Grid>
@@ -374,7 +385,7 @@ const AntecedentesForm = (props) => {
               label="Complemento"
               variant="filled"
               inputProps={{
-                readOnly: !!consulta.id
+                readOnly: readOnly
               }}
             />
           </AccordionDetails>
@@ -385,6 +396,7 @@ const AntecedentesForm = (props) => {
             color="primary"
             size="small"
             onClick={handleClickOpen}
+            disabled={readOnly}
           >
             Novo Item
           </Button>

@@ -353,12 +353,12 @@ export default function SideNav(props) {
         <Switch>
           <Route exact path="/pacientes" component={PacienteList} />
           <Route exact path="/pacientes/criar" component={PacienteEdit} />
-          <Route exact path="/pacientes/:id/consultas/criar" children={<ConsultaEdit />} />
+          <Route exact path="/pacientes/:pacienteId/consultas/criar" children={<ConsultaEdit />} />
           <Route path="/pacientes/:id">
             <PacienteView />
           </Route>
 
-          <Route exact path="/consultas/:id" component={ConsultaEdit} />
+          <Route exact path="/consultas/:consultaId" component={ConsultaEdit} />
 
           {/* <Route exact path="/paciente/consultas" children={<PacienteView />} /> */}
           <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />

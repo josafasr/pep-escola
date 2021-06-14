@@ -26,6 +26,7 @@ export const GET_WITH_INCLUDES = gql`
     consulta(id: $id) {
       id
       createdAt
+      primeira
       paciente {
         id
         pessoa {
@@ -98,33 +99,6 @@ export const GET_WITH_INCLUDES = gql`
         especialidades {
           id
           nome
-        }
-        antecedentesPatologicos {
-          id
-          tempoDiagnostico
-          patologia {
-            id
-            nome
-            tipoPatologia {
-              id
-              nome
-            }
-          }
-        }
-        # PacienteAntecedenteAtributo
-        antecedentesAtributos {
-          id atributoValor
-          # AntecedenteAtributo
-          antecedenteAtributo {
-            id nome tipoDado
-            # Antecedente
-            tipoAntecedente {
-              id nome
-            }
-          }
-          antecedente {
-            id nome
-          }
         }
       }
       acompanhante
@@ -202,6 +176,20 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      antecedentesAtributos {
+        id atributoValor
+        # AntecedenteAtributo
+        antecedenteAtributo {
+          id nome tipoDado
+          # Antecedente
+          tipoAntecedente {
+            id nome
+          }
+        }
+        antecedente {
+          id nome
+        }
+      }
       complementosAntecedentes {
         id
         complemento
@@ -220,7 +208,39 @@ export const GET_WITH_INCLUDES = gql`
         }
       }
     }
-  }`
+  }
+`
+
+export const PRIMEIRA_CONSULTA_OF_PACIENTE = gql`
+  query PrimeiraConsultaOfPaciente($pacienteId: ID!) {
+    primeiraConsultaOfPaciente(pacienteId: $pacienteId) {
+      id createdAt
+      # ConsultaAntecedenteAtributo
+      antecedentesAtributos {
+        id atributoValor
+        # AntecedenteAtributo
+        antecedenteAtributo {
+          id nome tipoDado
+          # Antecedente
+          tipoAntecedente {
+            id nome
+          }
+        }
+        antecedente {
+          id nome
+        }
+      }
+      complementosAntecedentes {
+        id
+        complemento
+        tipoAntecedente {
+          id
+          nome
+        }
+      }
+    }
+  }
+`
 
 export const CREATE_CONSULTA = gql`
   mutation CreateConsulta(
@@ -234,6 +254,8 @@ export const CREATE_CONSULTA = gql`
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
     $indicadoresExameFisico: IndicadoresExameFisicoInput,
     $exameFisico: [ID],
+    $complementosExameFisico: [ComplementoConsultaExameFisicoInput]
+    $antecedentesAtributos: [ConsultaAntecedenteAtributoInput]
     $complementosAntecedentes: [ComplementoConsultaAntecedenteInput]
     $suspeitasDiagnosticas: String,
     $planoConduta: String
@@ -249,6 +271,8 @@ export const CREATE_CONSULTA = gql`
       complementosQueixas: $complementosQueixas
       indicadoresExameFisico: $indicadoresExameFisico,
       exameFisico: $exameFisico,
+      complementosExameFisico: $complementosExameFisico,
+      antecedentesAtributos: $antecedentesAtributos,
       complementosAntecedentes: $complementosAntecedentes,
       suspeitasDiagnosticas: $suspeitasDiagnosticas,
       planoConduta: $planoConduta

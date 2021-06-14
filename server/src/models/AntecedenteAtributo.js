@@ -33,9 +33,9 @@ export default (sequelize, DataTypes) => {
 
     /**
      * Relacionamento com a tabela de valores de atributos de antecedentes
-     * @see {@link src/models/PacienteAntecedenteAtributo}
+     * @see {@link src/models/ConsultaAntecedenteAtributo}
      */
-     AntecedenteAtributo.hasMany(models.PacienteAntecedenteAtributo, {
+     AntecedenteAtributo.hasMany(models.ConsultaAntecedenteAtributo, {
       as: 'valoresAntecedentesAtributos',
       foreignKey: 'antecedenteAtributoId'
     })

@@ -9,6 +9,7 @@ import { gql } from 'apollo-server-express'
 export default gql`
   type Consulta {
     id: ID
+    primeira: Boolean
     responsaveis: [Usuario]
     paciente: Paciente
     acompanhante: String
@@ -24,6 +25,7 @@ export default gql`
     suspeitasDiagnosticas: String
     planoConduta: String
     avaliacao: AvaliacaoAtendimento
+    antecedentesAtributos: [ConsultaAntecedenteAtributo]
     complementosAntecedentes: [ComplementoConsultaAntecedente]
     createdAt: String
   }
@@ -32,6 +34,7 @@ export default gql`
     consultas: [Consulta]
     consulta(id: ID!): Consulta
     consultasByPaciente(pacienteId: ID!): [Consulta]
+    primeiraConsultaOfPaciente(pacienteId: ID!): Consulta
     queixaPrincipal(id: ID!): Queixa
   }
 
@@ -43,6 +46,7 @@ export default gql`
 
   type Mutation {
     createConsulta(
+      primeira: Boolean,
       responsaveis: [ID]
       pacienteId: ID!,
       acompanhante: String,
@@ -54,6 +58,7 @@ export default gql`
       recordatorioAlimentar: [RecordatorioAlimentarInput],
       exameFisico: [ID],
       complementosExameFisico: [ComplementoConsultaExameFisicoInput]
+      antecedentesAtributos: [ConsultaAntecedenteAtributoInput]
       complementosAntecedentes: [ComplementoConsultaAntecedenteInput]
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       suspeitasDiagnosticas: String,
@@ -62,7 +67,8 @@ export default gql`
 
     updateConsulta(
       id: ID!,
-      responsaveis: [ID]
+      primeira: Boolean,
+      responsaveis: [ID],
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
@@ -73,7 +79,7 @@ export default gql`
       indicadoresExameFisico: IndicadoresExameFisicoInput,
       exameFisico: [ID],
       suspeitasDiagnosticas: String,
-      planoConduta: String,
+      planoConduta: String
     ): ConsultaResponse
 
     deleteConsulta(id: ID!): Boolean

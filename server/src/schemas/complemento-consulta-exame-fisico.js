@@ -15,9 +15,9 @@ export default gql`
   }
 
   input ComplementoConsultaExameFisicoInput {
-    id: ID
+    # id: ID
     complemento: String
-    tipoExameFisico: TipoQueixaInput
+    tipoExameFisicoId: ID
   }
 
   type ComplementoConsultaExameFisicoResponse {
@@ -33,7 +33,7 @@ export default gql`
   }
 
   type Mutation{
-    createComplementoConsultaExameFisico(complemento: String, consultaId: ID, exameFisicoId: ID): ComplementoConsultaTipoQueixaResponse
+    createComplementoConsultaExameFisico(complemento: String, consultaId: ID, tipoExameFisicoId: ID): ComplementoConsultaExameFisicoResponse
     updateComplementoConsultaExameFisico(id: ID!, complemento: String): ComplementoConsultaExameFisicoResponse
   }
 `

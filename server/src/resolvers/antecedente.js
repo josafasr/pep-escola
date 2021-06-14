@@ -8,7 +8,7 @@ import AntecedenteRepository from '../data/antecedente'
 
 export default {
   Query: {
-    antecedentes: async (_, __) => await AntecedenteRepository.findAll()
+    antecedentes: async () => await AntecedenteRepository.findAll()
   },
   
   Mutation: {

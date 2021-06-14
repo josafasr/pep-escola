@@ -233,33 +233,6 @@ export const GET_WITH_INCLUDES = gql`
         id
         nome
       }
-      antecedentesPatologicos {
-        id
-        tempoDiagnostico
-        patologia {
-          id
-          nome
-          tipoPatologia {
-            id
-            nome
-          }
-        }
-      }
-      # PacienteAntecedenteAtributo
-      antecedentesAtributos {
-        id atributoValor
-        # AntecedenteAtributo
-        antecedenteAtributo {
-          id nome tipoDado
-          # Antecedente
-          tipoAntecedente {
-            id nome
-          }
-        }
-        antecedente {
-          id nome
-        }
-      }
     }
   }`
 

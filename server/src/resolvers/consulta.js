@@ -4,6 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
+import { Op } from 'sequelize'
 import { formatErrors } from '../format-errors';
 
 export default {
@@ -13,7 +14,7 @@ export default {
     /**
      * retorna todos os registros de consulta
      */
-    consultas: async (parent, _, { models }) => {
+    consultas: async (_, __, { models }) => {
       const consultas = await models.Consulta.findAll({
         include: [
           {
@@ -110,29 +111,6 @@ export default {
               }, {
                 association: 'especialidades',
                 attributes: ['id', 'nome']
-              }, {
-                association: 'antecedentesPatologicos',
-                attributes: ['id', 'tempoDiagnostico'],
-                include: {
-                  association: 'patologia',
-                  attributes: ['id', 'nome'],
-                  include: {
-                    association: 'tipoPatologia',
-                    attributes: ['id', 'nome']
-                  }
-                }
-              }, {
-                association: 'antecedentesAtributos',
-                include: [
-                  {
-                    association: 'antecedenteAtributo',
-                    include: {
-                      association: 'tipoAntecedente'
-                    }
-                  }, {
-                    association: 'antecedente'
-                  }
-                ]
               }
             ]
           }, {
@@ -190,6 +168,18 @@ export default {
               }
             }
           }, {
+            association: 'antecedentesAtributos',
+            include: [
+              {
+                association: 'antecedenteAtributo',
+                include: {
+                  association: 'tipoAntecedente'
+                }
+              }, {
+                association: 'antecedente'
+              }
+            ]
+          }, {
             association: 'complementosAntecedentes',
             attributes: ['id', 'complemento'],
             include: {
@@ -201,7 +191,7 @@ export default {
       return consulta
     },
 
-    consultasByPaciente: async (parent, { pacienteId }, { models }) => {
+    consultasByPaciente: async (_, { pacienteId }, { models }) => {
       const consultas = await models.Consulta.findAll({
         include: [
           {
@@ -214,6 +204,40 @@ export default {
       return consultas
     },
 
+    primeiraConsultaOfPaciente: async (_, { pacienteId }, { models }) => {
+      try {
+        const consulta = await models.Consulta.findOne({
+          include: [
+            {
+              association: 'antecedentesAtributos',
+              include: [
+                {
+                  association: 'antecedenteAtributo',
+                  include: {
+                    association: 'tipoAntecedente'
+                  }
+                }, {
+                  association: 'antecedente'
+                }
+              ]
+            }, {
+              association: 'complementosAntecedentes',
+              attributes: ['id', 'complemento'],
+              include: {
+                association: 'tipoAntecedente'
+              }
+            }
+          ],
+          where: {
+            [Op.and]: [{ pacienteId }, { primeira: true }]
+          }
+        })
+
+        return consulta
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
   },
 
   Mutation: {
@@ -274,15 +298,16 @@ export default {
                 association: 'recordatorioAlimentar',
                 include: {
                   association: 'alimento'
-                }
-              }, /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
-              {
+                } /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
+              }, {
                 association: 'indicadoresExameFisico'
-              },
-              {
+              }, {
                 association: 'complementosQueixas'
-              },
-              {
+              }, {
+                association: 'complementosExameFisico'
+              }, {
+                association: 'antecedentesAtributos'
+              }, {
                 association: 'complementosAntecedentes'
               }
             ]
