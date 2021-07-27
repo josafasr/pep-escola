@@ -27,9 +27,14 @@ export default (sequelize, DataTypes) => {
       },
       field: 'hash_senha'
     },
+    tokenVersion: {
+      type: DataTypes.INTEGER,
+      field: 'token_version'
+    },
     pessoaId: {
       type: DataTypes.INTEGER,
-      field: 'pessoa_id'
+      field: 'pessoa_id',
+      defaultValue: 0
     }
   }, {
     tableName: 'usuario',

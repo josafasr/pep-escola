@@ -108,6 +108,7 @@ export const useStyles = makeStyles((theme) => ({
   copy: {
     textAlign: 'center',
     fontSize: 'small',
-    padding: '10px'
+    padding: '10px',
+    color: 'gray'
   }
 }))

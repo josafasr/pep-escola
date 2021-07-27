@@ -5,7 +5,7 @@
  */
 import React from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
   Card,
   CardHeader,
@@ -19,7 +19,8 @@ import {
 } from '@material-ui/core'
 
 import { useStyles } from '../styles/login'
-import { TRY_LOGIN } from '../graphql/usuario'
+import { TRY_LOGIN, LOGOUT } from '../graphql/usuario'
+import { setAccessToken } from '../access-token'
 
 const LoginForm = () => {
   const classes = useStyles()
@@ -33,12 +34,13 @@ const LoginForm = () => {
 
   const [handleLogin, { loading, data }] = useLazyQuery(TRY_LOGIN, {
     onCompleted: () => {
-      const { token, reloadToken } = data.login
-      localStorage.setItem('token', token)
-      localStorage.setItem('reloadToken', reloadToken)
+      const { token } = data.login
+      setAccessToken(token)
       history.replace(from)
     }
   })
+
+  //const [handleLogout] = useMutation(LOGOUT)
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -52,10 +54,10 @@ const LoginForm = () => {
     })
   }
 
-  React.useEffect(() => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('reloadToken')
-  }, [])
+  /* React.useEffect(() => {
+    //setAccessToken(null)
+    handleLogout()
+  }, []) */
 
   return (
     <div className={classes.root}>

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf dist/ && babel src -d dist --copy-files",
     "serve": "npm run build && dotenv node dist/index.js",
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "nodemon --exec dotenv babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:unit": "dotenv cucumber-js -- spec/cucumber/features/consulta --require-module @babel/register --require spec/cucumber/steps/consulta",
     "test:e2e": "dotenv cucumber-js -- spec/cucumber/features/consulta --require-module @babel/register --require spec/cucumber/steps/consulta",
@@ -38,6 +38,8 @@
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "cls-hooked": "^4.2.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.7.0",
     "graphql-tools": "^4.0.8",

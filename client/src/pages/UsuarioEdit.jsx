@@ -44,16 +44,16 @@ export default function UsuarioEdit() {
       ...usuario,
       pessoa: {
         ...pessoa,
-        dataNascimento: toDatabaseDate(pessoa.dataNascimento),
+        dataNascimento: toDatabaseDate(pessoa?.dataNascimento),
         contato: contatoState,
         enderecos: [{
-          tipoLogradouroId: parseInt(endereco.tipoLogradouro?.id),
-          logradouro: endereco.logradouro,
-          numero: parseInt(endereco.numero),
-          bairro: endereco.bairro,
-          endereco: endereco.complemento,
-          cep: endereco.cep,
-          cidadeId: parseInt(endereco.cidade?.id)
+          tipoLogradouroId: parseInt(endereco?.tipoLogradouro?.id),
+          logradouro: endereco?.logradouro,
+          numero: parseInt(endereco?.numero),
+          bairro: endereco?.bairro,
+          endereco: endereco?.complemento,
+          cep: endereco?.cep,
+          cidadeId: parseInt(endereco?.cidade?.id)
         }]
       }
     }

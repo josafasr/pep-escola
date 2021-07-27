@@ -1,64 +1,9 @@
-import jwt from 'jsonwebtoken'
-import _ from 'lodash'
 import bcrypt from 'bcrypt'
 
-export const createTokens = async (user, secret, secret2) => {
-  const createToken = jwt.sign(
-    {
-      user: _.pick(user, ['id', 'nome'])
-    },
-    secret,
-    {
-      expiresIn: '15m'
-    }
-  )
+import { createAccessToken, createRefreshToken, verifyAccessToken } from './access'
+import { sendRefreshToken } from './send-refresh-token'
 
-  const createReloadToken = jwt.sign(
-    {
-      user: _.pick(user, 'id')
-    },
-    secret2,
-    {
-      expiresIn: '1h'
-    }
-  )
-  return [createToken, createReloadToken]
-}
-
-export const refreshTokens = async (token, reloadToken, models, SECRET, SECRET2) => {
-  let userId = 0
-  try {
-    const { user: { id } } = jwt.decode(reloadToken)
-    userId = id
-  } catch (err) {
-    return {}
-  }
-
-  if (!userId) {
-    return {}
-  }
-
-  const user = await models.Usuario.findOne({ where: { id: userId }, raw: true})
-  if (!user) {
-    return {}
-  }
-
-  const reloadSecret = user.senha + SECRET2
-  try {
-    jwt.verify(reloadToken, reloadSecret)
-  } catch (err) {
-    return {}
-  }
-
-  const [newToken, newReloadToken] = await createTokens(user, SECRET, reloadSecret)
-  return {
-    token: newToken,
-    reloadToken: newReloadToken,
-    user
-  }
-}
-
-export const tryLogin = async (nome, password, models, SECRET, SECRET2) => {
+export const tryLogin = async (nome, password, models, res) => {
   const user = await models.Usuario.findOne({ where: { nome }, raw: true })
   if (!user) {
     return {
@@ -75,13 +20,34 @@ export const tryLogin = async (nome, password, models, SECRET, SECRET2) => {
     }
   }
 
-  const reloadTokenSecret = user.senha + SECRET2
+  sendRefreshToken(res, createRefreshToken(user))
 
-  const [token, reloadToken] = await createTokens(user, SECRET, reloadTokenSecret)
+  const accessToken = createAccessToken(user)
 
   return {
     ok: true,
-    token,
-    reloadToken
+    token: accessToken
   }
+}
+
+export const isAuth = (req, _, next) => {
+  //console.log('isAuth req.headers:', req.headers)
+
+  if (req.headers.authorization) {
+  const token = req.headers.authorization.split(' ')[1]
+
+    if (token) {
+      try {
+        const { userId } = verifyAccessToken(token)
+        req.user = userId
+
+      } catch (err) {
+        if (req.url !== '/refresh') {
+          //console.log('isAuth err:', err.message)
+          throw new Error('Not authenticated!')
+        }
+      }
+    }
+  }
+  return next()
 }

@@ -761,9 +761,10 @@ CREATE TABLE seguranca.usuario (
 	id bigint NOT NULL DEFAULT nextval('seguranca.usuario_id_seq'::regclass),
 	nome character varying,
 	hash_senha character varying,
+	token_version integer DEFAULT 0,
+	pessoa_id bigint,
 	created_at timestamp with time zone,
 	updated_at timestamp with time zone,
-	pessoa_id bigint,
 	CONSTRAINT usuario_pk PRIMARY KEY (id)
 
 );
@@ -1470,4 +1471,4 @@ CREATE TABLE ceuas.paciente_antecedente_patologico
 		ON DELETE NO ACTION
 );
 
--- Última alteração: 30/04/2021
+-- Última alteração: 27/07/2021

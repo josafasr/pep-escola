@@ -3,75 +3,96 @@
  * @author Josafá Santos dos Reis
  */
 
-import jwt from 'jsonwebtoken'
 import express from 'express'
+import cors from 'cors'
 import { ApolloServer } from 'apollo-server-express'
 
 import path from 'path'
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
+import cookieParser from 'cookie-parser'
 
 import models from './models'
 import db from './models/index'
-import { refreshTokens } from './auth'
-
-/***** trocar por chaves de verdade *****/
-const SECRET = process.env.PRIVATE_KEY
-const SECRET2 = process.env.PUBLIC_KEY // 'kwvowudvj33739fnq9cn9938sjg9w73'
+import { isAuth } from './auth'
+import { sendRefreshToken } from './send-refresh-token'
+import { createAccessToken, createRefreshToken, verifyRefreshToken } from './access'
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')))
 
 const app = express()
+app.use(cors({
+  origin: 'http://localhost:3000',
+  //origin: '*',
+  credentials: true,
+  exposedHeaders: ['Authorization']
+}))
+app.use(cookieParser())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 const url = '/graphql'
 
-const getUser = async (req, res, next) => {
-  const token = req.headers['x-token']
-  if (token) {
-    try {
-      const { user } = jwt.verify(token, SECRET)
-      req.user = user
-    } catch (err) {
-      const reloadToken = req.headers['x-reload-token']
-      const newTokens = await refreshTokens(token, reloadToken, models, SECRET, SECRET2)
-      if (newTokens && newTokens.reloadToken) {
-        res.set('Access-Control-Expose-Headers', 'x-token, x-reload-token')
-        res.set('x-token', newTokens.token)
-        res.set('x-reload-token', newTokens.reloadToken)
-      }
-      req.user = newTokens.user
-    }
-  }
-  next()
-}
+app.use(isAuth)
 
-/* const requestHandler = (req, res, next) => {
-  if (req.method === 'POST' && req.url === '/graphql') {
-    res.writeHead(400, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({
-      message: 'Os argumentos não podem estar vazios'
-    }))
-    return
-  }
-  next()
-} */
-//app.use(getUser, requestHandler)
+/* app.use((req, _, next) => {
 
-app.use(getUser)
+  if ((['/refresh'].includes(req.url))
+      || (['GET', 'OPTIONS'].includes(req.method))
+      || (['TryLogin', 'IntrospectionQuery'].includes(req.body.operationName))
+      || req.user) {
+    return next()
+  } else {
+    throw new Error('Not authorized!')
+  }
+}) */
+
+app.post('/refresh', async (req, res) => {
+  
+  const refreshToken = req.cookies.jid
+  console.log(`/refresh refreshToken ${Date.now()}:`, refreshToken + '\n===========================================')
+  if (!refreshToken) {
+    //console.log('/refresh !refreshToken');
+    return res.send({ ok: false, accessToken: '' })
+  }
+
+  let payload = null
+  try {
+    payload = verifyRefreshToken(refreshToken)
+  } catch (error) {
+    //console.log('/refresh catch');
+    return res.send({ ok: false, accessToken: '' })
+  }
+
+  const user = await models.Usuario.findOne({ where: { id: payload.userId }, raw: true})
+  if (!user) {
+    //console.log('/refresh !user');
+    return res.send({ ok: false, accessToken: '' })
+  }
+
+  if (user.tokenVersion !== payload.tokenVersion) {
+    //console.log(`/refresh: user.tokenVersion: ${user.tokenVersion} | payload.tokenVersion: ${payload.tokenVersion}`)
+    return res.send({ ok: false, accessToken: '' })
+  }
+
+  sendRefreshToken(res, createRefreshToken(user))
+
+  return res.send({ ok: true, accessToken: createAccessToken(user) })
+})
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
+  context: ({ req, res }) => {
     return {
       models,
       sequelize: db.sequelize,
-      SECRET,
-      SECRET2,
-      user: req.user
+      //user: req.user,
+      req,
+      res
     }
   }
 })
 
-server.applyMiddleware({ app, path: url, cors: true })
+server.applyMiddleware({ app, path: url, cors: false })
 
 app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at ${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}${url}`))

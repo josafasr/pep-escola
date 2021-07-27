@@ -20,7 +20,6 @@ export const GET_BY_ID = gql`
         }
       }
       nome
-      senha
       grupos {
         id
         nome
@@ -42,7 +41,7 @@ export const USUARIOS_BY_TEXT = gql`
 `
 
 export const GET_ALL = gql`
-  {
+  query Usuarios {
     usuarios {
       id
       nome
@@ -54,7 +53,6 @@ export const GET_ALL = gql`
           email
         }
       }
-      senha
       grupos {
         id
         nome
@@ -110,12 +108,17 @@ export const TRY_LOGIN = gql`
     login(nome: $nome, senha: $senha) {
       ok
       token
-      reloadToken
       errors {
         path
         message
       }
     }
+  }
+`
+
+export const LOGOUT = gql`
+  mutation Logout {
+    logout
   }
 `
 

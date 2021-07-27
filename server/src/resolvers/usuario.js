@@ -4,10 +4,13 @@
  * @author Josafá Santos dos Reis
  */
 
-import _ from 'lodash'
 import { Op } from 'sequelize'
+import jwt from 'jsonwebtoken'
+
 import { formatErrors } from '../format-errors'
 import { tryLogin } from '../auth'
+import { createAccessToken, createRefreshToken, verifyRefreshToken } from '../access'
+import { sendRefreshToken } from '../send-refresh-token'
 
 export default {
 
@@ -101,7 +104,64 @@ export default {
       return usuarios
     },
 
-    login: async (parent, { nome, senha }, { models, SECRET, SECRET2 }) => tryLogin(nome, senha, models, SECRET, SECRET2)
+    currentUser: async (_, __, { models, req }) => {
+      const [, token] = req.headers.authorization.split(' ')
+      if (!token) {
+        return null
+      }
+
+      try {
+        const payload = jwt.verify(token, process.env.ACCESS_TOKEN_KEY, { algorithms: ['RS512'] })
+        return await models.Usuario.findOne({
+          where: { id: payload.userId },
+          include: {
+            association: 'pessoa',
+            attributes: [ 'id', 'nome' ],
+            include: {
+              association: 'contato',
+              attributes: [ 'id', 'email' ],
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        return null
+      }
+    },
+
+    login: async (_, { nome, senha }, { models, res }) => {
+      return await tryLogin(nome, senha, models, res)
+    },
+
+    refreshToken: async (_, __, { models, req, res }) => {
+      const refreshToken = req.cookies.jid
+
+      if (!refreshToken)
+        return { ok: false, token: '' }
+      
+      let payload = null
+      try {
+        payload = verifyRefreshToken(refreshToken) //jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY, { algorithms: ['RS512'] })
+      } catch (error) {
+        return { ok: false, token: '' }
+      }
+
+      const user = await models.Usuario.findOne({ where: { id: payload.userId }, raw: true})
+      if (!user)
+        return { ok: false, token: '' }
+
+      if (user.tokenVersion !== payload.tokenVersion)
+        return { ok: false, token: '' }
+
+      sendRefreshToken(res, createRefreshToken(user))
+
+      const accessToken = createAccessToken(user)
+
+      return {
+        ok: true,
+        token: accessToken
+      }
+    }
   },
 
   Mutation: {
@@ -109,29 +169,27 @@ export default {
     /**
      * cria um novo registro de usuário
      */
-    createUsuario: async (parent, args, { models, user }) => {
-    //  if (user) {
-        try {
-          const usuario = await models.Usuario.create({
-            nome: args.nome,
-            senha: args.senha,
-            pessoaId: args.pessoaId
-          })
+    createUsuario: async (_, args, { models }) => {
+      try {
+        const usuario = await models.Usuario.create({
+          nome: args.nome,
+          senha: args.senha,
+          pessoaId: args.pessoaId
+        })
 
-          if (args.grupos && args.grupos.length > 0) {
-            usuario.addGrupos(args.grupos)
-          }
-          return {
-            ok: true,
-            usuario
-          }
-        } catch (err) {
-          return {
-            ok: false,
-            errors: formatErrors(err, models)
-          }
+        if (args.grupos && args.grupos.length > 0) {
+          usuario.addGrupos(args.grupos)
         }
-     // }
+        return {
+          ok: true,
+          usuario
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
     },
 
     /**
@@ -209,6 +267,17 @@ export default {
       } catch (err) {
         return false
       }
+    },
+
+    logout: (_, __, { res }) => {
+      sendRefreshToken(res, '')
+      return true
+    },
+  
+    revokeRefreshToken: async (_, { userId }, { models }) => {
+      await models.Usuario.increment('tokenVersion', {
+        where: { id: userId }
+      })
     }
   }
 }

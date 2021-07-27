@@ -11,3 +11,5 @@
 /server/src/config/config.json
 
 */.env
+
+*.bkp
