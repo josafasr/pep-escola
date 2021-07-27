@@ -471,6 +471,7 @@ const ConsultaEdit = () => {
           onClick={handleSubmit}
           className={classes.button}
           size="small"
+          disabled={!pacienteId}
         >
           Salvar
         </Button>

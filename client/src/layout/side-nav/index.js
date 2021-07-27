@@ -1,7 +1,8 @@
 import React from 'react'
-import { useApolloClient } from 'react-apollo'
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
+import { createBrowserHistory } from 'history'
+//import { useApolloClient } from 'react-apollo'
+//import gql from 'graphql-tag'
+//import { useQuery } from '@apollo/react-hooks'
 import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom'
 import clsx from 'clsx'
 import {
@@ -37,6 +38,7 @@ import PacienteEdit from '../../pages/PacienteEdit'
 import PacienteList from '../../pages/PacienteList'
 import PacienteView from '../../pages/PacienteView'
 import ConsultaEdit from '../../pages/ConsultaEdit'
+//import { setAccessToken } from '../../access-token'
 
 const drawerWidth = 240
 
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   appBar: {
-    backgroundColor: '#ff4c4c',
+    backgroundColor: 'red', //#ff4c4c',
     zIndex: theme.zIndex.drawer + 1,
   },
 
@@ -152,15 +154,16 @@ export default function SideNav(props) {
 
   const classes = useStyles()
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
-  const client = useApolloClient()
+  let browserHistory = createBrowserHistory()
+
+  //const client = useApolloClient()
 
   const toggleDrawer = (mobileOpen) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return
     }
-
     setMobileOpen(mobileOpen)
   }
 
@@ -169,29 +172,35 @@ export default function SideNav(props) {
   }
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('reloadToken')
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('reloadToken')
     history.push('/login')
   }
 
-  const { data: authData } = useQuery(gql`
-    query IsLoggedI {
-      isLoggedIn @client
+/*   const { data } = useQuery(gql`
+    {
+      lastAction @client
     }`
-  )
+  ) */
 
-  /* React.useEffect(() => {
-    //console.log(client.cache.data.data)
-    console.log(authData?.isLoggedIn)
-  }) */
+  React.useEffect(() => {
+    //let location = browserHistory.location
+    let unlisten = browserHistory.listen(({ location, action }) => {
+      console.log(action, location.pathname, location.state)
+    })
+
+    return () => {
+      unlisten()
+    }
+  }, [browserHistory])
 
   const drawer = (
     <div>

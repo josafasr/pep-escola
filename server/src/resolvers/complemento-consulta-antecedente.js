@@ -4,8 +4,8 @@
  * @author Josafá Santos dos Reis
  */
 
-import { CreateComplementoAntecedenteRepository } from '../infra/create-complemento-antecedente-repo'
-import { CreateComplementoAntecedente } from '../domain/use-cases/create-complemento-antecedente'
+/* import { CreateComplementoAntecedenteRepository } from '../infra/create-complemento-antecedente-repo'
+import { CreateComplementoAntecedente } from '../domain/use-cases/create-complemento-antecedente' */
 
 export default {
 
@@ -24,11 +24,11 @@ export default {
   Mutation: {
 
     // Cria um novo registro de complemento de exames físicos
-    createComplementoConsultaAntecedente: (_, args) => {
+    /* createComplementoConsultaAntecedente: (_, args) => {
       const repo = new CreateComplementoAntecedenteRepository()
       const createComplementoConsultaAntecedente = new CreateComplementoAntecedente(repo)
       return createComplementoConsultaAntecedente.create(args)
-    }
+    } */
 
     // Atualiza um registro de complemento de exames físicos
     /* updateComplementoConsultaExameFisico: (_, args) => .update(args, {

@@ -1,13 +1,16 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de usuários
+ * @description Descritores GraphQL para as operações sobre a tabela de usuários
  * @module src/schemas/usuario
  * @author Josafá Santos dos Reis
  */
-export default `
+
+import { gql } from 'apollo-server-express'
+
+export default gql`
   type Usuario {
     id: ID
     nome: String
-    senha: String
+    # senha: String
     pessoa: Pessoa
     grupos: [Grupo]
   }
@@ -21,16 +24,24 @@ export default `
   type LoginResponse {
     ok: Boolean
     token: String
-    reloadToken: String
+    # reloadToken: String
     errors: [Error]
   }
 
   type Query {
     usuario(id: ID!): Usuario
+
     usuarios: [Usuario]
+
     usuariosByText(text: String!): [Usuario]
+
     findAllFields(id: ID!): Usuario
+
+    currentUser: Usuario
+
     login(nome: String!, senha: String!): LoginResponse
+
+    refreshToken: LoginResponse
   }
 
   type Mutation {
@@ -57,5 +68,9 @@ export default `
     ): UsuarioResponse
 
     deleteUsuario(id: ID!): Boolean
+
+    logout: Boolean
+
+    revokeRefreshToken(userId: ID!): Boolean
   }
 `

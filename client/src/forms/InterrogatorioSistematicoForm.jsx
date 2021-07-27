@@ -159,7 +159,7 @@ const InterrogatorioSistematicoForm = () => {
                       id={queixa.id}
                       onChange={handleChange}
                       checked={isChecked(queixa)}
-                      color="primary"
+                      //color="primary"
                       size="small"
                     />
                   }
