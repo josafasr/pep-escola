@@ -90,8 +90,16 @@ export const useStyles = makeStyles((theme) => ({
     margin: '6px 0'
   },
 
+  error: {
+    paddingLeft: '40px',
+    marginBottom: '5px',
+    fontSize: 'small',
+    color: 'red'
+  },
+
   btnLogin: {
     width: '80%',
+    marginTop: '5px',
     textTransform: 'none',
     fontSize: 'medium',
     backgroundColor: 'red'

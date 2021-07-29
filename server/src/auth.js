@@ -4,11 +4,12 @@ import { createAccessToken, createRefreshToken, verifyAccessToken } from './acce
 import { sendRefreshToken } from './send-refresh-token'
 
 export const tryLogin = async (nome, password, models, res) => {
+  const error = { path: 'Login', message: 'Nome de usuário ou senha incorretos!' }
   const user = await models.Usuario.findOne({ where: { nome }, raw: true })
   if (!user) {
     return {
       ok: false,
-      errors: [{ path: 'name', message: 'Wrong user name!' }]
+      errors: [error]
     }
   }
 
@@ -16,7 +17,7 @@ export const tryLogin = async (nome, password, models, res) => {
   if (!valid) {
     return {
       ok: false,
-      errors: [{ path: 'password', message: 'Wrong password!' }]
+      errors: [error]
     }
   }
 

@@ -1,15 +1,21 @@
 /**
- * @title Mapeamento da tabela de usuários
+ * @description Mapeamento da tabela de usuários
  * @module src/models/Usuario
  * @author Josafá Santos dos Reis
  */
 
 import bcrypt from 'bcrypt'
+import { v4 as uuid } from 'uuid'
 
 export default (sequelize, DataTypes) => {
   const Usuario = sequelize.define('Usuario', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
     nome: {
       type: DataTypes.STRING,
+      unique: true,
       validate: {
         len: {
           args: 3,
@@ -37,14 +43,19 @@ export default (sequelize, DataTypes) => {
       defaultValue: 0
     }
   }, {
-    tableName: 'usuario',
-    schema: 'seguranca',
+    tableName: 'auth_user',
     hooks: {
       afterValidate: async (usuario) => {
         if (usuario.senha != null && usuario.senha != '') {
           const hashSenha = await bcrypt.hash(usuario.senha, 12)
           // eslint-disable-next-line no-param-reassign
           usuario.senha = hashSenha
+        }
+      },
+      beforeCreate: async (usuario) => {
+        if (!usuario.id) {
+          const id = await Promise.resolve(uuid())
+          usuario.id = id
         }
       }
     }

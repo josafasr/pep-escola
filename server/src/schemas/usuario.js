@@ -48,7 +48,7 @@ export default gql`
     createUsuario(
       nome: String!,
       senha: String!,
-      pessoaId: Int!,
+      pessoaId: Int,
       grupos: [Int]
     ): UsuarioResponse
 

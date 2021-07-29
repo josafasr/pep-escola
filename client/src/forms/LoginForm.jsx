@@ -1,15 +1,14 @@
 /**
- * @title Formulário para login no sistema
+ * @description Formulário para login no sistema
  * @module src/form/LoginForm
  * @author Josafá Santos dos Reis
  */
-import React from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useLazyQuery, useMutation } from '@apollo/react-hooks'
+import React, { useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useLazyQuery } from '@apollo/react-hooks'
 import {
   Card,
   CardHeader,
-  CardActions,
   CardContent,
   Button,
   Avatar,
@@ -19,28 +18,25 @@ import {
 } from '@material-ui/core'
 
 import { useStyles } from '../styles/login'
-import { TRY_LOGIN, LOGOUT } from '../graphql/usuario'
+import { TRY_LOGIN } from '../graphql/usuario'
 import { setAccessToken } from '../access-token'
 
 const LoginForm = () => {
   const classes = useStyles()
-  const [fields, setFields] = React.useState({
-    nome: '',
-    senha: ''
-  })
+  const [fields, setFields] = useState({ nome: '', senha: '' })
   const history = useHistory()
   let location = useLocation()
   let { from } = location.state || { from: { pathname: "/" } }
 
   const [handleLogin, { loading, data }] = useLazyQuery(TRY_LOGIN, {
     onCompleted: () => {
-      const { token } = data.login
-      setAccessToken(token)
-      history.replace(from)
+      const { ok, token } = data.login
+      if (ok) {
+        setAccessToken(token)
+        history.replace(from)
+      }
     }
   })
-
-  //const [handleLogout] = useMutation(LOGOUT)
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -53,11 +49,6 @@ const LoginForm = () => {
       variables: fields
     })
   }
-
-  /* React.useEffect(() => {
-    //setAccessToken(null)
-    handleLogout()
-  }, []) */
 
   return (
     <div className={classes.root}>
@@ -86,7 +77,9 @@ const LoginForm = () => {
           }
         />
         <CardContent className={classes.cardContent}>
-          <form className={classes.formCardActions}>
+          {data && data.login && data.login.errors && <div className={classes.error}>{data.login.errors[0].message}</div>}
+          
+          <form className={classes.formCardActions} onSubmit={handleSubmit}>
             <TextField
               className={classes.textField}
               name="nome"
@@ -96,8 +89,6 @@ const LoginForm = () => {
               placeholder="usuario"
               value={fields.nome}
               onChange={handleChange}
-              //error={!!errors.nameError}
-              //helperText={errors.nameError}
             />
 
             <TextField
@@ -110,25 +101,22 @@ const LoginForm = () => {
               placeholder="usuario"
               value={fields.senha}
               onChange={handleChange}
-              //error={!!errors.passwordError}
-              //helperText={errors.passwordError}
             />
+            <Button
+              type="submit"
+              className={classes.btnLogin}
+              variant="contained"
+              color="secondary"
+              size="small"
+              disabled={fields.nome === '' || fields.senha === ''}
+            >
+              {loading ? <CircularProgress color="inherit" size={30} /> : 'Entrar'}
+            </Button>
           </form>
+          {/* <CardActions className={classes.formCardActions}>
+            <Link className={classes.forgetLink} to="#">Esqueceu a senha?</Link>
+          </CardActions> */}
         </CardContent>
-        <CardActions className={classes.formCardActions}>
-          <Button
-            className={classes.btnLogin}
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={handleSubmit}
-            disabled={fields.nome === '' || fields.senha === ''}
-          >
-            {loading ? <CircularProgress color="inherit" size={30} /> : 'Entrar'}
-          </Button>
-
-          <Link className={classes.forgetLink} to="#">Esqueceu a senha?</Link>
-        </CardActions>
       </Card>
       <div className={classes.copy}>© 2020 - Universidade Estadual do Sudoeste da Bahia</div>
     </div>
