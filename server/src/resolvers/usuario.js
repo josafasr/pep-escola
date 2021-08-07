@@ -1,11 +1,12 @@
 /**
- * @title Operações sobre a tabela de usuarios
+ * @description Operações sobre a tabela de usuarios
  * @module src/resolvers/usuario
  * @author Josafá Santos dos Reis
  */
 
 import { Op } from 'sequelize'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 import { formatErrors } from '../format-errors'
 import { tryLogin } from '../auth'
@@ -19,7 +20,7 @@ export default {
     /**
      * retorna todos os registros de usuário
      */
-    usuarios: async (parent, args, { models }) => {
+    usuarios: async (_, __, { models }) => {
       const usuarios = await models.Usuario.findAll({
         include: [
         {
@@ -29,7 +30,7 @@ export default {
           {
             association: 'contato',
             attributes: { exclude: ['createdAt', 'updatedAt'] }
-          },
+          }/* ,
           {
             association: 'enderecos',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -42,12 +43,12 @@ export default {
               association: 'cidade',
               attributes: ['id', 'nome']
             }]
-          }]
-        },
+          } */]
+        }/* ,
         {
           association: 'grupos',
           attributes: ['id', 'nome']
-        }],
+        } */],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuarios
@@ -66,7 +67,7 @@ export default {
           {
             association: 'contato',
             attributes: { exclude: ['createdAt', 'updatedAt'] }
-          },
+          }/* ,
           {
             association: 'enderecos',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -79,7 +80,7 @@ export default {
               association: 'cidade',
               attributes: ['id', 'nome']
             }]
-          }]
+          } */]
         },
         {
           association: 'grupos',
@@ -195,8 +196,7 @@ export default {
     /**
      * cria um novo registro de usuário com dependências
      */
-    createUsuarioWithIncludes: async (parent, { grupos, ...otherArgs }, { sequelize, models, user }) => {
-      //  if (user) {
+    createUsuarioWithIncludes: async (_, { grupos, ...otherArgs }, { sequelize, models }) => {
       try {
         const result = await sequelize.transaction(async (tx) => {
           const usuario = await models.Usuario.create({ ...otherArgs }, {
@@ -223,18 +223,17 @@ export default {
           errors: formatErrors(err, models)
         }
       }
-    // }
     },
 
     /**
      * atualiza um registro de usuário, dado o id
      */
-    updateUsuario: async (parent, { id, grupos, ...rest }, { models }) => {
+    updateUsuario: async (_, { id, grupos, ...rest }, { models }) => {
       try {
         const usuario = await models.Usuario.findByPk(id)
         if ({ ...rest }) {
           await usuario.update({ ...rest }, {
-            where: { id },
+            // where: { id },
             returning: true,
             plain: true
           })
@@ -258,7 +257,7 @@ export default {
     /**
      * exclui um registro de usuário, dado o id
      */
-    deleteUsuario: async (parent, { id }, { models }) => {
+    deleteUsuario: async (_, { id }, { models }) => {
       try {
         models.Usuario.destroy({
           where: { id }
@@ -278,6 +277,36 @@ export default {
       await models.Usuario.increment('tokenVersion', {
         where: { id: userId }
       })
+    },
+
+    changePassword: async (_, { id, previousPassword, newPassword }, { sequelize, models }) => {
+      try {
+        const usuario = await models.Usuario.findByPk(id)
+        const isValid = await bcrypt.compare(previousPassword, usuario.senha)
+        
+        if (isValid) {
+            await sequelize.transaction(async (tx) => {
+              await models.Usuario.update({
+                senha: newPassword
+              }, {
+                where: { id },
+                returning: true,
+                plain: true
+              })
+          })
+          return { ok: true }
+        } else {
+          return {
+            ok: false,
+            errors: [{ path: 'changePassword', message: 'Dados incorretos!' }]
+          }
+        }
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        }
+      }
     }
   }
 }

@@ -78,22 +78,6 @@ export const GET_WITH_INCLUDES = gql`
           telefone
           email
         }
-        enderecos {
-          id
-          tipoLogradouro {
-            id
-            nome
-          }
-          logradouro
-          numero
-          bairro
-          complemento
-          cep
-          cidade {
-            id
-            nome
-          }
-        }
       }
       grupos {
         id
@@ -133,7 +117,6 @@ export const CREATE_USUARIO = gql`
           nome
         }
         nome
-        senha
         grupos {
           nome
         }
@@ -157,7 +140,6 @@ export const CREATE_WITH_INCLUDES = gql`
           nome
         }
         nome
-        senha
         grupos {
           id
           nome
@@ -180,7 +162,6 @@ export const UPDATE_USUARIO = gql`
         nome
       }
       nome
-      senha
       grupos {
         nome
       }
@@ -192,5 +173,16 @@ export const UPDATE_USUARIO = gql`
 export const DELETE_USUARIO = gql`
   mutation($id: ID!) {
     deleteUsuario(id: $id)
+  }
+`
+
+export const CHANEG_PASSWORD = gql`
+  mutation ChangePassword($id: ID!, $previousPassword: String!, $newPassword: String!) {
+    changePassword(id: $id, previousPassword: $previousPassword, newPassword: $newPassword) {
+      ok
+      errors {
+        path message
+      }
+    }
   }
 `

@@ -1,5 +1,5 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de pessoas
+ * @description Descritores GraphQL para as operações sobre a tabela de pessoas
  * @module src/schemas/pessoa
  * @author Josafá Santos dos Reis
  */
@@ -38,7 +38,6 @@ export default `
       nome: String!,
       dataNascimento: String,
       sexo: String,
-      contatoId: Int,
       enderecos: [Int]
     ): PessoaResponse
 
@@ -47,7 +46,6 @@ export default `
       nome: String,
       dataNascimento: String,
       sexo: String,
-      contatoId: Int,
       enderecos: [Int]
     ): PessoaResponse
 

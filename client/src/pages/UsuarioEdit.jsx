@@ -1,5 +1,11 @@
+/**
+ * @description Página de edição de dados de usuários
+ * @module src/pages/UsuarioEdit
+ * @author Josafá Santos dos Reis
+ */
+
 import React from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   CssBaseline,
@@ -14,30 +20,52 @@ import { toDatabaseDate } from '../utils/format'
 
 import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES } from '../graphql/usuario'
 import PessoaContext from '../contexts/PessoaContext'
-import EnderecoContext from '../contexts/EnderecoContext'
+//import EnderecoContext from '../contexts/EnderecoContext'
 import ContatoContext from '../contexts/ContatoContext'
 import contatoReducer from '../store/contato/reducer'
 import { loadData } from '../store/contato/acitons'
 import UsuarioContext from '../contexts/UsuarioContext'
 import PessoaForm from '../forms/PessoaForm'
-import EnderecoForm from '../forms/EnderecoForm'
+//import EnderecoForm from '../forms/EnderecoForm'
 import ContatoForm from '../forms/ContatoForm'
 import UsuarioForm from '../forms/UsuarioForm'
+import ChangePasswordForm from '../forms/ChangePasswordForm'
 
 export default function UsuarioEdit() {
   const classes = useStyles()
   let history = useHistory()
-  const { id } = useParams()
+  const { userId } = useParams()
+  const editar = useRouteMatch('/usuarios/:userId/editar') // history.location.pathname.split('/').includes('editar')
 
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
   const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
-  const [endereco, setEndereco] = React.useState({})
+  //const [endereco, setEndereco] = React.useState({})
+  console.log('UsuarioEdit:', usuario);
 
   const pessoaRef = React.useRef()
-  const enderecoRef = React.useRef()
+  //const enderecoRef = React.useRef()
   const contatoRef = React.useRef()
   const usuarioRef = React.useRef()
+
+  /**
+   * Query para exibir os dados do usuário
+   * @param userId userId do usuário
+   * @return {object} data: objeto com os dados do usuário
+   */
+  const usuarioData = useQuery(GET_WITH_INCLUDES, {
+    variables: { id: userId },
+    onCompleted: (data) => {
+      setUsuario(data.usuario)
+      setPessoa(data.usuario.pessoa)
+      //setContato(data.usuario.pessoa.contato)
+      contatoDispatch(loadData(data.usuario.pessoa.contato))
+      //setEndereco(data.usuario.pessoa.enderecos[0])
+    },
+    skip: !userId
+  })
+
+  const changePassword = useRouteMatch('/usuarios/:userId/alterar-senha')
 
   const [handleCreateUsuario] = useMutation(CREATE_WITH_INCLUDES, {
     variables: {
@@ -45,16 +73,16 @@ export default function UsuarioEdit() {
       pessoa: {
         ...pessoa,
         dataNascimento: toDatabaseDate(pessoa?.dataNascimento),
-        contato: contatoState,
+        contato: contatoState/* ,
         enderecos: [{
-          tipoLogradouroId: parseInt(endereco?.tipoLogradouro?.id),
+          tipoLogradouroId: parseInt(endereco?.tipoLogradouro?.userId),
           logradouro: endereco?.logradouro,
           numero: parseInt(endereco?.numero),
           bairro: endereco?.bairro,
           endereco: endereco?.complemento,
           cep: endereco?.cep,
-          cidadeId: parseInt(endereco?.cidade?.id)
-        }]
+          cidadeId: parseInt(endereco?.cidade?.userId)
+        }] */
       }
     }
   })
@@ -77,39 +105,66 @@ export default function UsuarioEdit() {
 
   const handleReset = () => {
     pessoaRef.current.handleReset()
-    enderecoRef.current.handleReset()
+    //enderecoRef.current.handleReset()
     contatoRef.current.handleReset()
     usuarioRef.current.handleReset()
   }
 
   const handleBack = () => {
-    handleReset()
-    history.push('/usuarios')
+    //handleReset()
+    history.goBack()
   }
 
-  /**
-   * Query para exibir os dados do usuário
-   * @param id id do usuário
-   * @return {object} data: objeto com os dados do usuário
-   */
-  const usuarioData = useQuery(GET_WITH_INCLUDES, {
-    variables: { id },
-    onCompleted: (data) => {
-      setPessoa(data.usuario.pessoa)
-      //setContato(data.usuario.pessoa.contato)
-      contatoDispatch(loadData(data.usuario.pessoa.contato))
-      setEndereco(data.usuario.pessoa.enderecos[0])
-      setUsuario(data.usuario)
-    },
-    skip: !id
-  })
+  const goToEdit = () => {
+    history.push(`/usuarios/${userId}/editar`)
+  }
+
+  const goChangePassword = () => {
+    history.push(`/usuarios/${userId}/alterar-senha`)
+  }
 
   if (usuarioData.loading) { return <p>Carregando...</p> }
+
+  if (changePassword) {
+    return (
+      <Paper className={classes.paper} elevation={2}>
+        <Box className={classes.boxFieldset} component="fieldset">
+          <legend>
+            <Typography>Dados de Usuário</Typography>
+          </legend>
+          <ChangePasswordForm
+            ref={usuarioRef}
+            //disabled={false}
+          />
+        </Box>
+      </Paper>
+
+      /* <div>
+        <Button
+          className={classes.formButton}
+          type="reset"
+          // variant="contained"
+          // color="secondary"
+          size="small"
+          onClick={handleBack}
+        >Cancelar</Button>
+        <Button
+          className={classes.formButton}
+          // type="submit"
+          variant="contained"
+          color="primary"
+          size="small"
+          //onClick={handleChangePassword}
+          //disabled={!!userId}
+        >Salvar</Button>
+      </div> */
+    )
+  }
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <form className={classes.form} onSubmit={handleSubmit}>
+      <form className={classes.form}>
         <div className={classes.fieldsContainer}>
           <UsuarioContext.Provider value={{usuario, setUsuario}}>
             <Paper className={classes.paper} elevation={2}>
@@ -130,13 +185,13 @@ export default function UsuarioEdit() {
                 <PessoaContext.Provider value={{pessoa, setPessoa}}>
                   <PessoaForm
                     ref={pessoaRef}
-                    disabled={!!id}
+                    disabled={!!userId && !editar}
                   />
                 </PessoaContext.Provider>
               </Box>
             </Paper>
 
-            <Paper className={classes.paper} elevation={2}>
+            {/* <Paper className={classes.paper} elevation={2}>
               <Box className={classes.boxFieldset} component="fieldset">
                 <legend className={classes.boxTitle}>
                   <Typography>Endereço</Typography>
@@ -144,11 +199,11 @@ export default function UsuarioEdit() {
                 <EnderecoContext.Provider value={{endereco, setEndereco}}>
                   <EnderecoForm
                     ref={enderecoRef}
-                    disabled={!!id}
+                    disabled={!!userId}
                   />
                 </EnderecoContext.Provider>
               </Box>
-            </Paper>
+            </Paper> */}
 
             <Paper className={classes.paper} elevation={2}>
               <Box className={classes.boxFieldset} component="fieldset">
@@ -158,23 +213,23 @@ export default function UsuarioEdit() {
                 <ContatoContext.Provider value={{contatoState, contatoDispatch}}>
                   <ContatoForm
                     ref={contatoRef}
-                    disabled={!!id}
+                    disabled={!!userId && !editar}
                   />
                 </ContatoContext.Provider>
               </Box>
             </Paper>
 
-            <Paper className={classes.paper} elevation={2}>
+            {!userId && <Paper className={classes.paper} elevation={2}>
               <Box className={classes.boxFieldset} component="fieldset">
                 <legend>
                   <Typography>Dados de Usuário</Typography>
                 </legend>
                 <UsuarioForm
                   ref={usuarioRef}
-                  disabled={!!id}
+                  disabled={!!userId}
                 />
               </Box>
-            </Paper>
+            </Paper>}
           </UsuarioContext.Provider>
         </div>  
 
@@ -182,20 +237,24 @@ export default function UsuarioEdit() {
           <Button
             className={classes.formButton}
             type="reset"
-            // variant="contained"
-            // color="secondary"
+            variant="contained"
             size="small"
             onClick={handleBack}
-          >{ !!id ? 'Voltar' : 'Cancelar'}</Button>
+          >{!!userId && !editar ? 'Voltar' : 'Cancelar'}</Button>
           <Button
             className={classes.formButton}
-            // type="submit"
             variant="contained"
             color="primary"
             size="small"
-            onClick={handleSubmit}
-            disabled={!!id}
-          >Salvar</Button>
+            onClick={!userId ? handleSubmit : goToEdit}
+          >{!!userId && !editar ? 'Editar' : 'Salvar'}</Button>
+          {!!userId && !editar && <Button
+            className={classes.formButton}
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={goChangePassword}
+          >Alterar Senha</Button>}
         </div>
       </form>
     </React.Fragment>

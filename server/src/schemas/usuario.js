@@ -10,7 +10,7 @@ export default gql`
   type Usuario {
     id: ID
     nome: String
-    # senha: String
+    senha: String
     pessoa: Pessoa
     grupos: [Grupo]
   }
@@ -25,6 +25,11 @@ export default gql`
     ok: Boolean
     token: String
     # reloadToken: String
+    errors: [Error]
+  }
+
+  type UpdateResponse {
+    ok: Boolean
     errors: [Error]
   }
 
@@ -48,7 +53,7 @@ export default gql`
     createUsuario(
       nome: String!,
       senha: String!,
-      pessoaId: Int,
+      pessoaId: ID,
       grupos: [Int]
     ): UsuarioResponse
 
@@ -72,5 +77,7 @@ export default gql`
     logout: Boolean
 
     revokeRefreshToken(userId: ID!): Boolean
+
+    changePassword(id: ID!, previousPassword: String!, newPassword: String!): UpdateResponse
   }
 `

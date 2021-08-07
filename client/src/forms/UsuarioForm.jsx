@@ -1,10 +1,10 @@
 /**
- * @title Formulário para criação/edição dos dados de usuário
+ * @description Formulário para criação/edição dos dados de usuário
  * @module src/forms/UsuarioForm
  * @author Josafá Santos dos Reis
  */
 
-import React from 'react'
+import React, { useContext, useImperativeHandle, forwardRef } from 'react'
 import {
   makeStyles,
   TextField
@@ -38,7 +38,8 @@ function UsuarioForm(props, ref) {
   const classes = useStyles()
   const { disabled } = props
 
-  const {usuario, setUsuario} = React.useContext(UsuarioContext)
+  const { usuario, setUsuario } = useContext(UsuarioContext)
+  console.log('UsuarioForm:', usuario);
 
   const handleChange = event => {
     const { name, value } = event.target
@@ -56,7 +57,7 @@ function UsuarioForm(props, ref) {
    * Possibilita, ao component pai,
    * acesso a métodos deste component
    */
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     handleReset: () => {
       handleReset()
     }
@@ -100,4 +101,4 @@ function UsuarioForm(props, ref) {
     </div>
   )
 }
-export default React.forwardRef(UsuarioForm)
+export default forwardRef(UsuarioForm)

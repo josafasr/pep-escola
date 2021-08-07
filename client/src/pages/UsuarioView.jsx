@@ -1,5 +1,5 @@
 /**
- * @title Componente para acesso às informações de usuários
+ * @description Componente para acesso às informações de usuários
  * @module src/pages/UsuarioView
  * @author Josafá Santos dos Reis
  */
@@ -21,7 +21,9 @@ const UsuarioView = () => {
       <CssBaseline />
       <Switch>
         <Route path={`${path}/criar`} component={UsuarioEdit} />
-        <Route path={`${path}/:id`} children={<UsuarioEdit />} />
+        <Route path={`${path}/:userId`} component={UsuarioEdit} />
+        <Route path={`${path}/:userId/editar`} component={UsuarioEdit} />
+        <Route path={`${path}/:userId/alterar-senha`} component={UsuarioEdit} />
         <Route exact path={`${path}/`} component={UsuarioList} />
       </Switch>
     </div>

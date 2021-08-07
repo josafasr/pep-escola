@@ -1,7 +1,7 @@
 /**
- * @file Mapeamento da tabela de contato
+ * @description Mapeamento da tabela de contato
  * @module src/models/Contato
- * @author Josafá Santos
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Contato = sequelize.define('Contato', {
@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     telefone: {
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     },
     email: {
       type: DataTypes.STRING,
@@ -19,22 +19,26 @@ export default (sequelize, DataTypes) => {
           msg: 'E-mail inválido'
         }
       }
+    },
+    pessoaId: {
+      type: DataTypes.UUID,
+      field: 'pessoa_id'
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'contato'
-  });
+    tableName: 'gd_contato'
+  })
 
   Contato.associate = (models) => {
 
     /**
      * Relacionamento com a tabela de pessoas
-     * @see module:models/Pessoa
+     * @see module: src/models/Pessoa
      */
-    Contato.hasOne(models.Pessoa, {
+    Contato.belongsTo(models.Pessoa, {
       as: 'pessoa',
-      foreignKey: 'contatoId'
+      foreignKey: 'pessoaId'
     })
-  };
-  return Contato;
-};
+  }
+
+  return Contato
+}

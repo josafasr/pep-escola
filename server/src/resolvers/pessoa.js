@@ -1,5 +1,5 @@
 /**
- * @file Operações sobre a tabela de pessoas
+ * @description Operações sobre a tabela de pessoas
  * @module src/resolvers/pessoa
  * @author Josafá Santos dos Reis
  */
@@ -13,18 +13,18 @@ export default {
     /**
      * retorna todos os registros de pessoa
      */
-    pessoas: async (parent, args, { models }) => {
+    pessoas: async (_, __, { models }) => {
       try {
         const pessoas = await models.Pessoa.findAll({
           include: [
             {
               association: 'contato',
               attributes: ['celular', 'email']
-            },
+            }/* ,
             {
               association: 'enderecos',
               attributes: ['logradouro']
-            }
+            } */
           ],
           attributes: { exclude: ['createdAt', 'updatedAt'] }
         })
@@ -38,7 +38,7 @@ export default {
     /**
      * restorna um registro de pessoa pelo id
      */
-    pessoa: (parent, { id }, { models }) => models.Pessoa.findByPk(id, {
+    pessoa: (_, { id }, { models }) => models.Pessoa.findByPk(id, {
       include: [
         {
           association: 'contato',
@@ -61,21 +61,28 @@ export default {
     /**
      * cria um novo registro de pessoa
      */
-    createPessoa: async (parent, args, { models }) => {
+    createPessoa: async (_, args, { sequelize, models }) => {
       try {
-        const pessoa = await models.Pessoa.create({
-          nome: args.nome,
-          dataNascimento: args.dataNascimento,
-          sexo: args.sexo,
-          contatoId: args.contatoId
-        })
+        const result = await sequelize.transaction(async (tx) => {
+          const pessoa = await models.Pessoa.create(args, {
+            /* nome: args.nome,
+            dataNascimento: args.dataNascimento,
+            sexo: args.sexo
+          }, { */
+            include: [
+              { association: 'contato' }/* ,
+              { association: 'enderecos' } */
+            ]
+          })
 
-        if (args.enderecos) {
-          pessoa.addEnderecos(args.enderecos)
-        }
+          /* if (args.enderecos) {
+            pessoa.addEnderecos(args.enderecos)
+          } */
+          return pessoa
+        })
         return {
           ok: true,
-          pessoa
+          pessoa: result
         }
       } catch (err) {
         return {
@@ -88,7 +95,7 @@ export default {
     /**
      * atualiza um registro de pessoa, dado o id
      */
-    updatePessoa: async (parent, { id, enderecos, ...rest }, { models }) => {
+    updatePessoa: async (_, { id, enderecos, ...rest }, { models }) => {
       try {
         const pessoa = await models.Pessoa.findByPk(id)
         if ({ ...rest }) {
@@ -117,7 +124,7 @@ export default {
     /**
      * exclui um registro de pessoa, dado o id
      */
-    deletePessoa: (parent, { id }, { models }) => models.Pessoa.destroy({
+    deletePessoa: (_, { id }, { models }) => models.Pessoa.destroy({
       where: {
         id
       }

@@ -38,20 +38,21 @@ export default (sequelize, DataTypes) => {
       field: 'token_version'
     },
     pessoaId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'pessoa_id',
       defaultValue: 0
     }
   }, {
-    tableName: 'auth_user',
+    tableName: 'auth_usuario',
     hooks: {
       afterValidate: async (usuario) => {
-        if (usuario.senha != null && usuario.senha != '') {
+        if (usuario.senha !== null && usuario.senha !== '') {
           const hashSenha = await bcrypt.hash(usuario.senha, 12)
           // eslint-disable-next-line no-param-reassign
           usuario.senha = hashSenha
         }
       },
+
       beforeCreate: async (usuario) => {
         if (!usuario.id) {
           const id = await Promise.resolve(uuid())

@@ -5,7 +5,7 @@ export const createAccessToken = (user) => {
     { userId: user.id },
     process.env.ACCESS_TOKEN_KEY,
     {
-      expiresIn: '5s',
+      expiresIn: '5m',
       algorithm: 'RS512'
     }
   )
@@ -16,7 +16,7 @@ export const createRefreshToken = (user) => {
     { userId: user.id, tokenVersion: user.tokenVersion },
     process.env.REFRESH_TOKEN_KEY,
     {
-      expiresIn: '10s',
+      expiresIn: '15m',
       algorithm: 'RS512'
     }
   )

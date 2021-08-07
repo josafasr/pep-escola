@@ -34,13 +34,15 @@ export default `
     createContatoBkp(
       celular: String,
       telefone: String,
-      email: String
+      email: String,
+      pessoaId: ID
     ): Contato
 
     createContato(
       celular: String,
       telefone: String,
-      email: String
+      email: String,
+      pessoaId: ID
     ): CreateContatoResponse
 
     updateContato(

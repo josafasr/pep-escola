@@ -50,6 +50,10 @@ const LoginForm = () => {
     })
   }
 
+  /* const testData = event => {
+    console.log(event.currentTarget.dataset.test)
+  } */
+
   return (
     <div className={classes.root}>
       <Card
@@ -109,6 +113,8 @@ const LoginForm = () => {
               color="secondary"
               size="small"
               disabled={fields.nome === '' || fields.senha === ''}
+              //data-test="Test Data!"
+              //onClick={testData}
             >
               {loading ? <CircularProgress color="inherit" size={30} /> : 'Entrar'}
             </Button>

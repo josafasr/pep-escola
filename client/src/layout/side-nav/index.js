@@ -1,5 +1,4 @@
 import React from 'react'
-import { createBrowserHistory } from 'history'
 //import { useApolloClient } from 'react-apollo'
 //import gql from 'graphql-tag'
 //import { useQuery } from '@apollo/react-hooks'
@@ -156,8 +155,6 @@ export default function SideNav(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null)
 
-  let browserHistory = createBrowserHistory()
-
   //const client = useApolloClient()
 
   const toggleDrawer = (mobileOpen) => (event) => {
@@ -190,17 +187,6 @@ export default function SideNav(props) {
       lastAction @client
     }`
   ) */
-
-  React.useEffect(() => {
-    //let location = browserHistory.location
-    let unlisten = browserHistory.listen(({ location, action }) => {
-      console.log(action, location.pathname, location.state)
-    })
-
-    return () => {
-      unlisten()
-    }
-  }, [browserHistory])
 
   const drawer = (
     <div>
