@@ -68,7 +68,7 @@ export default gql`
       id: ID!,
       nome: String,
       senha: String,
-      pessoaId: Int,
+      pessoa: PessoaInput,
       grupos: [Int]
     ): UsuarioResponse
 

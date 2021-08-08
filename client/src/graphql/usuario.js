@@ -155,15 +155,29 @@ export const CREATE_WITH_INCLUDES = gql`
 
 // updateMutation:
 export const UPDATE_USUARIO = gql`
-  mutation($nome: String, $senha: String, $pessoaId: Int, $grupos: [Int]) {
-    updateUsuario(id: $id, nome: $nome, senha: $senha, pessoaId: $pessoaId, grupos: $grupos) {
-      id
-      pessoa {
+  mutation($id: ID!, $nome: String, $pessoa: PessoaInput, $grupos: [Int]) {
+    updateUsuario(id: $id, nome: $nome, pessoa: $pessoa, grupos: $grupos) {
+      ok
+      usuario {
+        id
         nome
+        pessoa {
+          id
+          nome
+          contato {
+            id
+            telefone
+            celular
+            email
+          }
+        }
+        grupos {
+          id
+          nome
+        }
       }
-      nome
-      grupos {
-        nome
+      errors {
+        path message
       }
     }
   }

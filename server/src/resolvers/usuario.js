@@ -228,23 +228,30 @@ export default {
     /**
      * atualiza um registro de usuário, dado o id
      */
-    updateUsuario: async (_, { id, grupos, ...rest }, { models }) => {
+    updateUsuario: async (_, { id, grupos, ...rest }, { sequelize, models }) => {
       try {
-        const usuario = await models.Usuario.findByPk(id)
-        if ({ ...rest }) {
-          await usuario.update({ ...rest }, {
-            // where: { id },
-            returning: true,
-            plain: true
-          })
-        }
+        const result = await sequelize.transaction(async (tx) => {
+          const usuario = await models.Usuario.findByPk(id)
+          if ({ ...rest }) {
+            await usuario.update({ ...rest }, {
+              // where: { id },
+              include: {
+                association: 'pessoa',
+                include: { association: 'contato' }
+              },
+              returning: true,
+              plain: true
+            })
+          }
 
-        if (grupos) {
-          await usuario.addGrupos(grupos)
-        }
+          if (grupos) {
+            await usuario.addGrupos(grupos)
+          }
+          return usuario
+        })
         return {
           ok: true,
-          usuario
+          usuario: result
         }
       } catch (err) {
         return {

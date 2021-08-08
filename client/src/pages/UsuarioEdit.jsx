@@ -12,13 +12,14 @@ import {
   Paper,
   Box,
   Typography,
-  Button
+  Button,
+  LinearProgress
 } from '@material-ui/core'
 
 import { useStyles } from '../styles/usuario'
 import { toDatabaseDate } from '../utils/format'
 
-import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES } from '../graphql/usuario'
+import { GET_WITH_INCLUDES, CREATE_WITH_INCLUDES, UPDATE_USUARIO } from '../graphql/usuario'
 import PessoaContext from '../contexts/PessoaContext'
 //import EnderecoContext from '../contexts/EnderecoContext'
 import ContatoContext from '../contexts/ContatoContext'
@@ -35,13 +36,11 @@ export default function UsuarioEdit() {
   const classes = useStyles()
   let history = useHistory()
   const { userId } = useParams()
-  const editar = useRouteMatch('/usuarios/:userId/editar') // history.location.pathname.split('/').includes('editar')
-
+  const editar = useRouteMatch('/usuarios/:userId/editar')
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
   const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
   //const [endereco, setEndereco] = React.useState({})
-  console.log('UsuarioEdit:', usuario);
 
   const pessoaRef = React.useRef()
   //const enderecoRef = React.useRef()
@@ -57,7 +56,10 @@ export default function UsuarioEdit() {
     variables: { id: userId },
     onCompleted: (data) => {
       setUsuario(data.usuario)
-      setPessoa(data.usuario.pessoa)
+      setPessoa({
+        ...data.usuario.pessoa,
+        dataNascimento: new Date(`${data.usuario.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", { dateStyle: "short" })
+      })
       //setContato(data.usuario.pessoa.contato)
       contatoDispatch(loadData(data.usuario.pessoa.contato))
       //setEndereco(data.usuario.pessoa.enderecos[0])
@@ -87,19 +89,45 @@ export default function UsuarioEdit() {
     }
   })
 
+  const [handleUpdateUsuario] = useMutation(UPDATE_USUARIO)
+
   /**
    * @method handleSubmit Envio dos dados do furmulário para criação do usuário
    */
   const handleSubmit = async (event) => {
     event.preventDefault()
-    event.stopPropagation()
+    //event.stopPropagation()
+
+    if (editar) {
+      delete usuario['__typename']
+      delete pessoa['__typename']
+      delete contatoState['__typename']
+      const updateResponse = await handleUpdateUsuario({
+        variables: {
+          ...usuario,
+          pessoa: {
+            ...pessoa,
+            dataNascimento: toDatabaseDate(pessoa?.dataNascimento),
+            contato: contatoState
+          }
+        }
+      })
+      if (updateResponse.data.updateUsuario.ok) {
+        alert('Usuário atualizado com sucesso!')
+        handleBack()
+      } else {
+        alert('Não foi possível atualizar o usuário :(')
+      }
+    }
     
-    const usuarioResponse = await handleCreateUsuario()
-    if (usuarioResponse.data.createUsuarioWithIncludes.ok) {
-      alert('Usuário criado com sucesso!')
-      handleBack()
-    } else {
-      alert('Não foi possível criar o usuário :(')
+    if (!userId) {
+      const usuarioResponse = await handleCreateUsuario()
+      if (usuarioResponse.data.createUsuarioWithIncludes.ok) {
+        alert('Usuário criado com sucesso!')
+        handleBack()
+      } else {
+        alert('Não foi possível criar o usuário :(')
+      }
     }
   }
 
@@ -123,7 +151,7 @@ export default function UsuarioEdit() {
     history.push(`/usuarios/${userId}/alterar-senha`)
   }
 
-  if (usuarioData.loading) { return <p>Carregando...</p> }
+  if (usuarioData.loading) { return <LinearProgress color="secondary" /> }
 
   if (changePassword) {
     return (
@@ -134,30 +162,9 @@ export default function UsuarioEdit() {
           </legend>
           <ChangePasswordForm
             ref={usuarioRef}
-            //disabled={false}
           />
         </Box>
       </Paper>
-
-      /* <div>
-        <Button
-          className={classes.formButton}
-          type="reset"
-          // variant="contained"
-          // color="secondary"
-          size="small"
-          onClick={handleBack}
-        >Cancelar</Button>
-        <Button
-          className={classes.formButton}
-          // type="submit"
-          variant="contained"
-          color="primary"
-          size="small"
-          //onClick={handleChangePassword}
-          //disabled={!!userId}
-        >Salvar</Button>
-      </div> */
     )
   }
 
@@ -246,7 +253,7 @@ export default function UsuarioEdit() {
             variant="contained"
             color="primary"
             size="small"
-            onClick={!userId ? handleSubmit : goToEdit}
+            onClick={!userId || editar ? handleSubmit : goToEdit}
           >{!!userId && !editar ? 'Editar' : 'Salvar'}</Button>
           {!!userId && !editar && <Button
             className={classes.formButton}
