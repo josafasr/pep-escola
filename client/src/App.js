@@ -6,13 +6,25 @@ import React, { useEffect, useState} from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { StylesProvider } from '@material-ui/styles'
+import { makeStyles, CircularProgress } from '@material-ui/core'
 
 import PrivateRoute from './utils/auth'
 import LoginForm from './forms/LoginForm'
 import SideNav from './layout/side-nav'
 import { setAccessToken } from './access-token'
 
+const useStyles = makeStyles({
+  circularProgress: {
+    width: '100%',
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+})
+
 function App() {
+  const classes = useStyles()
 
   const [loading, setLoading] = useState(true)
 
@@ -32,7 +44,7 @@ function App() {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className={classes.circularProgress}><CircularProgress color="secondary" disableShrink /></div>
   }
 
   return (

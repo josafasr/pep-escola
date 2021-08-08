@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import {
   makeStyles,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -59,7 +60,7 @@ export default function UsuarioList(props) {
 
   const { loading, error, data } = useQuery(GET_ALL)
 
-  if (loading) return 'Carregando...'
+  if (loading) return <LinearProgress color="secondary" />
   if (error) return 'Erro :('
 
   return (
