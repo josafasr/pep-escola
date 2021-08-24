@@ -3,9 +3,9 @@
  * @module src/form/LoginForm
  * @author Josafá Santos dos Reis
  */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
   Card,
   CardHeader,
@@ -18,8 +18,8 @@ import {
 } from '@material-ui/core'
 
 import { useStyles } from '../styles/login'
-import { TRY_LOGIN } from '../graphql/usuario'
-import { setAccessToken } from '../access-token'
+import { TRY_LOGIN, LOGOUT } from '../graphql/usuario'
+import { getAccessToken, setAccessToken } from '../access-token'
 
 const LoginForm = () => {
   const classes = useStyles()
@@ -38,6 +38,8 @@ const LoginForm = () => {
     }
   })
 
+  const [handleLogout] = useMutation(LOGOUT)
+
   const handleChange = (event) => {
     const { name, value } = event.target
     setFields(prevValues => ({ ...prevValues, [name]: value }))
@@ -53,6 +55,18 @@ const LoginForm = () => {
   /* const testData = event => {
     console.log(event.currentTarget.dataset.test)
   } */
+
+  useEffect(() => {
+    const token = getAccessToken()
+    if (token) {
+      handleLogout()
+        .then(res => {
+          if (res.data.logout === true)
+            setAccessToken(null)
+        })
+        .catch(console.log)
+    }
+  }, [handleLogout])
 
   return (
     <div className={classes.root}>
