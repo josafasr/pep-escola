@@ -94,33 +94,18 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 const cache = new InMemoryCache({})
 
 const httpLink = new HttpLink({
-  //uri: `https://${window.location.hostname}/api`
   uri: `${process.env.REACT_APP_API_URL}/graphql`,
   credentials: 'include'
 })
-
-/* cache.writeData({
-  data: {
-    isLoggedIn: false,
-    //lastAction: new Date()
-  }
-}) */
 
 const client = new ApolloClient({
   cache,
   link: ApolloLink.from([
     tokenRefreshLink,
-    //refreshTokenLink,
     requestLink,
     onErrorLink,
-    //responseLink,
     httpLink
   ]),
-  /* resolvers: {
-    Query: {
-      lastAction: () => new Date()
-    }
-  }, */
   //queryDeduplication: true,
   defaultOptions: {
     watchQuery: {

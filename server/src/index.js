@@ -21,12 +21,13 @@ const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')))
 
 const app = express()
+
 app.use(cors({
-  origin: 'http://localhost:3000',
-  //origin: '*',
+  origin: 'http://localhost:80',
   credentials: true,
-  exposedHeaders: ['Authorization']
+  allowedHeaders: []
 }))
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -49,9 +50,7 @@ app.use(isAuth)
 app.post('/refresh', async (req, res) => {
   
   const refreshToken = req.cookies.jid
-  console.log(`/refresh refreshToken ${Date.now()}:`, refreshToken + '\n===========================================')
   if (!refreshToken) {
-    //console.log('/refresh !refreshToken');
     return res.send({ ok: false, accessToken: '' })
   }
 
@@ -59,18 +58,15 @@ app.post('/refresh', async (req, res) => {
   try {
     payload = verifyRefreshToken(refreshToken)
   } catch (error) {
-    //console.log('/refresh catch');
     return res.send({ ok: false, accessToken: '' })
   }
 
   const user = await models.Usuario.findOne({ where: { id: payload.userId }, raw: true})
   if (!user) {
-    //console.log('/refresh !user');
     return res.send({ ok: false, accessToken: '' })
   }
 
   if (user.tokenVersion !== payload.tokenVersion) {
-    //console.log(`/refresh: user.tokenVersion: ${user.tokenVersion} | payload.tokenVersion: ${payload.tokenVersion}`)
     return res.send({ ok: false, accessToken: '' })
   }
 
@@ -86,7 +82,6 @@ const server = new ApolloServer({
     return {
       models,
       sequelize: db.sequelize,
-      //user: req.user,
       req,
       res
     }

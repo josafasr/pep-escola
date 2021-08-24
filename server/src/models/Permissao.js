@@ -13,7 +13,8 @@ export default (sequelize, DataTypes) => {
       primaryKey: true
     },
     nome: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
     descricao: {
       type: DataTypes.TEXT
@@ -29,6 +30,7 @@ export default (sequelize, DataTypes) => {
       }
     }
   })
+
   Permissao.associate = (models) => {
     /**
      * Relacionamento com a tabela de grupos
@@ -41,5 +43,6 @@ export default (sequelize, DataTypes) => {
       otherKey: 'grupoId'
     })
   }
+
   return Permissao
 }

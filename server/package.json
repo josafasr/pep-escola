@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rimraf dist/ && babel src -d dist --copy-files",
     "serve": "npm run build && dotenv node dist/index.js",
+    "serve:docker": "npm run build && dotenv -e .env.docker node dist/index.js",
     "start": "nodemon --exec dotenv babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:unit": "dotenv cucumber-js -- spec/cucumber/features/consulta --require-module @babel/register --require spec/cucumber/steps/consulta",
