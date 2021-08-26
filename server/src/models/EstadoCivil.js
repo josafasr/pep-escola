@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de estados civis
+ * @description Mapeamento da tabela de estados civis
  * @module src/models/EstadoCivil
  * @author Josafá Santos dos Reis
  */
@@ -9,9 +9,9 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'estado_civil'
-  });
+    tableName: 'dg_estado_civil',
+    timestamps: false
+  })
 
   EstadoCivil.associate = (models) => {
     /**
@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
       as: 'pacientes',
       foreignKey: 'estadoCivilId'
     })
-  };
-  return EstadoCivil;
-};
+  }
+
+  return EstadoCivil
+}

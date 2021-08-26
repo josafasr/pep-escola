@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de cidades
+ * @description Mapeamento da tabela de cidades
  * @module src/models/Cidade
  * @author Josafá Santos dos Reis
  */
@@ -17,9 +17,9 @@ export default (sequelize, DataTypes) => {
       field: 'estado_id'
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'cidade'
-  });
+    tableName: 'dg_cidade',
+    timestamps: false
+  })
 
   Cidade.associate = (models) => {
     /**
@@ -39,6 +39,7 @@ export default (sequelize, DataTypes) => {
       as: 'naturais',
       foreignKey: 'naturalidadeId'
     })
-  };
-  return Cidade;
-};
+  }
+
+  return Cidade
+}

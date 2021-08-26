@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => {
       field: 'pessoa_id'
     }
   }, {
-    tableName: 'gd_contato'
+    tableName: 'dg_contato'
   })
 
   Contato.associate = (models) => {

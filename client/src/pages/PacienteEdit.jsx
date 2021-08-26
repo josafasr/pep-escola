@@ -101,7 +101,7 @@ function PacienteEdit(props) {
       cartaoFamilia: paciente.cartaoFamilia,
       cns: paciente.cns,
       agenteComunitario: paciente.agenteComunitario,
-      encaminhadoPor: paciente.encaminhadoPor,
+      // encaminhadoPor: paciente.encaminhadoPor,
       unidadeSaudeId: paciente.unidadeSaude?.id,
       naturalidadeId: paciente.naturalidade?.id,
       estadoCivilId: paciente.estadoCivil?.id,

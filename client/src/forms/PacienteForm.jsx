@@ -1,15 +1,14 @@
 /**
- * @title Formulário para criação/edição dos dados de pacientes
+ * @description Formulário para criação/edição dos dados de pacientes
  * @module src/forms/PacienteForm
  * @author Josafá Santos dos Reis
  */
 
-import React from 'react'
+import React, { forwardRef, useContext, useImperativeHandle } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import clsx from 'clsx'
 import {
   makeStyles,
-  CircularProgress,
   TextField,
   MenuItem,
   LinearProgress
@@ -45,11 +44,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function PacienteForm(props, ref) {
+const PacienteForm = (props, ref) => {
 
   const classes = useStyles()
   const { disabled } = props
-  const [paciente, setPaciente] = React.useContext(PacienteContext)
+  const [paciente, setPaciente] = useContext(PacienteContext)
 
   /**
    * Dados para povoar as listas dos campos do tipo select
@@ -65,7 +64,7 @@ function PacienteForm(props, ref) {
       cartaoFamilia: '',
       cns: '',
       agenteComunitario: '',
-      encaminhadoPor: '',
+      // encaminhadoPor: '',
       unidadeSaude: {},
       // nacionalidade: '',
       naturalidade: {},
@@ -83,7 +82,7 @@ function PacienteForm(props, ref) {
    * Possibilita, ao component pai,
    * acesso a métodos deste component
    */
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     handleReset: () => {
       handleReset()
     }
@@ -168,7 +167,7 @@ function PacienteForm(props, ref) {
         }}
       />
 
-      <TextField
+      {/* <TextField
         className={clsx(classes.formFields, classes.fieldGrow)}
         name="encaminhadoPor"
         defaultValue={paciente?.encaminhadoPor || ''}
@@ -177,7 +176,7 @@ function PacienteForm(props, ref) {
         inputProps={{
           readOnly: disabled
         }}
-      />
+      /> */}
 
       <TextField
         className={classes.formFields}
@@ -330,4 +329,5 @@ function PacienteForm(props, ref) {
     </div>
   )
 }
-export default React.forwardRef(PacienteForm)
+
+export default forwardRef(PacienteForm)

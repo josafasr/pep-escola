@@ -11,14 +11,14 @@ export default {
   Query: {
 
     // restorna todas as cidades
-    cidades: (parent, args, { models }) => models.Cidade.findAll({
+    cidades: (parent, args, { models }) => models.Cidade.findAll(),/* {
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       where: { id: { [Op.in]: ['10211', '10407', '1'] }}
-    }),
+    }), */
 
     // restorna as cidades cujos nomes inicial com o texto digitado
     cidadesByText: (_, args, { models }) => models.Cidade.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      //attributes: { exclude: ['createdAt', 'updatedAt'] },
       where: { nome: { [Op.like]: `${args.text}%` }},
       include: {
         association: 'estado'

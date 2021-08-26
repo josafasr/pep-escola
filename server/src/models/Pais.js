@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de países
+ * @description Mapeamento da tabela de países
  * @module src/models/Pais
  * @author Josafá Santos dos Reis
  */
@@ -16,19 +16,19 @@ export default (sequelize, DataTypes) => {
       }
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'pais'
-  });
+    tableName: 'dg_pais',
+    timestamps: false
+  })
 
   Pais.associate = (models) => {
     /**
      * Relacionamento com a tabela de estados
      * @see module:models/Estado
      */
-    Pais.hasMany(models.Estado, {
+    /* Pais.hasMany(models.Estado, {
       as: 'estados',
       foreignKey: 'paisId'
-    }),
+    }), */
 
     /**
      * Relacionamento com a tabela de pacientes
@@ -38,6 +38,7 @@ export default (sequelize, DataTypes) => {
       as: 'nascidos',
       foreignKey: 'nacionalidadeId'
     })
-  };
-  return Pais;
-};
+  }
+
+  return Pais
+}

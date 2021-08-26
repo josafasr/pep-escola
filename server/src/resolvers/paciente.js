@@ -1,5 +1,5 @@
 /**
- * @file Operações sobre a tabela de pacientes
+ * @description Operações sobre a tabela de pacientes
  * @module src/resolvers/paciente
  * @author Josafá Santos dos Reis
  */
@@ -86,7 +86,7 @@ export default {
           }, {
             association: 'especialidades',
             attributes: ['id', 'nome']
-          }, {
+          }/* , {
             association: 'antecedentesPatologicos',
             attributes: ['id', 'tempoDiagnostico'],
             include: {
@@ -96,11 +96,8 @@ export default {
                 association: 'tipoPatologia',
                 attributes: ['id', 'nome']
               }
-            } /* ,
-            through: {
-              attributes: ['createdAt', 'updatedAt']
-            } */
-          }/* , {
+            }
+          }, {
             association: 'antecedentesAtributos',
             include: [
               {
@@ -185,7 +182,8 @@ export default {
     /**
      * atualiza um registro de paciente, dado o id
      */
-    updatePaciente: async (_, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { sequelize, models }) => {
+    // updatePaciente: async (_, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { sequelize, models }) => {
+    updatePaciente: async (_, { id, especialidades, ...otherArgs }, { sequelize, models }) => {
       try {
         const result = await sequelize.transaction(async (tx) => {
           const paciente = await models.Paciente.findByPk(id)
@@ -202,10 +200,10 @@ export default {
             await paciente.addEspecialidades(especialidades)
           }
 
-          if (antecedentesPatologicos) {
+          /* if (antecedentesPatologicos) {
             console.log(antecedentesPatologicos);
             await paciente.addAntecedentesPatologicos(antecedentesPatologicos)
-          }
+          } */
           return paciente
         })
 

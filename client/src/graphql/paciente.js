@@ -80,7 +80,7 @@ export const CREATE_WITH_INCLUDES = gql`
     $cartaoFamilia: String,
     $cns: String,
     $agenteComunitario: String,
-    $encaminhadoPor: String,
+    # $encaminhadoPor: String,
     $pessoa: PessoaInput,
     $unidadeSaudeId: ID,
     $nacionalidadeId: ID,
@@ -101,7 +101,7 @@ export const CREATE_WITH_INCLUDES = gql`
       cartaoFamilia: $cartaoFamilia,
       cns: $cns,
       agenteComunitario: $agenteComunitario,
-      encaminhadoPor: $encaminhadoPor,
+      # encaminhadoPor: $encaminhadoPor,
       pessoa: $pessoa,
       unidadeSaudeId: $unidadeSaudeId,
       nacionalidadeId: $nacionalidadeId,
@@ -191,7 +191,7 @@ export const GET_WITH_INCLUDES = gql`
       cartaoFamilia
       cns
       agenteComunitario
-      encaminhadoPor
+      # encaminhadoPor
       unidadeSaude {
         id
         nome
@@ -278,20 +278,20 @@ export const DELETE_PACIENTE = gql`
     deletePaciente(id: $id)
   }`
 
-export const UPDATE_ANTECEDENTES = gql`
-  mutation UpdateAntecedentes($id: ID!, $antecedentesPatologicos: [PatologiaInput]) {
-    updatePaciente(id: $id, antecedentesPatologicos: $antecedentesPatologicos) {
-      ok
-      paciente {
-        id
-        antecedentesPatologicos {
-          id nome
-        }
-      }
-      errors {
-        path
-        message
-      }
-    }
-  }
-`
+// export const UPDATE_ANTECEDENTES = gql`
+//   mutation UpdateAntecedentes($id: ID!, $antecedentesPatologicos: [PatologiaInput]) {
+//     updatePaciente(id: $id, antecedentesPatologicos: $antecedentesPatologicos) {
+//       ok
+//       paciente {
+//         id
+//         antecedentesPatologicos {
+//           id nome
+//         }
+//       }
+//       errors {
+//         path
+//         message
+//       }
+//     }
+//   }
+// `

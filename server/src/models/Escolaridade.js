@@ -1,5 +1,5 @@
 /**
- * @title Mapeamento da tabela de escolaridades
+ * @description Mapeamento da tabela de escolaridades
  * @module src/models/Escolaridade
  * @author Josafá Santos dos Reis
  */
@@ -9,8 +9,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'escolaridade'
+    tableName: 'dg_escolaridade',
+    timestamps: false
   })
 
   Escolaridade.associate = (models) => {
@@ -23,5 +23,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'escolaridadeId'
     })
   }
+
   return Escolaridade
 }

@@ -1,10 +1,17 @@
 /**
- * @file Mapeamento da tabela de pacientes
+ * @description Mapeamento da tabela de pacientes
  * @module src/models/Paciente
  * @author Josafá Santos dos Reis
  */
+
+import { v4 as uuid } from 'uuid'
+
 export default (sequelize, DataTypes) => {
   const Paciente = sequelize.define('Paciente', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
     prontuario: DataTypes.STRING,
     rg: DataTypes.STRING,
     cpf: DataTypes.STRING,
@@ -17,16 +24,17 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       field: 'agente_comunitario'
     },
-    encaminhadoPor: {
+    /** vincular à consulta */
+    /* encaminhadoPor: {
       type: DataTypes.STRING,
       field: 'encaminhado_por'
-    },
+    }, */
     pessoaId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'pessoa_id'
     },
     unidadeSaudeId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'unidade_saude_id'
     },
     nacionalidadeId: {
@@ -66,9 +74,16 @@ export default (sequelize, DataTypes) => {
       field: 'situacao_profissional_id'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'paciente'
-  });
+    tableName: 'ceuas_paciente',
+    hooks: {
+      beforeCreate: async (paciente) => {
+        if (!paciente.id) {
+          const id = await Promise.resolve(uuid())
+          paciente.id = id
+        }
+      }
+    }
+  })
 
   Paciente.associate = (models) => {
     
@@ -191,5 +206,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'pacienteId'
     })
   }
+
   return Paciente
 }

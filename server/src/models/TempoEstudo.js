@@ -1,5 +1,5 @@
 /**
- * @title Mapeamento da tabela de tempo de estudo
+ * @description Mapeamento da tabela de tempo de estudo
  * @module src/models/TempoEstudo
  * @author Josafá Santos dos Reis
  */
@@ -7,8 +7,7 @@ export default (sequelize, DataTypes) => {
   const TempoEstudo = sequelize.define('TempoEstudo', {
     nome: DataTypes.STRING
   }, {
-    schema: 'dados_gerais',
-    tableName: 'tempo_estudo',
+    tableName: 'dg_tempo_estudo',
     timestamps: false
   })
 
@@ -22,5 +21,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'tempoEstudoId'
     })
   }
+
   return TempoEstudo
 }

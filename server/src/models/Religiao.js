@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de religiões
+ * @description Mapeamento da tabela de religiões
  * @module src/models/Religiao
  * @author Josafá Santos dos Reis
  */
@@ -9,8 +9,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'religiao'
+    tableName: 'dg_religiao',
+    timestamps: false
   });
 
   Religiao.associate = (models) => {
@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
       as: 'pacientes',
       foreignKey: 'religiaoId'
     })
-  };
-  return Religiao;
-};
+  }
+
+  return Religiao
+}

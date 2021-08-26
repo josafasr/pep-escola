@@ -1,7 +1,7 @@
 /**
- * @file Mapeamento da tabela de endereços
+ * @description Mapeamento da tabela de endereços
  * @module src/models/Endereco
- * @author Josafá Santos
+ * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const Endereco = sequelize.define('Endereco', {
@@ -28,17 +28,16 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     },
     tipoLogradouroId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       field: 'tipo_logradouro_id'
     },
     cidadeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       field: 'cidade_id'
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'endereco'
-  });
+    tableName: 'dg_endereco'
+  })
 
   Endereco.associate = (models) => {
 
@@ -70,6 +69,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'enderecoId',
       otherKey: 'pessoaId'
     })
-  };
-  return Endereco;
-};
+  }
+
+  return Endereco
+}

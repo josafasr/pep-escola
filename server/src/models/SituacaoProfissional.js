@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de situações profissionais
+ * @description Mapeamento da tabela de situações profissionais
  * @module src/models/SituacaoProfissional
  * @author Josafá Santos dos Reis
  */
@@ -9,9 +9,9 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'situacao_profissional'
-  });
+    tableName: 'dg_situacao_profissional',
+    timestamps: false
+  })
 
   SituacaoProfissional.associate = (models) => {
     /**
@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
       as: 'pecientes',
       foreignKey: 'situacaoProfissionalId'
     })
-  };
-  return SituacaoProfissional;
-};
+  }
+
+  return SituacaoProfissional
+}

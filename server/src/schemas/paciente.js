@@ -15,7 +15,7 @@ export default gql`
     cartaoFamilia: String
     cns: String
     agenteComunitario: String
-    encaminhadoPor: String
+    # encaminhadoPor: String
     pessoa: Pessoa
     unidadeSaude: UnidadeSaude
     nacionalidade: Pais
@@ -53,7 +53,7 @@ export default gql`
       cartaoFamilia: String,
       cns: String,
       agenteComunitario: String,
-      encaminhadoPor: String,
+      # encaminhadoPor: String,
       pessoaId: ID!,
       unidadeSaudeId: ID,
       nacionalidadeId: ID,
@@ -76,7 +76,7 @@ export default gql`
       cartaoFamilia: String,
       cns: String,
       agenteComunitario: String,
-      encaminhadoPor: String,
+      # encaminhadoPor: String,
       pessoa: PessoaInput,
       unidadeSaudeId: ID,
       nacionalidadeId: ID,
@@ -100,7 +100,7 @@ export default gql`
       cartaoFamilia: String,
       cns: String,
       agenteComunitario: String,
-      encaminhadoPor: String,
+      # encaminhadoPor: String,
       pessoaId: ID,
       unidadeSaudeId: ID,
       nacionalidadeId: ID,

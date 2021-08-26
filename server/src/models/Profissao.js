@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de profissões
+ * @description Mapeamento da tabela de profissões
  * @module src/models/Profissao
  * @author Josafá Santos dos Reis
  */
@@ -9,8 +9,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'profissao'
+    tableName: 'dg_profissao',
+    timestamps: false
   });
 
   Profissao.associate = (models) => {
@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
       as: 'paciente',
       foreignKey: 'profissaoId'
     })
-  };
-  return Profissao;
-};
+  }
+
+  return Profissao
+}

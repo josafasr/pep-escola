@@ -29,7 +29,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     }
   }, {
-    tableName: 'gd_pessoa',
+    tableName: 'dg_pessoa',
     hooks: {
       beforeCreate: async (pessoa) => {
         if (!pessoa.id) {
@@ -38,7 +38,7 @@ export default (sequelize, DataTypes) => {
         }
       }
     }
-  });
+  })
 
   Pessoa.associate = (models) => {
     /**
@@ -59,16 +59,26 @@ export default (sequelize, DataTypes) => {
       as: 'enderecos',
       foreignKey: 'pessoaId',
       otherKey: 'enderecoId'
-    }),
+    })//,
 
     /**
      * Relacionamento com a tabela de usuários
      * @see {@link Usuario}
      */
-    Pessoa.hasOne(models.Usuario, {
+    /* Pessoa.hasOne(models.Usuario, {
       as: 'pessoa',
       foreignKey: 'pessoaId'
-    })
+    }), */
+
+    /**
+     * Relacionamento com a tabela de pacientes
+     * @see {@link Paciente}
+     */
+    /* Pessoa.hasOne(models.Paciente, {
+      as: 'pessoa',
+      foreignKey: 'pessoaId'
+    }) */
   }
+
   return Pessoa
 }

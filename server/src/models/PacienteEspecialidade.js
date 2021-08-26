@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento do relacionamento (M:M) entre as tabelas de pacientes e especialidades
+ * @description Mapeamento do relacionamento (M:M) entre as tabelas de pacientes e especialidades
  * @module src/models/PacienteEspecialidade
  * @author Josafá Santos dos Reis
  */
@@ -7,7 +7,7 @@ export default (sequelize, DataTypes) => {
   const PacienteEspecialidade = sequelize.define('PacienteEspecialidade', {
 
     pacienteId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'paciente_id',
       references: {
         model: 'paciente',
@@ -27,9 +27,9 @@ export default (sequelize, DataTypes) => {
       onDelete: 'cascade'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'paciente_especialidade',
+    tableName: 'ceuas_paciente_especialidade',
     timestamps: false
   })
+
   return PacienteEspecialidade
 }

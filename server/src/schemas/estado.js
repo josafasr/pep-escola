@@ -8,7 +8,7 @@ export default `
     id: ID
     nome: String
     sigla: String
-    pais: Pais
+    # pais: Pais
   }
 
   type Query {
@@ -17,8 +17,8 @@ export default `
   }
 
   type Mutation {
-    createEstado(nome: String, sigla: String, paisId: Int): Estado
-    updateEstado(id: ID!, nome: String, sigla: String, paisId: Int): Estado
+    createEstado(nome: String, sigla: String): Estado
+    updateEstado(id: ID!, nome: String, sigla: String): Estado
     deleteEstado(id: ID!): Int
   }
 `
