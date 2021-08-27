@@ -3,7 +3,7 @@
  * @module src/form/LoginForm
  * @author Josafá Santos dos Reis
  */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
@@ -19,11 +19,14 @@ import {
 
 import { useStyles } from '../styles/login'
 import { TRY_LOGIN, LOGOUT } from '../graphql/usuario'
-import { getAccessToken, setAccessToken } from '../access-token'
+//import { getAccessToken, setAccessToken } from '../access-token'
+import { AppContext } from '../contexts/app-context'
 
 const LoginForm = () => {
   const classes = useStyles()
   const [fields, setFields] = useState({ nome: '', senha: '' })
+  const { getAccessToken, setLoging, setLogout } = useContext(AppContext)
+
   const history = useHistory()
   let location = useLocation()
   let { from } = location.state || { from: { pathname: "/" } }
@@ -32,7 +35,7 @@ const LoginForm = () => {
     onCompleted: () => {
       const { ok, token } = data.login
       if (ok) {
-        setAccessToken(token)
+        setLoging(token)
         history.replace(from)
       }
     }
@@ -62,7 +65,7 @@ const LoginForm = () => {
       handleLogout()
         .then(res => {
           if (res.data.logout === true)
-            setAccessToken(null)
+            setLogout()
         })
         .catch(console.log)
     }

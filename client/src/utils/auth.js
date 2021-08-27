@@ -1,21 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import decode from 'jwt-decode'
-import { getAccessToken } from '../access-token'
 
-export const decodeToken = (token) => {
-  return decode(token, { algorithms: ['RS512'] })
-}
+//import { getAccessToken } from '../access-token'
+import { AppContext } from '../contexts/app-context'
 
-const isAuthenticated = () => {
+/* const isAuthenticated = () => {
   const token = getAccessToken()
-  if (!token) {
+  if (token === '') {
     console.log(`isAuthenticated ${Date.now()}: !token`)
     return false
   } else {
     console.log('isAuthenticated: true')
     return true
-  }
+  } */
   
   /* try {
     decodeToken(token)
@@ -30,14 +27,17 @@ const isAuthenticated = () => {
     console.log('isAuthenticated: catch err')
     return false
   } */
-}
+//}
 
 export default function PrivateRoute({ children, ...rest }) {
+
+  const { appState } = useContext(AppContext)
+
   return (
     <Route 
       {...rest}
       render={({ location }) =>
-        isAuthenticated() ? (
+        appState?.isLoggedIn ? (
           children
           ) : (
           <Redirect

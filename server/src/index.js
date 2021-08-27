@@ -23,9 +23,9 @@ const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers'))
 const app = express()
 
 app.use(cors({
-  origin: 'http://localhost:80',
+  origin: process.env.CORS_ORIGIN,
   credentials: true,
-  allowedHeaders: []
+  //allowedHeaders: []
 }))
 
 app.use(cookieParser())

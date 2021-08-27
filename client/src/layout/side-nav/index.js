@@ -37,7 +37,6 @@ import PacienteEdit from '../../pages/PacienteEdit'
 import PacienteList from '../../pages/PacienteList'
 import PacienteView from '../../pages/PacienteView'
 import ConsultaEdit from '../../pages/ConsultaEdit'
-//import { setAccessToken } from '../../access-token'
 
 const drawerWidth = 240
 
