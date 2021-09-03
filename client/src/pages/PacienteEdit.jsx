@@ -1,11 +1,11 @@
 /**
- * @title Componente para criação/edição de pacientes/prontuários
+ * @description Componente para criação/edição de pacientes/prontuários
  * @module src/pages/PacienteEdit
  * @author Josafá Santos dos Reis
  */
 
 import React from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
@@ -76,11 +76,11 @@ const useStyles = makeStyles((theme) => ({
 
 function PacienteEdit(props) {
 
-  let history = useHistory()
-
-  const { id } = useParams()
-
   const classes = useStyles()
+  let history = useHistory()
+  const { id } = useParams()
+  const editar = useRouteMatch('/pacientes/:id/editar')
+  const isProntuario = useRouteMatch('/pacientes/:id/prontuario')
 
   const [pessoa, setPessoa] = React.useState({})
   //const [contato, setContato] = React.useState({})
@@ -153,12 +153,24 @@ function PacienteEdit(props) {
     }
   }
 
+  const goToEdit = () => {
+    history.push(`/pacientes/${id}/editar`)
+  }
+
+  const goToProntuario = () => {
+    history.push(`/pacientes/${id}/prontuario`)
+  }
+
   const handleReset = () => {
     pessoaRef.current.handleReset()
     pacienteRef.current.handleReset()
     contatoRef.current.handleReset()
     enderecoRef.current.handleReset()
     history.push('/pacientes')
+  }
+
+  const handleBack = () => {
+    history.goBack()
   }
 
   if (loading) return <LinearProgress color="secondary" />
@@ -175,14 +187,14 @@ function PacienteEdit(props) {
           <PessoaContext.Provider value={{pessoa, setPessoa}}>
             <PessoaForm
               ref={pessoaRef}
-              disabled={!!id}
+              disabled={!!id && !editar}
             />
           </PessoaContext.Provider>
   
           <PacienteContext.Provider value={[paciente, setPaciente]}>
             <PacienteForm
               ref={pacienteRef}
-              disabled={!!id}
+              disabled={!!id && !editar}
             />
           </PacienteContext.Provider>
         </Box>
@@ -196,7 +208,7 @@ function PacienteEdit(props) {
           <ContatoContext.Provider value={{contatoState, contatoDispatch}}>
             <ContatoForm
               ref={contatoRef}
-              disabled={!!id}
+              disabled={!!id && !editar}
             />
           </ContatoContext.Provider>
         </Box>
@@ -210,7 +222,7 @@ function PacienteEdit(props) {
           <EnderecoContext.Provider value={{endereco, setEndereco}}>
             <EnderecoForm
               ref={enderecoRef}
-              disabled={!!id}
+              disabled={!!id && !editar}
             />
           </EnderecoContext.Provider>
         </Box>
@@ -221,16 +233,32 @@ function PacienteEdit(props) {
           className={classes.button}
           type="reset"
           size="small"
-          onClick={handleReset}
-        >{id ? 'Voltar' : 'Cancelar'}</Button>
+          onClick={!id ? handleReset : handleBack}
+        >
+          {id && !editar ? 'Voltar' : 'Cancelar'}
+        </Button>
+
         <Button
           className={classes.button}
           variant="contained"
           color="primary"
           size="small"
-          onClick={handleSubmit}
-          disabled={id ? true : false}
-        >Salvar</Button>
+          onClick={!id || editar ? handleSubmit : goToEdit}
+          //disabled={id && !editar}
+        >
+          {!id || editar ? 'Salvar' : 'Editar'}
+        </Button>
+
+        {!!id && !editar && !isProntuario && <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={goToProntuario}
+          //disabled={id && !editar}
+        >
+          Prontuário
+        </Button>}
       </div>
     </div>
   )

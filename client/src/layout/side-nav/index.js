@@ -345,24 +345,17 @@ export default function SideNav(props) {
         <Toolbar />
 
         <Switch>
-          <Route exact path="/pacientes" component={PacienteList} />
-          <Route exact path="/pacientes/criar" component={PacienteEdit} />
-          <Route exact path="/pacientes/:pacienteId/consultas/criar" children={<ConsultaEdit />} />
-          <Route path="/pacientes/:id">
-            <PacienteView />
-          </Route>
+          <Route exact path="/" render={() => <div className={classes.home}>
+            <img src="/images/medicina.png" alt="Brasão do Curso de Medicina" />
+          </div>} />
+
+          <Route path="/pacientes" component={PacienteView} />
 
           <Route exact path="/consultas/:consultaId" component={ConsultaEdit} />
 
-          {/* <Route exact path="/paciente/consultas" children={<PacienteView />} /> */}
           <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />
           <Route exact path="/cadastros" render={() => (<div>Em desenvolvimento.....</div>)} />
-          {/* <Route exact path="/usuarios/criar" component={Usuario} />
-          <Route exact path="/usuarios/:id" children={<Usuario />} /> */}
           <Route path="/usuarios" component={UsuarioView} />
-          <Route path="/" render={() => <div className={classes.home}>
-            <img src="/images/medicina.png" alt="Brasão do Curso de Medicina" />
-          </div>} />
         </Switch>
       </main>
     </div>
