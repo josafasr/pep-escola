@@ -143,7 +143,7 @@ export default function QueixaAutocomplete(props) {
   return (
     <React.Fragment>
       <Autocomplete
-        id="asinchronous-query"
+        id="queixa-autocomplete"
         style={{
           margin: '11px 10px 0 0',
           padding: '0 10px 0 0',

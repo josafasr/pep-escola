@@ -151,7 +151,96 @@ export const CREATE_WITH_INCLUDES = gql`
         message
       }
     }
-  }`
+  }
+`
+
+export const UPDATE_PACIENTE = gql`
+  mutation UpdatePaciente(
+    $id: ID!
+    $prontuario: String,
+    $rg: String,
+    $cpf: String,
+    $cartaoFamilia: String,
+    $cns: String,
+    $agenteComunitario: String,
+    # $encaminhadoPor: String,
+    $pessoa: PessoaInput,
+    $unidadeSaudeId: ID,
+    $nacionalidadeId: ID,
+    $naturalidadeId: ID,
+    $estadoCivilId: ID,
+    $religiaoId: ID,
+    $corPeleId: ID,
+    $escolaridadeId: ID,
+    $tempoEstudoId: ID,
+    $profissaoId: ID,
+    $situacaoProfissionalId: ID,
+    $especialidades: [ID]
+  ) {
+    updatePaciente(
+      id: $id,
+      prontuario: $prontuario,
+      rg: $rg,
+      cpf: $cpf,
+      cartaoFamilia: $cartaoFamilia,
+      cns: $cns,
+      agenteComunitario: $agenteComunitario,
+      # encaminhadoPor: $encaminhadoPor,
+      pessoa: $pessoa,
+      unidadeSaudeId: $unidadeSaudeId,
+      nacionalidadeId: $nacionalidadeId,
+      naturalidadeId: $naturalidadeId,
+      estadoCivilId: $estadoCivilId,
+      religiaoId: $religiaoId,
+      corPeleId: $corPeleId,
+      escolaridadeId: $escolaridadeId,
+      tempoEstudoId: $tempoEstudoId,
+      profissaoId: $profissaoId,
+      situacaoProfissionalId: $situacaoProfissionalId,
+      especialidades: $especialidades
+    ) {
+      ok
+      paciente {
+        id
+        pessoa {
+          id
+          nome
+          dataNascimento
+          sexo
+          enderecos {
+            id
+            logradouro
+            numero
+            bairro
+            cep
+            cidade {
+              nome
+            }
+          }
+          contato {
+            id
+            celular
+            telefone
+            email
+          }
+        }
+        prontuario
+        rg
+        cpf
+        cartaoFamilia
+        cns
+        especialidades {
+          id
+          nome
+        }
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`
 
 export const GET_WITH_INCLUDES = gql`
   query GetWithIncludes($id: ID!) {

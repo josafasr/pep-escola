@@ -228,20 +228,44 @@ export default {
     /**
      * atualiza um registro de usuário, dado o id
      */
-    updateUsuario: async (_, { id, grupos, ...rest }, { sequelize, models }) => {
+    updateUsuario: async (_, { id, grupos, pessoa, ...rest }, { sequelize, models }) => {
       try {
         const result = await sequelize.transaction(async (tx) => {
-          const usuario = await models.Usuario.findByPk(id)
-          if ({ ...rest }) {
-            await usuario.update({ ...rest }, {
-              // where: { id },
-              include: {
-                association: 'pessoa',
-                include: { association: 'contato' }
-              },
+          const usuario = await models.Usuario.findOne({
+            where: { id },
+            include: {
+              association: 'pessoa',
+              include: { association: 'contato' }
+            }
+          })
+          const attributes = { ...rest }
+          if (attributes) {
+            await usuario.update(attributes, {
               returning: true,
               plain: true
             })
+          }
+
+          if (pessoa) {
+            const pessoaToUpdate = usuario.pessoa
+            await pessoaToUpdate.update(pessoa)
+
+            const contato = pessoa.contato
+            if (contato) {
+              const contatoToUpdate = pessoaToUpdate.contato
+              await contatoToUpdate.update(contato)
+            }
+
+            /* const endereco = pessoa.enderecos[0]
+            if (endereco) {
+              const enderecoToUpdate = pessoaToUpdate.enderecos[0]
+              await enderecoToUpdate.update(endereco)
+            } */
+
+            /* const enderecos = pessoa.enderecos
+            if (enderecos) {
+              await pessoaToUpdate.setEnderecos(enderecos)
+            } */
           }
 
           if (grupos) {

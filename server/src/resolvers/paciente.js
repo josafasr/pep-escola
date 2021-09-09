@@ -183,27 +183,53 @@ export default {
      * atualiza um registro de paciente, dado o id
      */
     // updatePaciente: async (_, { id, especialidades, antecedentesPatologicos, ...otherArgs }, { sequelize, models }) => {
-    updatePaciente: async (_, { id, especialidades, ...otherArgs }, { sequelize, models }) => {
+    updatePaciente: async (_, { id, especialidades, pessoa, ...otherArgs }, { sequelize, models }) => {
       try {
         const result = await sequelize.transaction(async (tx) => {
-          const paciente = await models.Paciente.findByPk(id)
+          const paciente = await models.Paciente.findOne({
+            where: { id },
+            include: {
+              association: 'pessoa',
+              include: [
+                { association: 'contato' },
+                { association: 'enderecos' }
+              ]
+            }
+          })
 
-          if ({ ...otherArgs }) {
-            await paciente.update({ ...otherArgs }, {
-              // where: { id },
+          const attributes = { ...otherArgs }
+          if (attributes) {
+            await paciente.update(attributes, {
               returning: true,
               plain: true
             })
           }
 
+          if (pessoa) {
+            const pessoaToUpdate = paciente.pessoa
+            await pessoaToUpdate.update(pessoa)
+
+            const contato = pessoa.contato
+            if (contato) {
+              const contatoToUpdate = pessoaToUpdate.contato
+              await contatoToUpdate.update(contato)
+            }
+
+            const endereco = pessoa.enderecos[0]
+            if (endereco) {
+              const enderecoToUpdate = pessoaToUpdate.enderecos[0]
+              await enderecoToUpdate.update(endereco)
+            }
+
+            /* const enderecos = pessoa.enderecos
+            if (enderecos) {
+              await pessoaToUpdate.setEnderecos(enderecos)
+            } */
+          }
+
           if (especialidades) {
             await paciente.addEspecialidades(especialidades)
           }
-
-          /* if (antecedentesPatologicos) {
-            console.log(antecedentesPatologicos);
-            await paciente.addAntecedentesPatologicos(antecedentesPatologicos)
-          } */
           return paciente
         })
 

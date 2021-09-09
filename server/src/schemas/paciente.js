@@ -101,7 +101,7 @@ export default gql`
       cns: String,
       agenteComunitario: String,
       # encaminhadoPor: String,
-      pessoaId: ID,
+      pessoa: PessoaInput, #pessoaId: ID,
       unidadeSaudeId: ID,
       nacionalidadeId: ID,
       naturalidadeId: ID,

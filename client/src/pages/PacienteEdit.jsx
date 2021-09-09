@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
@@ -23,7 +23,7 @@ import ContatoForm from '../forms/ContatoForm'
 import EnderecoForm from '../forms/EnderecoForm'
 import PacienteForm from '../forms/PacienteForm'
 import { toDatabaseDate } from '../utils/format'
-import { CREATE_WITH_INCLUDES, GET_WITH_INCLUDES } from '../graphql/paciente'
+import { CREATE_WITH_INCLUDES, UPDATE_PACIENTE, GET_WITH_INCLUDES } from '../graphql/paciente'
 
 import PacienteContext from '../contexts/PacienteContext'
 import PessoaContext from '../contexts/PessoaContext'
@@ -74,13 +74,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function PacienteEdit(props) {
+const PacienteEdit = () => {
 
   const classes = useStyles()
   let history = useHistory()
   const { id } = useParams()
-  const editar = useRouteMatch('/pacientes/:id/editar')
-  const isProntuario = useRouteMatch('/pacientes/:id/prontuario')
+  const { path } = useRouteMatch()
+  const editar = path === '/pacientes/:id/editar'
+  const isProntuario = path === '/pacientes/:id/prontuario'
+  const showProntuarioButton = (!!id && !editar && !isProntuario)
+  const showEditarButton = (!id || editar)
 
   const [pessoa, setPessoa] = React.useState({})
   //const [contato, setContato] = React.useState({})
@@ -128,7 +131,9 @@ function PacienteEdit(props) {
     }
   })
 
-  const { loading, error } = useQuery(GET_WITH_INCLUDES, {
+  const [handleUpdatePaciente] = useMutation(UPDATE_PACIENTE)
+
+  const { loading, error, refetch } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
     onCompleted: (data) => {
       setPaciente(data.paciente)
@@ -139,21 +144,72 @@ function PacienteEdit(props) {
       contatoDispatch(loadData(data.paciente.pessoa.contato))
       setEndereco(data.paciente.pessoa.enderecos[0])
     },
+    notifyOnNetworkStatusChange: true,
     skip: !id
   })
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const pacienteResponse = await handleCreatePaciente()
-    if (pacienteResponse.data.createWithIncludes.ok) {
-      alert('Paciente criado com sucesso!')
-      handleReset()
+    if (!editar) {
+      const pacienteResponse = await handleCreatePaciente()
+      if (pacienteResponse.data.createWithIncludes.ok) {
+        alert('Paciente criado com sucesso!')
+        handleReset()
+      } else {
+        alert('Não foi possível criar o paciente :(')
+      }
     } else {
-      alert('Não foi possível criar o paciente :(')
+      delete pessoa['__typename']
+      delete contatoState['__typename']
+      delete endereco['__typename']
+      const updateResponse = await handleUpdatePaciente({
+        variables: {
+          id,
+          prontuario: paciente.prontuario,
+          rg: paciente.rg,
+          cpf: paciente.cpf,
+          cartaoFamilia: paciente.cartaoFamilia,
+          cns: paciente.cns,
+          agenteComunitario: paciente.agenteComunitario,
+          // encaminhadoPor: paciente.encaminhadoPor,
+          unidadeSaudeId: paciente.unidadeSaude?.id,
+          naturalidadeId: paciente.naturalidade?.id,
+          estadoCivilId: paciente.estadoCivil?.id,
+          religiaoId: paciente.religiao?.id,
+          corPeleId: paciente.corPele?.id,
+          escolaridadeId: paciente.escolaridade?.id,
+          tempoEstudoId: paciente.tempoEstudo?.id,
+          profissaoId: paciente.profissao?.id,
+          situacaoProfissionalId: paciente.situacaoProfissional?.id,
+          pessoa: {
+            ...pessoa,
+            dataNascimento: toDatabaseDate(pessoa.dataNascimento),
+            contato: contatoState,
+            enderecos: [{
+              id: parseInt(endereco?.id),
+              tipoLogradouroId: parseInt(endereco?.tipoLogradouro?.id),
+              logradouro: endereco?.logradouro,
+              numero: parseInt(endereco?.numero),
+              bairro: endereco?.bairro,
+              complemento: endereco?.complemento,
+              cep: endereco?.cep,
+              cidadeId: parseInt(endereco?.cidade?.id)
+            }]
+          }
+        }
+      })
+      if (updateResponse.data.updatePaciente.ok) {
+        alert('Paciente atualizado com sucesso!')
+        handleBack()
+      } else {
+        alert('Não foi possível atualizar o paciente :(')
+      }
     }
   }
 
   const goToEdit = () => {
+    // pacienteOrig = { ...paciente }
+    // console.log(pacienteOrig);
     history.push(`/pacientes/${id}/editar`)
   }
 
@@ -170,8 +226,14 @@ function PacienteEdit(props) {
   }
 
   const handleBack = () => {
+    // console.log(pacienteOrig);
+    // setPaciente(pacienteOrig)
     history.goBack()
   }
+
+  useEffect(() => {
+    refetch()
+  }, [path, refetch])
 
   if (loading) return <LinearProgress color="secondary" />
   if (error) return 'Error :('
@@ -243,19 +305,17 @@ function PacienteEdit(props) {
           variant="contained"
           color="primary"
           size="small"
-          onClick={!id || editar ? handleSubmit : goToEdit}
-          //disabled={id && !editar}
+          onClick={showEditarButton ? handleSubmit : goToEdit}
         >
-          {!id || editar ? 'Salvar' : 'Editar'}
+          {showEditarButton ? 'Salvar' : 'Editar'}
         </Button>
 
-        {!!id && !editar && !isProntuario && <Button
+        {showProntuarioButton && <Button
           className={classes.button}
           variant="contained"
           color="primary"
           size="small"
           onClick={goToProntuario}
-          //disabled={id && !editar}
         >
           Prontuário
         </Button>}

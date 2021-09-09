@@ -1,5 +1,5 @@
 /**
- * @title Formulário para criação/edição dos dados de endereço
+ * @description Formulário para criação/edição dos dados de endereço
  * @module src/forms/EnderecoForm
  * @author Josafá Santos dos Reis
  */
@@ -15,6 +15,8 @@ import {
 
 import { LOAD_DROP_DOWNS } from '../graphql/endereco'
 import EnderecoContext from '../contexts/EnderecoContext'
+import { CIDADES_BY_TEXT } from '../graphql/cidade'
+import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -62,6 +64,14 @@ function EnderecoForm(props, ref) {
       ...prevState,
       [name]: value
     }))
+  }
+
+  const changeCidade = (data) => {
+    console.log('changeCidade:', data)
+    setEndereco({
+      ...endereco,
+      cidade: data
+    })
   }
 
   const handleReset = () => {
@@ -167,7 +177,17 @@ function EnderecoForm(props, ref) {
         }}
       />
 
-      <TextField
+      <GenericAutocomplete
+        id="cidade-autocomplete"
+        disabled={disabled}
+        query={CIDADES_BY_TEXT}
+        value={endereco?.cidade || {}}
+        responseName="cidadesByText"
+        label="Cidade"
+        onChange={changeCidade}
+      />
+
+      {/* <TextField
         className={classes.formFields}
         name="cidade"
         value={endereco?.cidade || ''}
@@ -181,11 +201,11 @@ function EnderecoForm(props, ref) {
         }}
         select
       >
-        {/* <MenuItem value=""><em>Não Informado</em></MenuItem> */}
         {data.cidades.map((item) => (
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
+      {/* <MenuItem value=""><em>Não Informado</em></MenuItem> */}
     </div>
   )
 }

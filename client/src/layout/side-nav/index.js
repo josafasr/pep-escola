@@ -33,8 +33,6 @@ import { deepPurple } from '@material-ui/core/colors'
 
 //import Usuario from '../../components/usuario'
 import UsuarioView from '../../pages/UsuarioView'
-import PacienteEdit from '../../pages/PacienteEdit'
-import PacienteList from '../../pages/PacienteList'
 import PacienteView from '../../pages/PacienteView'
 import ConsultaEdit from '../../pages/ConsultaEdit'
 
@@ -176,8 +174,6 @@ export default function SideNav(props) {
   }
 
   const handleLogout = () => {
-    // localStorage.removeItem('token')
-    // localStorage.removeItem('reloadToken')
     history.push('/login')
   }
 

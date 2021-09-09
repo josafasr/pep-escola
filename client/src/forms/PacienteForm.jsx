@@ -18,6 +18,8 @@ import { LOAD_DROP_DOWNS } from '../graphql/paciente'
 
 import NaturalidadeAutocomplete from '../components/autocomplete/NaturalidadeAutocomplete'
 import PacienteContext from '../contexts/PacienteContext'
+import { CIDADES_BY_TEXT } from '../graphql/cidade'
+import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -94,6 +96,14 @@ const PacienteForm = (props, ref) => {
       ...prevValues,
       [name]: value
     }))
+  }
+
+  const changeNaturalidade = (data) => {
+    console.log('changeNaturalidade:', data)
+    setPaciente({
+      ...paciente,
+      naturalidade: data
+    })
   }
 
   if (loading) return <LinearProgress color="secondary" />
@@ -196,8 +206,18 @@ const PacienteForm = (props, ref) => {
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
-      <NaturalidadeAutocomplete
+      {/* <NaturalidadeAutocomplete
         disabled={disabled}
+      /> */}
+
+      <GenericAutocomplete
+        id="naturalidade-autocomplete"
+        disabled={disabled}
+        query={CIDADES_BY_TEXT}
+        value={paciente?.naturalidade || {}}
+        responseName="cidadesByText"
+        label="Naturalidade"
+        onChange={changeNaturalidade}
       />
 
       <TextField
