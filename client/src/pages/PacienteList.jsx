@@ -1,5 +1,5 @@
-/**
- * @title Componente para listagem de pacientes/prontuários
+  /**
+ * @description Componente para listagem de pacientes/prontuários
  * @module src/pages/PacienteList
  * @author Josafá Santos dos Reis
  */
@@ -10,34 +10,17 @@ import { useQuery } from '@apollo/react-hooks'
 import {
   makeStyles,
   Paper,
-  // Tabs,
-  // Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
+  List,
+  ListItem,
+  //ListItemText,
+  ListItemAvatar,
+  Avatar,
   Button,
   LinearProgress
  } from '@material-ui/core'
-import FileCopyIcon from '@material-ui/icons/FileCopy'
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-import { toPtBrDate } from '../utils/format'
 import { GET_ALL } from '../graphql/paciente'
-
-const columns = [
-  // { id: 'id', label: 'Id', minWidth: 50 },
-  { id: 'prontuario', label: 'Prontuário' },
-  { id: 'nome', label: 'Paciente' },
-  { id: 'dataNascimento', label: 'Nasimento' },
-  { id: 'sexo', label: 'Sexo' },
-  { id: 'rg', label: 'RG' },
-  { id: 'cpf', label: 'CPF' },
-  { id: 'cns', label: 'CNS' },
-  { id: 'detalhes', label: 'Detalhes' },
-];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +38,22 @@ const useStyles = makeStyles((theme) => ({
 
   linkDetail: {
     color: 'gray'
+  },
+
+  listItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 0,
+    color: '#595959',
+    '&& div': {
+      display: 'flex',
+      flexWrap: 'wrap'
+    }
+  },
+
+  column: {
+    color: 'gray',
+    margin: '0 10px 0 0'
   }
 }));
 
@@ -62,7 +61,7 @@ export default function PacienteList() {
 
   const classes = useStyles();
 
-  const [page, setPage] = React.useState(0);
+/*   const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -73,14 +72,19 @@ export default function PacienteList() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
+  }; */
 
   const pacientesResponse = useQuery(GET_ALL)
+
+  const ptBrDate = (date) => {
+    return new Date(`${date}T03:00:00Z`).toLocaleDateString('pt-BR')
+  }
+
   if (pacientesResponse.loading) return <LinearProgress color="secondary" />
   if (pacientesResponse.error) return pacientesResponse.error.message
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.root} elevation={0}>
       <Link to="/pacientes/criar">
         <Button
           className={classes.button}
@@ -92,55 +96,35 @@ export default function PacienteList() {
         </Button>
       </Link>
       <div>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth, backgroundColor: 'rgb(223, 223, 223)' }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          {pacientesResponse.data && <TableBody>
-            {pacientesResponse.data.pacientes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  <TableCell>{row.prontuario}</TableCell>
-                  <TableCell>{row.pessoa?.nome}</TableCell>
-                  <TableCell>{toPtBrDate(row.pessoa?.dataNascimento)}</TableCell>
-                  <TableCell>{row.pessoa?.sexo}</TableCell>
-                  <TableCell>{row.rg}</TableCell>
-                  <TableCell>{row.cpf}</TableCell>
-                  <TableCell>{row.cns}</TableCell>
-                  <TableCell>
-                    <Link to={`pacientes/${row.id}`} className={classes.linkDetail}>
-                      <FileCopyIcon />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>}
-        </Table>
-      </TableContainer>
-      {pacientesResponse.data && <TablePagination
-        labelRowsPerPage="Linhas por página"
-        rowsPerPageOptions={[10, 25, 100]}
-        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-        component="div"
-        count={pacientesResponse.data.pacientes.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />}
+        <List>
+          {pacientesResponse.data.pacientes.map(paciente =>
+            <Paper key={paciente.prontuario}>
+              <ListItem component={Link} to={`/pacientes/${paciente.id}`}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <AssignmentIndIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                {/* <ListItemText
+                  className={classes.listItemText}
+                  primary={paciente.pessoa.nome}
+                  //secondary={paciente.prontuario}
+                /> */}
+                <div className={classes.listItem}>
+                  <p><b>{paciente.pessoa.nome}</b></p>
+                  <div>
+                    <p className={classes.column}><b>Prontuário:</b> <span>{paciente.prontuario}</span></p>
+                    <p className={classes.column}>
+                      <b>Data Nascimento:</b> <span>{ptBrDate(paciente.pessoa.dataNascimento)}</span>
+                    </p>
+                    <p className={classes.column}><b>Sexo:</b> <span>{paciente.pessoa.sexo}</span></p>
+                  </div>
+                </div>
+              </ListItem>
+            </Paper>
+          )}
+        </List>
       </div>
     </Paper>
-  );
+  )
 }

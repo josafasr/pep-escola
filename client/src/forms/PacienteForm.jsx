@@ -16,7 +16,6 @@ import {
 
 import { LOAD_DROP_DOWNS } from '../graphql/paciente'
 
-import NaturalidadeAutocomplete from '../components/autocomplete/NaturalidadeAutocomplete'
 import PacienteContext from '../contexts/PacienteContext'
 import { CIDADES_BY_TEXT } from '../graphql/cidade'
 import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
@@ -99,7 +98,6 @@ const PacienteForm = (props, ref) => {
   }
 
   const changeNaturalidade = (data) => {
-    console.log('changeNaturalidade:', data)
     setPaciente({
       ...paciente,
       naturalidade: data
