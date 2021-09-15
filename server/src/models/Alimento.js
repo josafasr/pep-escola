@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de tipos de refeição
+ * @description Mapeamento da tabela de tipos de refeição
  * @module src/models/Alimento
  * @author Josafá Santos dos Reis
  */
@@ -10,8 +10,8 @@ export default (sequelize, DataTypes) => {
     nome: DataTypes.STRING
     
   }, {
-    schema: 'ceuas',
-    tableName: 'alimento'
+    tableName: 'ceuas_alimento',
+    timestamps: false
   });
 
   Alimento.associate = (models) => {

@@ -9,8 +9,7 @@ export default (sequelize, DataTypes) => {
     nome: DataTypes.STRING,
     descricao: DataTypes.TEXT
   }, {
-    schema: 'ceuas',
-    tableName: 'tipo_antecedente',
+    tableName: 'ceuas_tipo_antecedente',
     timestamps: false
   })
 

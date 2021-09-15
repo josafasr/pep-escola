@@ -11,7 +11,7 @@ export default (sequelize, DataTypes) => {
       field: 'atributo_valor'
     },
     consultaId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'consulta_id'
     },
     antecedenteAtributoId: {
@@ -23,8 +23,7 @@ export default (sequelize, DataTypes) => {
       field: 'antecedente_id'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'consulta_antecedente_atributo'
+    tableName: 'ceuas_consulta_antecedente_atributo'
   })
 
   ConsultaAntecedenteAtributo.associate = (models) => {

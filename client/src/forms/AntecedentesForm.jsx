@@ -91,7 +91,7 @@ const AntecedentesForm = () => {
 
   const { loading, data } = useQuery(PRIMEIRA_CONSULTA_OF_PACIENTE, {
     variables: {
-      pacienteId: pacienteId ? parseInt(pacienteId) : parseInt(consulta.paciente.id)
+      pacienteId: pacienteId ? pacienteId : consulta.paciente.id
     },
     onCompleted: data => {
       if (data.primeiraConsultaOfPaciente !== null) {

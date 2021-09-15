@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de tipos de refeição
+ * @description Mapeamento da tabela de tipos de refeição
  * @module src/models/TipoRefeicao
  * @author Marcos Porto
  */
@@ -11,9 +11,8 @@ export default (sequelize, DataTypes) => {
         }
     },
         {
-            schema: 'ceuas',
-            tableName: 'tipo_refeicao'
-        
+            tableName: 'ceuas_tipo_refeicao',
+            timestamps: false        
     });
 
       TipoRefeicao.associate = (models) => {

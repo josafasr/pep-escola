@@ -1,5 +1,5 @@
 /**
- * @title Mapeamento da tabela de tipos de exame físico
+ * @description Mapeamento da tabela de tipos de exame físico
  * @module src/models/TipoExameFisico
  * @author Josafá Santos dos Reis
  */
@@ -14,8 +14,7 @@ export default (sequelize, DataTypes) => {
     }
   },
   {
-    schema: 'ceuas',
-    tableName: 'tipo_exame_fisico',
+    tableName: 'ceuas_tipo_exame_fisico',
     timestamps: false
   })
 

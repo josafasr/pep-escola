@@ -212,11 +212,11 @@ export default function SideNav(props) {
           <NavLink to="/pacientes" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><FolderIcon /></ListItemIcon>
-              <ListItemText primary="Prontuários" />
+              <ListItemText primary="Pacientes" />
             </ListItem>
           </NavLink>
 
-          <NavLink to="/agendamentos" className={classes.link} activeClassName={classes.selected}>
+          {/* <NavLink to="/agendamentos" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
               <ListItemIcon><CalendarTodayIcon /></ListItemIcon>
               <ListItemText primary="Agendamento" />
@@ -228,7 +228,7 @@ export default function SideNav(props) {
               <ListItemIcon><ViewListIcon /></ListItemIcon>
               <ListItemText primary="Cadastro" />
             </ListItem>
-          </NavLink>
+          </NavLink> */}
 
           <NavLink to="/usuarios" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>

@@ -1,5 +1,5 @@
 /**
- * @title Componente para listagem de consultas
+ * @description Componente para listagem de consultas
  * @module src/pages/ConsultaList
  * @author Josafá Santos dos Reis
  */
@@ -62,7 +62,7 @@ export default function PacienteList() {
 
   const { id } = useParams()
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 

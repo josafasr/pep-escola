@@ -158,7 +158,7 @@ export default {
             }
           }, {
             association: 'indicadoresExameFisico'
-          }, {
+          }, /* {
             association: 'avaliacao',
             include: {
               association: 'avaliador',
@@ -167,7 +167,7 @@ export default {
                 attributes: ['id', 'nome']
               }
             }
-          }, {
+          }, */ {
             association: 'antecedentesAtributos',
             include: [
               {

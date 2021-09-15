@@ -6,10 +6,10 @@
 export default (sequelize, DataTypes) => {
     const ConsultaRecordatorioAlimentar = sequelize.define('ConsultaRecordatorioAlimentar', {
       consultaId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         field: 'consulta_id',
         references: {
-          model: 'consulta',
+          model: 'ceuas_consulta',
           key: 'id'
         },
         onUpdate: 'cascade',
@@ -19,15 +19,14 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         field: 'recordatorio_alimentar_id',
         references: {
-          model: 'recordatorio_alimentar',
+          model: 'ceuas_recordatorio_alimentar',
           key: 'id'
         },
         onUpdate: 'cascade',
         onDelete: 'cascade'
       }
     }, {
-      schema: 'ceuas',
-      tableName: 'consulta_recordatorio_alimentar',
+      tableName: 'ceuas_consulta_recordatorio_alimentar',
       timestamps: false
     });
     

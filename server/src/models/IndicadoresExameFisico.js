@@ -1,5 +1,5 @@
 /**
- * @title Mapeamento da tabela de indicadores exame físico
+ * @description Mapeamento da tabela de indicadores exame físico
  * @module src/models/IndicadoresExameFisico
  * @author Josafá Santos dos Reis
  */
@@ -64,12 +64,11 @@ export default (sequelize, DataTypes) => {
     },
     itb: DataTypes.DECIMAL,
     consultaId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       field: 'consulta_id'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'indicadores_exame_fisico',
+    tableName: 'ceuas_indicadores_exame_fisico',
     timestamps: false
   })
 

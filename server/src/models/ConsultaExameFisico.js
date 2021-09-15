@@ -1,12 +1,12 @@
 /**
- * @title Mapeamento do relacionamento (M:M) entre consulta e exame físico
+ * @description Mapeamento do relacionamento (M:M) entre consulta e exame físico
  * @module src/models/ConsultaExameFisico
  * @author Josafá Santos dos Reis
  */
 export default (sequelize, DataTypes) => {
   const ConsultaExameFisico = sequelize.define('ConsultaExameFisico', {
     consultaId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'consulta_id'
     },
     exameFisicoId: {
@@ -15,8 +15,7 @@ export default (sequelize, DataTypes) => {
     },
     observacao: DataTypes.TEXT
   }, {
-    schema: 'ceuas',
-    tableName: 'consulta_exame_fisico',
+    tableName: 'ceuas_consulta_exame_fisico',
     timestamps: false
   })
   

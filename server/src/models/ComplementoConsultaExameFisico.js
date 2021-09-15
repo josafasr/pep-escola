@@ -7,7 +7,7 @@ export default (sequelize, DataTypes) => {
     const ComplementoConsultaExameFisico = sequelize.define('ComplementoConsultaExameFisico', {
       complemento: DataTypes.TEXT,
       consultaId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         field: 'consulta_id'
       },
       tipoExameFisicoId: {
@@ -15,8 +15,7 @@ export default (sequelize, DataTypes) => {
         field: 'tipo_exame_fisico_id'
       }
     }, {
-      schema: 'ceuas',
-      tableName: 'complemento_consulta_exame_fisico',
+      tableName: 'ceuas_complemento_consulta_exame_fisico',
       timestamps: false
     })
 

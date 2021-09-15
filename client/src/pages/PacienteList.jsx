@@ -40,7 +40,11 @@ const useStyles = makeStyles((theme) => ({
     color: 'gray'
   },
 
-  listItem: {
+  listItemPaper: {
+    marginBottom: '5px'
+  },
+
+  listItemInfo: {
     display: 'flex',
     flexDirection: 'column',
     margin: 0,
@@ -98,7 +102,7 @@ export default function PacienteList() {
       <div>
         <List>
           {pacientesResponse.data.pacientes.map(paciente =>
-            <Paper key={paciente.prontuario}>
+            <Paper className={classes.listItemPaper} key={paciente.prontuario}>
               <ListItem component={Link} to={`/pacientes/${paciente.id}`}>
                 <ListItemAvatar>
                   <Avatar>
@@ -110,7 +114,7 @@ export default function PacienteList() {
                   primary={paciente.pessoa.nome}
                   //secondary={paciente.prontuario}
                 /> */}
-                <div className={classes.listItem}>
+                <div className={classes.listItemInfo}>
                   <p><b>{paciente.pessoa.nome}</b></p>
                   <div>
                     <p className={classes.column}><b>Prontuário:</b> <span>{paciente.prontuario}</span></p>

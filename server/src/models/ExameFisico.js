@@ -15,8 +15,7 @@ export default (sequelize, DataTypes) => {
     }
   },
   {
-    schema: 'ceuas',
-    tableName: 'exame_fisico',
+    tableName: 'ceuas_exame_fisico',
     timestamps: false
   });
 

@@ -28,7 +28,8 @@ export default {
             }]
           }
         ],
-        attributes: { exclude: ['createdAt', 'updatedAt'] }
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        order: [ 'prontuario' ]
       })
       return pacientes
     },

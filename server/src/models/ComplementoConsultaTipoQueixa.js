@@ -1,5 +1,5 @@
 /**
- * @title Mapeamento da tabela de complemento das quaixas na consulta
+ * @description Mapeamento da tabela de complemento das quaixas na consulta
  * @module src/models/ComplementoConsultaTipoQueixa
  * @author Josafá Santos dos Reis
  */
@@ -7,7 +7,7 @@ export default (sequelize, DataTypes) => {
     const ComplementoConsultaTipoQueixa = sequelize.define('ComplementoConsultaTipoQueixa', {
       complemento: DataTypes.TEXT,
       consultaId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         field: 'consulta_id'
       },
       tipoQueixaId: {
@@ -15,8 +15,7 @@ export default (sequelize, DataTypes) => {
         field: 'tipo_queixa_id'
       }
     }, {
-      schema: 'ceuas',
-      tableName: 'complemento_consulta_tipo_queixa',
+      tableName: 'ceuas_complemento_consulta_tipo_queixa',
       timestamps: false
     })
 

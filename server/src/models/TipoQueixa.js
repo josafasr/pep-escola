@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de tipos de queixa
+ * @description Mapeamento da tabela de tipos de queixa
  * @module src/models/TipoQueixa
  * @author Marcos Porto
  */
@@ -14,9 +14,8 @@ export default (sequelize, DataTypes) => {
         }
     },
         {
-            schema: 'ceuas',
-            tableName: 'tipo_queixa'
-        
+            tableName: 'ceuas_tipo_queixa',
+            timestamps: false
     });
 
     TipoQueixa.associate = (models) => {

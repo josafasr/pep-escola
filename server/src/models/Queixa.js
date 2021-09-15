@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de Queixa
+ * @description Mapeamento da tabela de Queixa
  * @module src/models/Queixa
  * @author Marcos Porto, Josafá Santos dos Reis
  */
@@ -15,8 +15,8 @@ export default (sequelize, DataTypes) =>{
         }
     },
     {
-        schema: 'ceuas',
-        tableName: 'queixa'
+        tableName: 'ceuas_queixa',
+        timestamps: false
     });
 
     Queixa.associate = (models) => {

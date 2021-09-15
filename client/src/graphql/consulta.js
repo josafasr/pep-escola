@@ -63,7 +63,7 @@ export const GET_WITH_INCLUDES = gql`
         cartaoFamilia
         cns
         agenteComunitario
-        encaminhadoPor
+        # encaminhadoPor
         unidadeSaude {
           id
           nome

@@ -19,7 +19,7 @@ import FileCopyIcon from '@material-ui/icons/FileCopy'
 import { GET_ALL } from '../graphql/usuario'
 
 const columns = [
-  { id: 'id', label: 'Id', minWidth: 50 },
+  //{ id: 'id', label: 'Id', minWidth: 50 },
   { id: 'pessoa.nome', label: 'Nome', minWidth: 107 },
   { id: 'nome', label: 'Nome de Usuário', minWidth: 100 },
   { id: 'pessoa.contato.email', label: 'E-mail', minWidth: 100 },
@@ -95,7 +95,7 @@ export default function UsuarioList(props) {
             {data.usuarios.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  <TableCell>{row.id}</TableCell>
+                  {/* <TableCell>{row.id}</TableCell> */}
                   <TableCell>{row.pessoa?.nome}</TableCell>
                   <TableCell>{row.nome}</TableCell>
                   <TableCell>{row.pessoa?.contato?.email}</TableCell>

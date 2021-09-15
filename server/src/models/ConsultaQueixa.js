@@ -1,12 +1,12 @@
 /**
- * @title Mapeamento do relacionamento (M:M) entre consulta e queixa
+ * @description Mapeamento do relacionamento (M:M) entre consulta e queixa
  * @module src/models/ConsultaQueixa
  * @author Marcos Porto
  */
 export default (sequelize, DataTypes) => {
     const ConsultaQueixa = sequelize.define('ConsultaQueixa', {
       consultaId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         field: 'consulta_id'
       },
       queixaId: {
@@ -14,8 +14,7 @@ export default (sequelize, DataTypes) => {
         field: 'queixa_id'
       }
     }, {
-      schema: 'ceuas',
-      tableName: 'consulta_queixa',
+      tableName: 'ceuas_consulta_queixa',
       timestamps: false
     })
     

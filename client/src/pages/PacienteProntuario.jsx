@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom'
 import {
   CssBaseline,
@@ -40,6 +40,11 @@ const PacienteProntuario = () => {
 
   let history = useHistory()
 
+  useEffect(() => {
+    console.log('path:', path);
+    console.log('url:', url);
+  }, [path, url])
+
   return (
     <div>
     <CssBaseline />
@@ -63,13 +68,13 @@ const PacienteProntuario = () => {
           value={`${url}/consultas`} 
           component={Link} 
           to={`${url}/consultas`} 
-          disabled={true}
+          //disabled={true}
         />
       </Tabs>
     </AppBar>
     <Switch>
-      <Route exact path={`${routes[0]}`} component={PacienteEdit} />
-      <Route path={`${routes[1]}/consultas`} component={ConsultaList} />
+      <Route exact path={routes[0]} component={PacienteEdit} />
+      <Route exact path={routes[1]} component={ConsultaList} />
     </Switch>
     </div>
   )

@@ -1,10 +1,17 @@
 /**
- * @title Mapeamento da tabela de consultas
+ * @description Mapeamento da tabela de consultas
  * @module src/models/Consulta
  * @author Josafá Santos dos Reis
  */
+
+import { v4 as uuid } from 'uuid'
+
 export default (sequelize, DataTypes) => {
   const Consulta = sequelize.define('Consulta', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true
+    },
     primeira: DataTypes.BOOLEAN,
     acompanhante: DataTypes.STRING,
     queixaPrincipalObs: {
@@ -16,7 +23,7 @@ export default (sequelize, DataTypes) => {
       field: 'historia_doenca_atual'
     },
     pacienteId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       field: 'paciente_id'
     },
     queixaPrincipalId: {
@@ -32,9 +39,16 @@ export default (sequelize, DataTypes) => {
       fields: 'plano_conduta'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'consulta'
-  });
+    tableName: 'ceuas_consulta',
+    hooks: {
+      beforeCreate: async (consulta) => {
+        if (!consulta.id) {
+          const id = await Promise.resolve(uuid())
+          consulta.id = id
+        }
+      }
+    }
+  })
 
   Consulta.associate = (models) => {
     
@@ -111,10 +125,10 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de avaliação de atendimento
      * @see module:src/models/AvaliacaoAtendimento
      */
-    Consulta.hasOne(models.AvaliacaoAtendimento, {
+    /* Consulta.hasOne(models.AvaliacaoAtendimento, {
       as: 'avaliacao',
       foreignKey: 'consultaId'
-    }),
+    }), */
 
     /**
      * Relacionamento com a tabela de complemento de queixas

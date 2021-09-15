@@ -199,7 +199,7 @@ const ConsultaEdit = () => {
       }
     })
 
-    const antecedentesAtributos = consulta.primeira && consulta.antecedentesAtributos.length > 0
+    const antecedentesAtributos = consulta.primeira && consulta.antecedentesAtributos?.length > 0
       ? consulta.antecedentesAtributos.map(item => {
           return {
             atributoValor: item.atributoValor,
@@ -209,7 +209,7 @@ const ConsultaEdit = () => {
         })
       : []
 
-    const complementosAntecedentes = consulta.primeira && consulta.complementosAntecedentes.length > 0
+    const complementosAntecedentes = consulta.primeira && consulta.complementosAntecedentes?.length > 0
       ? consulta.complementosAntecedentes.map(item => {
           return {
             complemento: item.complemento,
@@ -221,7 +221,7 @@ const ConsultaEdit = () => {
     const consultaResponse = await handleCreateConsulta({
       variables: {
         primeira: consulta.primeira,
-        pacienteId: parseInt(pacienteId),
+        pacienteId: pacienteId,
         acompanhante: consulta.acompanhante,
         queixaPrincipalObs: consulta.queixaPrincipalObs,
         historiaDoencaAtual: consulta.historiaDoencaAtual,

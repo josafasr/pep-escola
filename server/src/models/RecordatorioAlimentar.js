@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de Recordatorio Alimentar
+ * @description Mapeamento da tabela de Recordatorio Alimentar
  * @module src/models/RecordatorioAlimentar
  * @author Marcos Porto, Josafá Santos dos Reis
  */
@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
     const RecordatorioAlimentar = sequelize.define('RecordatorioAlimentar', {
         quantidade: DataTypes.INTEGER,
         consultaId: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.UUID,
           field: 'consulta_id'
         },
         tipoRefeicaoId: {
@@ -20,8 +20,8 @@ export default (sequelize, DataTypes) => {
           field: 'alimento_id'
         }
     }, {
-        schema: 'ceuas',
-        tableName: 'recordatorio_alimentar'
+        tableName: 'ceuas_recordatorio_alimentar',
+        timestamps: false
     })
 
     RecordatorioAlimentar.associate = (models) => {
