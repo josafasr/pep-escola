@@ -22,14 +22,11 @@ const ResponsavelConsultaForm = () => {
 
   const [handleQuery] = useLazyQuery(USUARIOS_BY_TEXT, {
     onCompleted: (data) => {
-      //isLoading = data.usuariosByText > 0
-      console.log(isLoading);
       setOptions(data.usuariosByText)
     }
   })
 
-  const handleChange = (event, value, reason, details) => {
-    console.log(value);
+  const handleChange = (_, value, reason, details) => {
 
     // Exclusão
     if (reason === 'remove-option') {

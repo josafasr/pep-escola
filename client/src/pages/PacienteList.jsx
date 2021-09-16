@@ -1,4 +1,4 @@
-  /**
+/**
  * @description Componente para listagem de pacientes/prontuários
  * @module src/pages/PacienteList
  * @author Josafá Santos dos Reis
@@ -18,7 +18,7 @@ import {
   Button,
   LinearProgress
  } from '@material-ui/core'
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 
 import { GET_ALL } from '../graphql/paciente'
 
@@ -64,19 +64,6 @@ const useStyles = makeStyles((theme) => ({
 export default function PacienteList() {
 
   const classes = useStyles();
-
-/*   const [page, setPage] = React.useState(0);
-
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  }; */
 
   const pacientesResponse = useQuery(GET_ALL)
 

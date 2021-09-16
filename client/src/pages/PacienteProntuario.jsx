@@ -40,11 +40,6 @@ const PacienteProntuario = () => {
 
   let history = useHistory()
 
-  useEffect(() => {
-    console.log('path:', path);
-    console.log('url:', url);
-  }, [path, url])
-
   return (
     <div>
     <CssBaseline />
