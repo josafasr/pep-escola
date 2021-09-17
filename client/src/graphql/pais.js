@@ -1,5 +1,5 @@
 /**
- * @file API GraphQL sobre países
+ * @description API GraphQL sobre países
  * @module src/graphql/pais
  * @author Josafá Santos dos Reis
  */
@@ -23,6 +23,16 @@ export const PAISES = gql`
       sigla
     }
   }`
+
+export const PAISES_BY_TEXT = gql`
+query PaisesByText($text: String!) {
+  paisesByText(text: $text) {
+    id
+    nome
+    sigla
+  }
+}
+`
 
   /* createMutation: gql`
     mutation($celular: String, $telefone: String, $email: String, $homePage: String) {

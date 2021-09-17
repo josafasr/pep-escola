@@ -18,6 +18,7 @@ import { LOAD_DROP_DOWNS } from '../graphql/paciente'
 
 import PacienteContext from '../contexts/PacienteContext'
 import { CIDADES_BY_TEXT } from '../graphql/cidade'
+import { PAISES_BY_TEXT } from '../graphql/pais'
 import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
 import ProfissaoAutocomplete from '../components/autocomplete/ProfissaoAutocomplete'
 import UnidadeSaudeAutocomplete from '../components/autocomplete/UnidadeSaude'
@@ -69,7 +70,7 @@ const PacienteForm = (props, ref) => {
       agenteComunitario: '',
       // encaminhadoPor: '',
       unidadeSaude: {},
-      // nacionalidade: '',
+      nacionalidade: '',
       naturalidade: {},
       estadoCivil: {},
       religiao: {},
@@ -97,6 +98,13 @@ const PacienteForm = (props, ref) => {
       ...prevValues,
       [name]: value
     }))
+  }
+
+  const changeNacionalidade = (data) => {
+    setPaciente({
+      ...paciente,
+      nacionalidade: data
+    })
   }
 
   const changeNaturalidade = (data) => {
@@ -211,6 +219,16 @@ const PacienteForm = (props, ref) => {
       {/* <NaturalidadeAutocomplete
         disabled={disabled}
       /> */}
+
+      <GenericAutocomplete
+        id="nacionalidade-autocomplete"
+        disabled={disabled}
+        query={PAISES_BY_TEXT}
+        value={paciente?.nacionalidade || {}}
+        responseName="paisesByText"
+        label="Nacionalidade"
+        onChange={changeNacionalidade}
+      />
 
       <GenericAutocomplete
         id="naturalidade-autocomplete"

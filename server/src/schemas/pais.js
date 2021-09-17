@@ -1,7 +1,7 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de pais
- * @module schemas/pais
- * @author Josafá Santos
+ * @description Descritores GraphQL para as operações sobre a tabela de pais
+ * @module src/schemas/pais
+ * @author Josafá Santos dos Reis
  */
 export default `
   type Pais {
@@ -13,6 +13,7 @@ export default `
   type Query {
     pais(id: ID!): Pais
     paises: [Pais]
+    paisesByText(text: String): [Pais]
   }
 
   type Mutation {

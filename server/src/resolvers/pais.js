@@ -1,8 +1,11 @@
 /**
- * @file Operações sobre a tabela de países
- * @module resolvers/pais
- * @author Josafá Santos
+ * @description Operações sobre a tabela de países
+ * @module src/resolvers/pais
+ * @author Josafá Santos dos Reis
  */
+
+import { Op } from 'sequelize'
+
 export default {
 
   Query: {
@@ -14,8 +17,20 @@ export default {
     // busca país pelo código
     pais: (parent, { id }, { models }) => models.Pais.findByPk(id, {
       attributes: { exclude: ['createdAt', 'updatedAt'] }
-    })
+    }),
 
+    paisesByText: async (_, { text }, { models }) => {
+      try {
+        const paises = await models.Pais.findAll({
+          where: {
+            nome: { [Op.like]: `${text}%` },
+          }
+        })
+        return paises
+      } catch (error) {
+        throw new Error(error.message)
+      }
+    }
   },
 
   Mutation: {
