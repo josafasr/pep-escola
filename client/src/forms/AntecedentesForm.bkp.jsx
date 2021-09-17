@@ -6,29 +6,29 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useQuery /* , useMutation */ } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
-  // Accordion,
-  // AccordionSummary,
-  // AccordionDetails,
-  // Grid,
-  // FormControlLabel,
-  // Checkbox,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Grid,
+  FormControlLabel,
+  Checkbox,
   TextField,
-  // Divider,
-  // Dialog,
-  // DialogTitle,
-  // DialogContent,
-  // DialogActions,
-  // Button,
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
   LinearProgress,
-  // MenuItem
+  MenuItem
 } from '@material-ui/core'
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import ConsultaContext from '../contexts/ConsultaContext'
-import { TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS /* , CREATE_ANTECEDENTE */ } from '../graphql/antecedente'
+import { TIPOS_ANTECEDENTE_WITH_ASSOCIATIONS, CREATE_ANTECEDENTE } from '../graphql/antecedente'
 import { PRIMEIRA_CONSULTA_OF_PACIENTE } from '../graphql/consulta'
 
 const useStyles = makeStyles(theme => ({
@@ -82,12 +82,12 @@ const AntecedentesForm = () => {
   const [antecedentes, setAntecedentes] = React.useState([])
   const [readOnly, setReadOnly] = React.useState(true)
 
-  // const [open, setOpen] = React.useState(false)
-  // const [dialog, setDialog] = React.useState({
-  //   nomeAntecedente: '',
-  //   descricaoAntecedente: '',
-  //   tipoAntecedente: ''
-  // })
+  const [open, setOpen] = React.useState(false)
+  const [dialog, setDialog] = React.useState({
+    nomeAntecedente: '',
+    descricaoAntecedente: '',
+    tipoAntecedente: ''
+  })
 
   const { loading, data } = useQuery(PRIMEIRA_CONSULTA_OF_PACIENTE, {
     variables: {
@@ -114,7 +114,6 @@ const AntecedentesForm = () => {
     }
   })
 
-/* 
   const [handleCreateAntecedente] = useMutation(CREATE_ANTECEDENTE)
 
   const handleChange = event => {
@@ -148,9 +147,8 @@ const AntecedentesForm = () => {
     }
     return false
   }
- */
 
-/* 
+
   const changeText = event => {
     const { id, value } = event.target
     if (id && value) {
@@ -217,7 +215,6 @@ const AntecedentesForm = () => {
       })
     }
   }
-*/
 
   const changeComplemento = event => {
     const { id, value } = event.target
@@ -254,7 +251,7 @@ const AntecedentesForm = () => {
       })
     }
   }
-/* 
+
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -305,7 +302,7 @@ const AntecedentesForm = () => {
       alert(`Não foi possível cadastrar! ${errors}`)
     }
   }
- */
+
   React.useEffect(() => {
     if (data && data.primeiraConsultaOfPaciente === null) {
       setReadOnly(false)
@@ -321,25 +318,24 @@ const AntecedentesForm = () => {
     ? <LinearProgress color="secondary" />
     : (tiposAntecedente.length < 1)
       ? <LinearProgress color="secondary" />
-      : <div className={classes.container}>
+      : <div>
       {tiposAntecedente.map(tipo => {
         const complementoAntecedente = consulta.complementosAntecedentes?.find(item =>
           item.tipoAntecedente?.id === tipo.id
         )
-        //return 
-        {/* <Accordion key={tipo.id}>
+        return <Accordion key={tipo.id}>
           <AccordionSummary
             className={classes.header}
             expandIcon={<ExpandMoreIcon />}
             id={`${tipo.id}`}
           >
             {tipo.nome}
-          </AccordionSummary> */}
+          </AccordionSummary>
 
-          {/* <AccordionDetails className={classes.container}> */}
-            {/* {tipo.antecedentes.map(antecedente => {
+          <AccordionDetails className={classes.container}>
+            {tipo.antecedentes.map(antecedente => {
 
-              return <div className={classes} key={antecedente.id}>
+              return <React.Fragment key={antecedente.id}>
                 <Grid className={classes.items} container>
                   <Grid className={classes.item} item sm>
                     <FormControlLabel
@@ -377,10 +373,10 @@ const AntecedentesForm = () => {
                   })}
                 </Grid>
                 <Divider />
-              </div className={classes}>
-            })} */}
+              </React.Fragment>
+            })}
 
-            {/* <TextField
+            <TextField
               className={classes.textArea}
               id={`${tipo.id}`}
               defaultValue={complementoAntecedente?.complemento || ''}
@@ -391,38 +387,21 @@ const AntecedentesForm = () => {
               inputProps={{
                 readOnly: readOnly
               }}
-            /> */}
-          {/* </AccordionDetails> */}
+            />
+          </AccordionDetails>
 
-          return (
-              <TextField
-                key={tipo.id}
-                className={classes.textArea}
-                id={`${tipo.id}`}
-                defaultValue={complementoAntecedente?.complemento || ''}
-                onBlur={changeComplemento}
-                multiline
-                rows="2"
-                label={tipo.nome}
-                variant="filled"
-                inputProps={{
-                  readOnly: readOnly
-                }}
-              />
-          )
-        /* </Accordion> */
+          <Button
+            className={classes.buttomOpenDialog}
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleClickOpen}
+            disabled={readOnly}
+          >
+            Novo Item
+          </Button>
+        </Accordion>
       })}
-
-      {/* <Button
-        className={classes.buttomOpenDialog}
-        variant="outlined"
-        color="primary"
-        size="small"
-        onClick={handleClickOpen}
-        disabled={readOnly}
-      >
-        Novo Item
-      </Button>
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Inserir Novo Item</DialogTitle>
@@ -485,7 +464,7 @@ const AntecedentesForm = () => {
             Salvar
           </Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
     </div>
   )
 }

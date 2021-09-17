@@ -68,6 +68,10 @@ export const GET_WITH_INCLUDES = gql`
           id
           nome
         }
+        nacionalidade {
+          id
+          nome
+        }
         naturalidade {
           id
           nome
