@@ -22,6 +22,7 @@ import { PAISES_BY_TEXT } from '../graphql/pais'
 import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
 import ProfissaoAutocomplete from '../components/autocomplete/ProfissaoAutocomplete'
 import UnidadeSaudeAutocomplete from '../components/autocomplete/UnidadeSaude'
+import ReligiaoAutocomplete from '../components/autocomplete/Religiao'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -258,7 +259,7 @@ const PacienteForm = (props, ref) => {
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
-      <TextField
+      {/* <TextField
         className={classes.formFields}
         name="religiao"
         value={paciente?.religiao || ''}
@@ -274,7 +275,9 @@ const PacienteForm = (props, ref) => {
       >
         {data.religioes.map((item) =>
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
-      </TextField>
+      </TextField> */}
+
+      <ReligiaoAutocomplete disabled={disabled} />
 
       <TextField
         className={classes.formFields}

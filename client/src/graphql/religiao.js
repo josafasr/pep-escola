@@ -1,5 +1,5 @@
 /**
- * @file API GraphQL sobre religiões
+ * @description API GraphQL sobre religiões
  * @module src/graphql/religiao
  * @author Josafá Santos dos Reis
  */
@@ -22,50 +22,27 @@ export const RELIGIOES = gql`
     }
   }`
 
-  /* createMutation: gql`
-    mutation($celular: String, $telefone: String, $email: String, $homePage: String) {
-      createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
-        ok
-        contato {
-          id
-          celular
-          telefone
-          email
-          homePage
-        }
-        errors {
-          path
-          message
-        }
-      }
-    }`, */
-/* 
-export const CREATE_CONTATO = gql`
-  mutation CreateContato($celular: String, $telefone: String, $email: String, $homePage: String) {
-    createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
-      ok
-      contato {
-        id
-        celular
-        telefone
-        email
-        homePage
-      }
-    }
-  }`
-
-export const UPDATE_CONTATO = gql`
-  mutation UpdateContato($id: ID!, $celular: String, $telefone: String, $email: String, $homePage: String) {
-    updateContato(id: $id, celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
+export const RELIGIOES_BY_TEXT = gql`
+  query ReligioesByText($text: String!) {
+    religioesByText(text: $text) {
       id
-      celular
-      telefone
-      email
-      homePage
+      nome
     }
-  }`
+  }
+`
 
-export const DELETE_CONTATO = gql`
-  mutation DeleteContato($id: ID!) {
-    deleteContato(id: $id)
-  }` */
+export const CREATE_RELIGIAO = gql`
+  mutation CreateReligiao($nome: String) {
+    createReligiao(nome: $nome) {
+      ok
+      religiao {
+        id
+        nome
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`

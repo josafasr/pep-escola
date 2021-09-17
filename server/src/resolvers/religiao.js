@@ -1,8 +1,11 @@
 /**
- * @file Operações sobre a tabela de religiões
- * @module resolvers/religiao
- * @author Josafá Santos
+ * @description Operações sobre a tabela de religiões
+ * @module src/resolvers/religiao
+ * @author Josafá Santos dos Reis
  */
+
+import ReligiaoRepository from '../data/religiao'
+
 export default {
 
   Query: {
@@ -15,7 +18,13 @@ export default {
     /**
      * restorna um registro de religião pelo id
      */
-    religiao: (parent, { id }, { models }) => models.Religiao.findByPk(id)
+    religiao: (parent, { id }, { models }) => models.Religiao.findByPk(id),
+
+    /**
+     * Busca profissoes pelo inicio do nome
+     * @returns array de profissoes
+     */
+     religioesByText: async (_, { text }) => await ReligiaoRepository.findByText(text)
   },
 
   Mutation: {
@@ -23,11 +32,7 @@ export default {
     /**
      * cria um novo registro de religião
      */
-    createReligiao: (parent, args, { models }) => models.Religiao.create({
-      nome: args.nome,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }),
+     createReligiao: async (_, args ) => await ReligiaoRepository.create(args),
 
     /**
      * atualiza um registro de religião, dado o id

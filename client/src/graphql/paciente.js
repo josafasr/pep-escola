@@ -286,6 +286,10 @@ export const GET_WITH_INCLUDES = gql`
         nome
         cnes
       }
+      nacionalidade {
+        id
+        nome
+      }
       naturalidade {
         id
         nome
