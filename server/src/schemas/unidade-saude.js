@@ -11,7 +11,7 @@
         cnes: String
     }
 
-    type CreateUnidadeSaudeResponse {
+    type UnidadeSaudeResponse {
         ok: Boolean
         unidadeSaude: UnidadeSaude
         errors: [Error]
@@ -20,11 +20,12 @@
     type Query {
         unidadeSaude(id: ID!): UnidadeSaude
         unidadesSaude: [UnidadeSaude]
+        unidadesSaudeByText(text: String): [UnidadeSaude]
     }
 
     type Mutation{
-        createUnidadeSaude(nome: String, cnes: String): CreateUnidadeSaudeResponse
-        updateUnidadeSaude(id: ID!, nome: String, cnes: String): CreateUnidadeSaudeResponse
+        createUnidadeSaude(nome: String, cnes: String): UnidadeSaudeResponse
+        updateUnidadeSaude(id: ID!, nome: String, cnes: String): UnidadeSaudeResponse
         deleteUnidadeSaude(id: ID!): Boolean
     }
 `

@@ -1,5 +1,5 @@
 /**
- * @file Acesso à API GraphQL sobre unidades de saúde
+ * @description Acesso à API GraphQL sobre unidades de saúde
  * @module src/graphql/unidade-saude
  * @author Josafá Santos dos Reis
  */
@@ -23,3 +23,28 @@ export const UNIDADES_SAUDE = gql`
       cnes
     }
   }`
+
+export const UNIDADES_SAUDE_BY_TEXT = gql`
+  query UnidadesSaudeByText($text: String!) {
+    unidadesSaudeByText(text: $text) {
+      id
+      nome
+    }
+  }
+`
+
+export const CREATE_UNIDADE_SAUDE = gql`
+  mutation CreateUnidadeSaude($nome: String) {
+    createUnidadeSaude(nome: $nome) {
+      ok
+      unidadeSaude {
+        id
+        nome
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`

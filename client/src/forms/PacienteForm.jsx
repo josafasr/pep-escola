@@ -20,6 +20,7 @@ import PacienteContext from '../contexts/PacienteContext'
 import { CIDADES_BY_TEXT } from '../graphql/cidade'
 import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
 import ProfissaoAutocomplete from '../components/autocomplete/ProfissaoAutocomplete'
+import UnidadeSaudeAutocomplete from '../components/autocomplete/UnidadeSaude'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -187,7 +188,7 @@ const PacienteForm = (props, ref) => {
         }}
       /> */}
 
-      <TextField
+      {/* <TextField
         className={classes.formFields}
         name="unidadeSaude"
         value={paciente?.unidadeSaude || ''}
@@ -203,7 +204,9 @@ const PacienteForm = (props, ref) => {
       >
         {data.unidadesSaude.map((item) =>
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
-      </TextField>
+      </TextField> */}
+
+      <UnidadeSaudeAutocomplete disabled={disabled} />
 
       {/* <NaturalidadeAutocomplete
         disabled={disabled}

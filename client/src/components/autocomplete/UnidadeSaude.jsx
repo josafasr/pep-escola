@@ -1,5 +1,5 @@
-import React from 'react'
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
+import React, { useContext, useEffect, useState } from 'react'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
   TextField,
   CircularProgress,
@@ -8,60 +8,45 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button,
-  MenuItem
+  Button
 } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
-import { PROFISSOES_BY_TEXT, CREATE_PROFISSAO } from '../../graphql/profissao'
+import { UNIDADES_SAUDE_BY_TEXT, CREATE_UNIDADE_SAUDE } from '../../graphql/unidade-saude'
 import PacienteContext from '../../contexts/PacienteContext'
 
 const filter = createFilterOptions();
 
-const ProfissaoAutocomplete = (props) => {
+const UnidadeSaudeAutocomplete = (props) => {
 
   const { disabled } = props
-  const [open, setOpen] = React.useState(false)
-  const [options, setOptions] = React.useState([])
-  const [_, setValue] = React.useState({})
+  const [open, setOpen] = useState(false)
+  const [options, setOptions] = useState([])
+  const [_, setValue] = useState({})
 
-  const [inputValue, setInputValue] = React.useState('')
-  const [reason, setReason] = React.useState()
+  const [inputValue, setInputValue] = useState('')
+  const [reason, setReason] = useState()
   
-  const [show, toggleShow] = React.useState(false)
-  const [paciente, setPaciente] = React.useContext(PacienteContext)
+  const [show, toggleShow] = useState(false)
+  const [paciente, setPaciente] = useContext(PacienteContext)
   // const loading = open && options.length === 0 && inputValue.length 
 
-  const [handleProfissoes, { networkStatus }] = useLazyQuery(PROFISSOES_BY_TEXT, {
+  const [handleUnidadesSaude, { networkStatus }] = useLazyQuery(UNIDADES_SAUDE_BY_TEXT, {
     onCompleted: (data) => {
-      setOptions(data.profissoesByText)
+      setOptions(data.unidadesSaudeByText)
     },
     notifyOnNetworkStatusChange: true
   })
 
   const loading = networkStatus === 1
 
-  // const tiposQueixaResponse = useQuery(TIPOS_QUEIXA)
+  const [handleCreate] = useMutation(CREATE_UNIDADE_SAUDE)
 
-  // const loadTiposQueixa = () => {
-  //   if (tiposQueixaResponse.loading) return 'Carregando...'
-  //   if (tiposQueixaResponse.error) return 'Erro :('
-
-  //   return (
-  //     tiposQueixaResponse.data.tiposQueixa.map((item) => (
-  //     <MenuItem key={item.id} value={item.id}>{item.nome}</MenuItem>
-  //     ))
-  //   )
-  // }
-
-  const [handleCreate] = useMutation(CREATE_PROFISSAO)
-
-  const [dialogValue, setDialogValue] = React.useState({ nome: '' })
+  const [dialogValue, setDialogValue] = useState({ nome: '' })
 
   const handleChange = (_, newValue, reason) => {
-    // event.preventDefault()
     if (reason === 'select-option') {
-      setPaciente({ ...paciente, profissao: newValue })
+      setPaciente({ ...paciente, unidadeSaude: newValue })
     }
 
     if (typeof newValue === 'string') {
@@ -96,23 +81,23 @@ const ProfissaoAutocomplete = (props) => {
       variables: dialogValue
     })
 
-    const { ok, profissao } = createResponse.data.createProfissao
+    const { ok, unidadeSaude } = createResponse.data.createUnidadeSaude
     if (ok) {
-      delete profissao['__typename']
+      delete unidadeSaude['__typename']
       setPaciente({
         ...paciente,
-        profissao: profissao
+        unidadeSaude: unidadeSaude
       })
       handleClose()
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true
 
     if (active && (reason === 'input')) {
       if (inputValue && inputValue.length > 2) {
-        handleProfissoes({
+        handleUnidadesSaude({
           variables: {
             text: inputValue
           }
@@ -123,9 +108,9 @@ const ProfissaoAutocomplete = (props) => {
     return () => {
       active = false
     }
-  }, [reason, inputValue, handleProfissoes])
+  }, [reason, inputValue, handleUnidadesSaude])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) {
       setOptions([])
     }
@@ -134,7 +119,7 @@ const ProfissaoAutocomplete = (props) => {
   return (
     <React.Fragment>
       <Autocomplete
-        id="profissao-autocomplete"
+        id="unidade-saude"
         style={{
           margin: '11px 10px 0 0',
           padding: '0 10px 0 0',
@@ -147,7 +132,7 @@ const ProfissaoAutocomplete = (props) => {
         onClose={() => {
           setOpen(false)
         }}
-        value={paciente?.profissao || ''}
+        value={paciente?.unidadeSaude || ''}
         onChange={handleChange}
         inputValue={inputValue}
         onInputChange={handleInputChange}
@@ -184,7 +169,7 @@ const ProfissaoAutocomplete = (props) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Profissão"
+            label="Unidade de Saúde"
             placeholder="Pesquisar..."
             size="small"
             InputProps={{
@@ -202,10 +187,10 @@ const ProfissaoAutocomplete = (props) => {
       />
       <Dialog open={show} onClose={handleClose} aria-labelledby="form-dialog-title">
         <form onSubmit={handleSubmit}>
-          <DialogTitle id="form-dialog-title">Adicionar nova profissão</DialogTitle>
+          <DialogTitle id="form-dialog-title">Adicionar nova Unidade</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Não encontrou a profissão na lista? Por favor, adicione!
+              Não encontrou a unidade na lista? Por favor, adicione!
             </DialogContentText>
             <TextField
               autoFocus
@@ -231,4 +216,4 @@ const ProfissaoAutocomplete = (props) => {
     </React.Fragment>
   )
 }
-export default ProfissaoAutocomplete
+export default UnidadeSaudeAutocomplete

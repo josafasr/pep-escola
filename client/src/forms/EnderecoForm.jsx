@@ -67,7 +67,6 @@ function EnderecoForm(props, ref) {
   }
 
   const changeCidade = (data) => {
-    console.log('changeCidade:', data)
     setEndereco({
       ...endereco,
       cidade: data

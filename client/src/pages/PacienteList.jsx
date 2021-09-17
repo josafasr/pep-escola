@@ -83,7 +83,7 @@ export default function PacienteList() {
           size="small"
           color="primary"
         >
-          Criar Prontuário
+          Cadastrar Paciente
         </Button>
       </Link>
       <div>
