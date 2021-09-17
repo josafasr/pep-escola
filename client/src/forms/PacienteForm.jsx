@@ -19,6 +19,7 @@ import { LOAD_DROP_DOWNS } from '../graphql/paciente'
 import PacienteContext from '../contexts/PacienteContext'
 import { CIDADES_BY_TEXT } from '../graphql/cidade'
 import GenericAutocomplete from '../components/autocomplete/GenericAutocomplete'
+import ProfissaoAutocomplete from '../components/autocomplete/ProfissaoAutocomplete'
 
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -308,7 +309,7 @@ const PacienteForm = (props, ref) => {
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
       </TextField>
 
-      <TextField
+      {/* <TextField
         className={classes.formFields}
         name="profissao"
         value={paciente?.profissao || ''}
@@ -325,7 +326,9 @@ const PacienteForm = (props, ref) => {
       >
         {data.profissoes.map((item) =>
           <MenuItem key={item.id} value={item}>{item.nome}</MenuItem>)}
-      </TextField>
+      </TextField> */}
+
+      <ProfissaoAutocomplete disabled={disabled} />
 
       <TextField
         className={classes.formFields}

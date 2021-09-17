@@ -1,6 +1,6 @@
 /**
- * @file API GraphQL sobre enderecos
- * @module src/components/endereco/api
+ * @description API GraphQL sobre dados de pacientes
+ * @module src/graphql/paciente
  * @author Josafá Santos dos Reis
  */
 

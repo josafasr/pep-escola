@@ -1,5 +1,5 @@
 /**
- * @file Acesso à API GraphQL sobre profissões
+ * @description Acesso à API GraphQL sobre profissões
  * @module src/graphql/profissao
  * @author Josafá Santos dos Reis
  */
@@ -12,7 +12,8 @@ export const PROFISSAO = gql`
       id
       nome
     }
-  }`
+  }
+`
 
 export const PROFISSOES = gql`
   query Profissoes {
@@ -20,52 +21,30 @@ export const PROFISSOES = gql`
       id
       nome
     }
-  }`
+  }
+`
 
-  /* createMutation: gql`
-    mutation($celular: String, $telefone: String, $email: String, $homePage: String) {
-      createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
-        ok
-        contato {
-          id
-          celular
-          telefone
-          email
-          homePage
-        }
-        errors {
-          path
-          message
-        }
-      }
-    }`, */
-/* 
-export const CREATE_CONTATO = gql`
-  mutation CreateContato($celular: String, $telefone: String, $email: String, $homePage: String) {
-    createContato(celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
-      ok
-      contato {
-        id
-        celular
-        telefone
-        email
-        homePage
-      }
-    }
-  }`
-
-export const UPDATE_CONTATO = gql`
-  mutation UpdateContato($id: ID!, $celular: String, $telefone: String, $email: String, $homePage: String) {
-    updateContato(id: $id, celular: $celular, telefone: $telefone, email: $email, homePage: $homePage) {
+export const PROFISSOES_BY_TEXT = gql`
+  query ProfissoesByText($text: String!) {
+    profissoesByText(text: $text) {
       id
-      celular
-      telefone
-      email
-      homePage
+      nome
     }
-  }`
+  }
+`
 
-export const DELETE_CONTATO = gql`
-  mutation DeleteContato($id: ID!) {
-    deleteContato(id: $id)
-  }` */
+export const CREATE_PROFISSAO = gql`
+  mutation CreateProfissao($nome: String) {
+    createProfissao(nome: $nome) {
+      ok
+      profissao {
+        id
+        nome
+      }
+      errors {
+        path
+        message
+      }
+    }
+  }
+`

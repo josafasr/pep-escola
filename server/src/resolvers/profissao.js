@@ -1,8 +1,11 @@
 /**
- * @file Operações sobre a tabela de profissões
- * @module resolvers/profissao
- * @author Josafá Santos
+ * @description Operações sobre a tabela de profissões
+ * @module src/resolvers/profissao
+ * @author Josafá Santos dos Reis
  */
+
+import ProfissaoRepository from '../data/profissao'
+
 export default {
 
   Query: {
@@ -21,7 +24,13 @@ export default {
     profissao: async (parent, { id }, { models }) => {
       const profissao = await models.Profissao.findByPk(id)
       return profissao
-    }
+    },
+
+    /**
+     * Busca profissoes pelo inicio do nome
+     * @returns array de profissoes
+     */
+    profissoesByText: async (_, { text }) => await ProfissaoRepository.findByText(text)
   },
 
   Mutation: {
@@ -29,7 +38,7 @@ export default {
     /**
      * cria um novo registro de profissão
      */
-    createProfissao: (parent, args, { models }) => models.Profissao.create(args),
+    createProfissao: async (_, args ) => await ProfissaoRepository.create(args),
 
     /**
      * atualiza um registro de profissão, dado o id
