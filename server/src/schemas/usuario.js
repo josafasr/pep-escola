@@ -10,7 +10,7 @@ export default gql`
   type Usuario {
     id: ID
     nome: String
-    senha: String
+    # senha: String
     pessoa: Pessoa
     grupos: [Grupo]
   }
