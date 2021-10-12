@@ -11,5 +11,8 @@
 /server/src/config/config.json
 
 */.env
+*/.env.production
 
 *.bkp
+
+*docker.compose-local.yml

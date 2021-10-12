@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
@@ -15,6 +15,7 @@ import {
   Button,
   LinearProgress
 } from '@material-ui/core'
+import decode from 'jwt-decode'
 
 import { useStyles } from '../styles/usuario'
 import { toDatabaseDate } from '../utils/format'
@@ -31,15 +32,20 @@ import PessoaForm from '../forms/PessoaForm'
 import ContatoForm from '../forms/ContatoForm'
 import UsuarioForm from '../forms/UsuarioForm'
 import ChangePasswordForm from '../forms/ChangePasswordForm'
+import { AppContext } from '../contexts/app-context'
 
-export default function UsuarioEdit() {
+const UsuarioEdit = () => {
   const classes = useStyles()
   let history = useHistory()
   const { userId } = useParams()
-  const editar = useRouteMatch('/usuarios/:userId/editar')
+  const { path } = useRouteMatch()
+  const editar = path === '/usuarios/:userId/editar'
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
   const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
+  const { getAccessToken } = useContext(AppContext)
+  const { userId: decodedId } = decode(getAccessToken(), { algorithms: ['RS512'] })
+  //const canEdit = userId === decodedId
   //const [endereco, setEndereco] = React.useState({})
 
   const pessoaRef = React.useRef()
@@ -247,14 +253,20 @@ export default function UsuarioEdit() {
             variant="contained"
             size="small"
             onClick={handleBack}
-          >{!!userId && !editar ? 'Voltar' : 'Cancelar'}</Button>
+          >
+            {!!userId && !editar ? 'Voltar' : 'Cancelar'}
+          </Button>
+
           <Button
             className={classes.formButton}
             variant="contained"
             color="primary"
             size="small"
             onClick={!userId || editar ? handleSubmit : goToEdit}
-          >{!!userId && !editar ? 'Editar' : 'Salvar'}</Button>
+          >
+            {!!userId && !editar ? 'Editar' : 'Salvar'}
+          </Button>
+
           {!!userId && !editar && <Button
             className={classes.formButton}
             variant="contained"
@@ -267,3 +279,4 @@ export default function UsuarioEdit() {
     </React.Fragment>
   )
 }
+export default UsuarioEdit

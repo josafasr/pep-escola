@@ -143,6 +143,7 @@ const InterrogatorioSistematicoForm = () => {
   return (
     <div>
       {tiposQueixa.map(tipo => {
+        const readOnly = !!consulta.id
         const complementoQueixa = consulta.complementosQueixas?.find(item => item.tipoQueixa.id === tipo.id)
         return (
         <Box className={classes.fieldSet} key={tipo.id} component="fieldset">
@@ -157,7 +158,7 @@ const InterrogatorioSistematicoForm = () => {
                     <Checkbox
                       className={classes.checkbox}
                       id={queixa.id}
-                      onChange={handleChange}
+                      onChange={!readOnly ? handleChange : undefined}
                       checked={isChecked(queixa)}
                       //color="primary"
                       size="small"
@@ -177,9 +178,9 @@ const InterrogatorioSistematicoForm = () => {
             multiline
             variant="filled"
             label="Observações"
-            /* inputProps={{
-              readOnly: disabled
-            }} */
+            inputProps={{
+              readOnly: readOnly
+            }}
           />
           {!isLast(tiposQueixa, tipo) && <Divider className={classes.divider} />}
         </Box>)

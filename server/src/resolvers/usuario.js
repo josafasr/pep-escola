@@ -44,11 +44,10 @@ export default {
               attributes: ['id', 'nome']
             }]
           } */]
-        }/* ,
-        {
+        }, {
           association: 'grupos',
           attributes: ['id', 'nome']
-        } */],
+        }],
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
       return usuarios
@@ -269,7 +268,7 @@ export default {
           }
 
           if (grupos) {
-            await usuario.addGrupos(grupos)
+            await usuario.setGrupos(grupos)
           }
           return usuario
         })

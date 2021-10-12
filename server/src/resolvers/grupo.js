@@ -1,8 +1,11 @@
 /**
- * @file Operações sobre a tabela de grupos
- * @module resolvers/grupo
- * @author Josafá Santos
+ * @description Operações sobre a tabela de grupos
+ * @module src/resolvers/grupo
+ * @author Josafá Santos dos Reis
  */
+
+import { formatErrors } from "../format-errors"
+
 export default {
 
   Query: {
@@ -10,11 +13,11 @@ export default {
     /**
      * retorna todos os registros de grupo
      */
-    grupos: (parent, args, { models }) => models.Grupo.findAll({
+    grupos: async (_, __, { models }) => await models.Grupo.findAll({
       include: [
         {
-          as: 'usuarios',
-          model: models.Usuario,
+          as: 'permissoes',
+          model: models.Permissao,
           through: { attributes: [] }
         }
       ]
@@ -23,7 +26,7 @@ export default {
     /**
      * restorna um registro de grupo pelo id
      */
-    grupo: (parent, { id }, { models }) => models.Grupo.findByPk(id, {
+    grupo: async (_, { id }, { models }) => await models.Grupo.findByPk(id, {
       include: [
         {
           as: 'usuarios',
@@ -39,23 +42,55 @@ export default {
     /**
      * cria um novo registro de grupo
      */
-    createGrupo: (parent, args, { models }) => models.Grupo.create({
-      nome: args.nome,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }),
-
+    createGrupo: async (_, args, { models, sequelize }) => {
+      try {
+        const result = await sequelize.transaction(async (tx) => {
+          const grupo = await models.Grupo.create(args)
+          return grupo
+        })
+        return {
+          ok: true,
+          grupo: result
+        }
+      } catch (error) {
+        return {
+          ok: false,
+          errors: formatErrors(error, models)
+        }
+      }
+    },
     /**
      * atualiza um registro de grupo, dado o id
      */
-    updateGrupo: (parent, args, { models }) => models.Grupo.update({
-      nome: args.nome,
-      updatedAt: new Date(),
-    }, {
-      where: { id: args.id },
-      returning: true,
-      plain: true
-    }).then((result) => { result[1] }),
+    updateGrupo: async (_, { id, permissoes, ...rest }, { models, sequelize }) => {
+      try {
+        const result = await sequelize.transaction(async (tx) => {
+          const grupo = await models.Grupo.findByPk(id)
+          
+          if (rest) {
+            await grupo.update(rest, {
+              returning: true,
+              plain: true
+            })
+          }
+
+          if (permissoes) {
+            await grupo.setPermissoes(permissoes)
+          }
+
+          return grupo
+        })
+        return {
+          ok: true,
+          grupo: result
+        }
+      } catch (error) {
+        return {
+          ok: false,
+          errors: formatErrors(error, models)
+        }
+      }
+    },
 
     /**
      * exclui exclui um registro de grupo, dado o id

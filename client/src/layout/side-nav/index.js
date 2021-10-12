@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 //import { useApolloClient } from 'react-apollo'
 //import gql from 'graphql-tag'
-//import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom'
 import clsx from 'clsx'
 import {
@@ -25,16 +25,20 @@ import {
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import GroupIcon from '@material-ui/icons/Group'
-import ViewListIcon from '@material-ui/icons/ViewList'
+// import ViewListIcon from '@material-ui/icons/ViewList'
 import MenuIcon from '@material-ui/icons/Menu'
 import FolderIcon from '@material-ui/icons/Folder'
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import { deepPurple } from '@material-ui/core/colors'
+// import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+// import { deepPurple } from '@material-ui/core/colors'
+import decode from 'jwt-decode'
 
 //import Usuario from '../../components/usuario'
 import UsuarioView from '../../pages/UsuarioView'
 import PacienteView from '../../pages/PacienteView'
-import ConsultaEdit from '../../pages/ConsultaEdit'
+// import ConsultaEdit from '../../pages/ConsultaEdit'
+import { GET_BY_ID } from '../../graphql/usuario'
+import { AppContext } from '../../contexts/app-context'
 
 const drawerWidth = 240
 
@@ -100,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'flex-end',
     width: theme.spacing(5),
     height: theme.spacing(5),
-    backgroundColor: deepPurple[500]
+    backgroundColor: 'red' //deepPurple[500]
   },
 
   avatarBtn: {
@@ -115,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   selected: {
-    backgroundColor: 'rgb(223, 223, 223)'
+    backgroundColor: 'rgb(245, 245, 245)'
   },
 
   content: {
@@ -142,7 +146,10 @@ export default function SideNav(props) {
 
   const history = useHistory()
 
-  const { url } = useRouteMatch()
+  const { path, url } = useRouteMatch()
+
+  const { appState, getAccessToken, setCurrentUser } = useContext(AppContext)
+  const { userId: decodedId } = decode(getAccessToken(), { algorithms: ['RS512'] })
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -151,6 +158,18 @@ export default function SideNav(props) {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const { loading } = useQuery(GET_BY_ID, {
+    variables: { id: decodedId },
+    onCompleted: data => {
+      setCurrentUser(data.usuario)
+    },
+    skip: appState.currentUser !== undefined
+  })
+
+  const isAdmin = appState.currentUser?.grupos?.some(grupo =>
+    grupo.nome === 'Administradores'
+  )
 
   //const client = useApolloClient()
 
@@ -177,6 +196,11 @@ export default function SideNav(props) {
     history.push('/login')
   }
 
+  const goToEdit = () => {
+    history.push(`/usuarios/${decodedId}`)
+    handleClose()
+  }
+
 /*   const { data } = useQuery(gql`
     {
       lastAction @client
@@ -201,20 +225,29 @@ export default function SideNav(props) {
       >
         <Divider />
 
-        <List>
-          <NavLink to={url} className={classes.link} activeClassName={classes.selected}>
-            <ListItem button>
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Início" />
-            </ListItem>
-          </NavLink>
+        {!loading && <List>
+          <ListItem
+            button
+            component={NavLink}
+            exact
+            to="/"
+            className={classes.link}
+            activeClassName={classes.selected}
+          >
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Início" />
+          </ListItem>
 
-          <NavLink to="/pacientes" className={classes.link} activeClassName={classes.selected}>
-            <ListItem button>
-              <ListItemIcon><FolderIcon /></ListItemIcon>
-              <ListItemText primary="Pacientes" />
-            </ListItem>
-          </NavLink>
+          <ListItem
+            button
+            component={NavLink}
+            to="/pacientes"
+            className={classes.link}
+            activeClassName={classes.selected}
+          >
+            <ListItemIcon><FolderIcon /></ListItemIcon>
+            <ListItemText primary="Pacientes" />
+          </ListItem>
 
           {/* <NavLink to="/agendamentos" className={classes.link} activeClassName={classes.selected}>
             <ListItem button>
@@ -230,13 +263,17 @@ export default function SideNav(props) {
             </ListItem>
           </NavLink> */}
 
-          <NavLink to="/usuarios" className={classes.link} activeClassName={classes.selected}>
-            <ListItem button>
-              <ListItemIcon><GroupIcon /></ListItemIcon>
-              <ListItemText primary="Usuários" />
-            </ListItem>
-          </NavLink>
-        </List>
+          {isAdmin && <ListItem
+            button
+            component={NavLink}
+            to="/usuarios"
+            className={classes.link}
+            activeClassName={classes.selected}
+          >
+            <ListItemIcon><GroupIcon /></ListItemIcon>
+            <ListItemText primary="Usuários" />
+          </ListItem>}
+        </List>}
       </div>
     </div>
   )
@@ -285,7 +322,7 @@ export default function SideNav(props) {
           <div className={classes.toobar}>
             <Avatar className={classes.avatar} children="JS">
               <Button className={classes.avatarBtn} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                U
+                <MoreVertIcon />
               </Button>
               <Menu
                 id="simple-menu"
@@ -294,8 +331,8 @@ export default function SideNav(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Perfil</MenuItem>
-                <MenuItem onClick={handleClose}>Informações</MenuItem>
+                <MenuItem onClick={goToEdit}>Meus Dados</MenuItem>
+                {/* <MenuItem onClick={handleClose}>Informações</MenuItem> */}
                 <Divider />
                 <MenuItem onClick={handleLogout}>Sair</MenuItem>
               </Menu>
@@ -344,10 +381,13 @@ export default function SideNav(props) {
           <Route exact path="/" render={() => <div className={classes.home}>
             <img src="/images/medicina.png" alt="Brasão do Curso de Medicina" />
           </div>} />
+          <Route path="/bloqueio">
+            <div>Não autorizado!</div>
+          </Route>
 
           <Route path="/pacientes" component={PacienteView} />
 
-          <Route exact path="/consultas/:consultaId" component={ConsultaEdit} />
+          {/* <Route exact path="/consultas/:consultaId" component={ConsultaEdit} /> */}
 
           <Route exact path="/agendamentos" render={() => (<div>Em desenvolvimento....</div>)} />
           <Route exact path="/cadastros" render={() => (<div>Em desenvolvimento.....</div>)} />

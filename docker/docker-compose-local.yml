@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: mypassword
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "4321:5432"
+    volumes:
+      - ./postgres-vol:/var/lib/postgresql/data
+
+  nodejs:
+    image: node:14
+    container_name: nodejs
+    hostname: nodejs
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    volumes:
+      - graphql:/home/node
+    working_dir: /home/node
+    command: npm run serve:docker
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - nodejs
+
+volumes:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/josafa/Desenvolvimento/Projetos/Uesb/pme-uesb/client/build/
+      o: bind
+  graphql:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/josafa/Desenvolvimento/Projetos/Uesb/pme-uesb/server/
+      o: bind

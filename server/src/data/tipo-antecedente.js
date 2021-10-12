@@ -41,7 +41,7 @@ export default {
     try {
       const tiposAntecedentes = await db.TipoAntecedente.findAll({
         where: {
-          id: { [Op.in]: [1, 2, 6, 7, 8] }
+          id: { [Op.in]: [1, 6, 7, 8] }
         },
         order: [
           ['id'],

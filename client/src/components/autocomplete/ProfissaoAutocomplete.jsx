@@ -112,9 +112,10 @@ const ProfissaoAutocomplete = (props) => {
 
     if (active && (reason === 'input')) {
       if (inputValue && inputValue.length > 2) {
+        const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1))
         handleProfissoes({
           variables: {
-            text: inputValue
+            text: text
           }
         })
       }
@@ -158,7 +159,7 @@ const ProfissaoAutocomplete = (props) => {
           if (params.inputValue.length > 2 && options.length < 1) {
             filtered.push({
               inputValue: params.inputValue,
-              nome: `Adicionar "${params.inputValue}"`,
+              nome: `Adicionar "${params.inputValue.substring(0, 1).toUpperCase().concat(params.inputValue.substring(1))}"`,
             });
           }
 

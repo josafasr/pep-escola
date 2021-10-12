@@ -1,12 +1,12 @@
 /**
- * @title Formulário para criação/edição dos dados de consultas
+ * @description Formulário para criação/edição dos dados de consultas
  * @module src/forms/ConsultaForm
  * @author Josafá Santos dos Reis
  */
 
- import React from 'react'
+import React from 'react'
 // import clsx from 'clsx'
- import {
+import {
   makeStyles,
   TextField
 } from '@material-ui/core'
@@ -114,7 +114,7 @@ function ConsultaForm(props, ref) {
         disabled={disabled}
       />
 
-      <TextField
+      {/* <TextField
         className={classes.textArea}
         name="queixaPrincipalObs"
         value={consulta.queixaPrincipalObs || ''}
@@ -126,7 +126,7 @@ function ConsultaForm(props, ref) {
         inputProps={{
           readOnly: disabled
         }}
-      />
+      /> */}
 
       <TextField
         className={classes.textArea}
@@ -134,9 +134,9 @@ function ConsultaForm(props, ref) {
         value={consulta.historiaDoencaAtual || ''}
         onChange={handleChange}
         multiline
-        rows={3}
+        rows={2}
         variant="filled"
-        label="História da Doença Atual"
+        //label="História da Doença Atual"
         inputProps={{
           readOnly: disabled
         }}

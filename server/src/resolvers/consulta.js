@@ -57,13 +57,10 @@ export default {
       const consulta = await models.Consulta.findByPk(id, {
         attributes: { exclude: ['updatedAt'] },
         include: [
-          {
+          /* {
             association: 'responsaveis',
-            include: {
-              association: 'pessoa',
-              attributes: ['id', 'nome']
-            }
-          }, {
+            attributes: ['id', 'responsaveis']
+          },  */{
             association: 'paciente',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [
@@ -198,6 +195,9 @@ export default {
       const consultas = await models.Consulta.findAll({
         include: [
           {
+            association: 'queixaPrincipal',
+            attributes: ['id', 'nome']
+          }, {
             association: 'queixas',
             attributes: ['id', 'nome']
           }
@@ -304,7 +304,9 @@ export default {
                 } /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
               }, {
                 association: 'indicadoresExameFisico'
-              }, {
+              }, /* {
+                association: 'responsaveis'
+              }, */ {
                 association: 'complementosQueixas'
               }, {
                 association: 'complementosExameFisico'

@@ -54,7 +54,7 @@ export default gql`
       nome: String!,
       senha: String!,
       pessoaId: ID,
-      grupos: [Int]
+      grupos: [ID]
     ): UsuarioResponse
 
     createUsuarioWithIncludes(
@@ -69,7 +69,7 @@ export default gql`
       nome: String,
       senha: String,
       pessoa: PessoaInput,
-      grupos: [Int]
+      grupos: [ID]
     ): UsuarioResponse
 
     deleteUsuario(id: ID!): Boolean

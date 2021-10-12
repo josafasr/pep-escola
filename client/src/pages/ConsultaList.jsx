@@ -102,7 +102,7 @@ export default function PacienteList() {
         <List>
           {data.consultasByPaciente.map(consulta =>
             <Paper className={classes.listItemPaper} key={consulta.id}>
-              <ListItem component={Link} to={`/consultas/${consulta.id}`}>
+              <ListItem component={Link} to={`/pacientes/${id}/consultas/${consulta.id}`}>
                 <ListItemAvatar>
                   <Avatar>
                     <AssignmentIcon />

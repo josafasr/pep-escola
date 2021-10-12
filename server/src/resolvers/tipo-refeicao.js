@@ -1,7 +1,7 @@
 /**
- * @file Operações sobre a tabela de apresentações de tipo de refeição
- * @module resolvers/tipo-refeicao
- * @author Marcos Porto 
+ * @description Operações sobre a tabela de apresentações de tipo de refeição
+ * @module src/resolvers/tipo-refeicao
+ * @author Marcos Porto, Josafá Santos dos Reis
  */
 
 import { formatErrors } from '../format-errors';
@@ -12,7 +12,12 @@ import { formatErrors } from '../format-errors';
          /**
           * retorna todos os registros de tipo de refeição
           */
-         tiposRefeicao: (parent, args, { models }) => models.TipoRefeicao.findAll(),
+         tiposRefeicao: async (_, __, { models }) => {
+           const tiposRefeicao = await models.TipoRefeicao.findAll({
+             order: [ 'id' ]
+           })
+           return tiposRefeicao
+         },
     
          /**
           * retorna um registro de tipo de refeição pelo id

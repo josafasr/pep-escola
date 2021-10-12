@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de tipos de logradouros
+ * @description Mapeamento da tabela de tipos de logradouros
  * @module models/TipoLogradouro
  * @author Josafá Santos
  */
@@ -9,9 +9,9 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    schema: 'dados_gerais',
-    tableName: 'tipo_logradouro'
-  });
+    tableName: 'dg_tipo_logradouro',
+    timestamps: false
+  })
 
   TipoLogradouro.associate = (models) => {
     /**
@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
       as: 'enderecos',
       foreignKey: 'tipoLogradouroId'
     })
-  };
-  return TipoLogradouro;
-};
+  }
+
+  return TipoLogradouro
+}

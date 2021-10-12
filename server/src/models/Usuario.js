@@ -87,12 +87,12 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de consultas
      * @see module: src/models/Consulta
      */
-    Usuario.belongsToMany(models.Consulta, {
+    /* Usuario.belongsToMany(models.Consulta, {
       through: models.ResponsavelConsulta,
       as: 'consultas',
       foreignKey: 'usuarioId',
       otherKey: 'consultaId'
-    }),
+    }), */
 
     /**
      * Relacionamento com a tabela de avaliação de atendimento

@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento da tabela de especialidade
+ * @description Mapeamento da tabela de especialidade
  * @module src/models/Especialidade
  * @author Marcos Porto
  */
@@ -14,8 +14,7 @@ export default (sequelize, DataTypes) => {
     }
   },
   {
-    schema: 'ceuas',
-    tableName: 'especialidade'
+    tableName: 'ceuas_especialidade'
   });
 
   Especialidade.associate = (models) => {

@@ -9,14 +9,22 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       field: 'consulta_id'
     },
-    usuarioId: {
-      type: DataTypes.UUID,
-      field: 'usuario_id'
-    }
+    responsaveis: DataTypes.TEXT
   }, {
     tableName: 'ceuas_responsavel_consulta',
     timestamps: false
   })
+
+  ResponsavelConsulta.associate = (models) => {
+    /**
+     * Relacionamento com a tabela de consultas
+     * @see module:src/models/Consulta
+     */
+     ResponsavelConsulta.belongsTo(models.Consulta, {
+      as: 'consulta',
+      foreignKey: 'consultaId'
+    })
+  }
   
   return ResponsavelConsulta
 }

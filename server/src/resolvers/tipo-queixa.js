@@ -17,9 +17,11 @@ import { formatErrors } from '../format-errors';
            include: {
              association: 'queixas'
            },
+           order: [ 'id' ]
+           /* ,
            where: {
             id: { [Op.in]: [1, 2, 6, 7, 8] }
-          }
+          } */
          }),
     
          /**

@@ -137,7 +137,6 @@ const PacienteEdit = () => {
   const { loading, error, refetch } = useQuery(GET_WITH_INCLUDES, {
     variables: { id },
     onCompleted: (data) => {
-      console.log('called!');
       setPaciente(data.paciente)
       setPessoa({
         ...data.paciente.pessoa,

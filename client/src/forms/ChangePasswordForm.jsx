@@ -144,7 +144,7 @@ const ChangePasswordForm = (_, ref) => {
           name="oldPassword"
           value={fields.oldPassword || ''}
           onChange={handleChange}
-          label="Senha anterior"
+          label="Senha atual"
           size="small"
         />
 

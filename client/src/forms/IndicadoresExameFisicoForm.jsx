@@ -1,5 +1,5 @@
 /**
- * @title Formulário para criação/edição dos dados de indicativos de exame físico
+ * @description Formulário para criação/edição dos dados de indicativos de exame físico
  * @module src/forms/IndicadoresExameFisicoForm
  * @author Josafá Santos dos Reis
  */

@@ -10,9 +10,10 @@ export default gql`
   type Consulta {
     id: ID
     primeira: Boolean
-    responsaveis: [Usuario]
+    #responsaveis: ResponsavelConsulta
     paciente: Paciente
     acompanhante: String
+    encaminhadoPor: String
     queixaPrincipalObs: String  ########## excluir
     historiaDoencaAtual: String
     recordatorioAlimentar: [RecordatorioAlimentar]
@@ -47,9 +48,10 @@ export default gql`
   type Mutation {
     createConsulta(
       primeira: Boolean,
-      responsaveis: [ID]
+      #responsaveis: ResponsavelConsultaInput,
       pacienteId: ID!,
       acompanhante: String,
+      encaminhadoPor: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,
       queixaPrincipalId: ID,
@@ -68,7 +70,7 @@ export default gql`
     updateConsulta(
       id: ID!,
       primeira: Boolean,
-      responsaveis: [ID],
+      #responsaveis: ResponsavelConsultaInput,
       acompanhante: String,
       queixaPrincipalObs: String,
       historiaDoencaAtual: String,

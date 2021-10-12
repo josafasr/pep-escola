@@ -1,5 +1,5 @@
 /**
- * @title API GraphQL sobre usuários
+ * @description API GraphQL sobre usuários
  * @module src/graphql/usuario
  * @author Josafá Santos
  */
@@ -11,6 +11,7 @@ export const GET_BY_ID = gql`
   query($id: ID!) {
     usuario(id: $id) {
       id
+      nome
       pessoa {
         id
         nome
@@ -19,7 +20,6 @@ export const GET_BY_ID = gql`
           email
         }
       }
-      nome
       grupos {
         id
         nome
@@ -155,8 +155,8 @@ export const CREATE_WITH_INCLUDES = gql`
 
 // updateMutation:
 export const UPDATE_USUARIO = gql`
-  mutation($id: ID!, $nome: String, $pessoa: PessoaInput, $grupos: [Int]) {
-    updateUsuario(id: $id, nome: $nome, pessoa: $pessoa, grupos: $grupos) {
+  mutation($id: ID!, $nome: String, $pessoa: PessoaInput) {
+    updateUsuario(id: $id, nome: $nome, pessoa: $pessoa) {
       ok
       usuario {
         id
@@ -170,10 +170,6 @@ export const UPDATE_USUARIO = gql`
             celular
             email
           }
-        }
-        grupos {
-          id
-          nome
         }
       }
       errors {

@@ -23,7 +23,8 @@ export default (sequelize, DataTypes) => {
       field: 'antecedente_id'
     }
   }, {
-    tableName: 'ceuas_consulta_antecedente_atributo'
+    tableName: 'ceuas_consulta_antecedente_atributo',
+    timestamps: false
   })
 
   ConsultaAntecedenteAtributo.associate = (models) => {

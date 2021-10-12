@@ -122,7 +122,7 @@ export default function UsuarioList(props) {
                     {/* <p className={classes.column}>
                       <b>Data Nascimento:</b> <span>{ptBrDate(usuario.pessoa.dataNascimento)}</span>
                     </p> */}
-                    <p className={classes.column}><b>E-mail:</b> <span>{usuario.pessoa.contato.email}</span></p>
+                    <p className={classes.column}><b>E-mail:</b> <span>{usuario.pessoa.contato?.email}</span></p>
                   </div>
                 </div>
               </ListItem>

@@ -14,6 +14,10 @@ export default (sequelize, DataTypes) => {
     },
     primeira: DataTypes.BOOLEAN,
     acompanhante: DataTypes.STRING,
+    encaminhadoPor: {
+      type: DataTypes.STRING,
+      field: 'encaminhado_por'
+    },
     queixaPrincipalObs: {
       type: DataTypes.TEXT,
       field: 'queixa_principal_obs'
@@ -114,12 +118,12 @@ export default (sequelize, DataTypes) => {
      * Relacionamento (M:M) com a tabela de usuários
      * @see module:src/models/Usuario
      */
-    Consulta.belongsToMany(models.Usuario, {
+    /* Consulta.belongsToMany(models.Usuario, {
       through: models.ResponsavelConsulta,
       as: 'responsaveis',
       foreignKey: 'consultaId',
       otherKey: 'usuarioId'
-    }),
+    }), */
 
     /**
      * Relacionamento com a tabela de avaliação de atendimento
@@ -165,6 +169,15 @@ export default (sequelize, DataTypes) => {
       as: 'complementosAntecedentes',
       foreignKey: 'consultaId'
     })
+
+    /**
+     * Relacionamento com a tabela de resnposaveis pela consulta
+     * @see {@link src/models/ResponsavelConsulta}
+     */
+     /* Consulta.hasOne(models.ResponsavelConsulta, {
+      as: 'responsaveis',
+      foreignKey: 'consultaId'
+    }) */
   }
 
   return Consulta

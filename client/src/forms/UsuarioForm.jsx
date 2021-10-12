@@ -39,7 +39,6 @@ function UsuarioForm(props, ref) {
   const { disabled } = props
 
   const { usuario, setUsuario } = useContext(UsuarioContext)
-  console.log('UsuarioForm:', usuario);
 
   const handleChange = event => {
     const { name, value } = event.target

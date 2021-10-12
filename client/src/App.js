@@ -52,7 +52,7 @@ export const App = () => {
   }
 
   return (
-    <Router basename="/appceuas">
+    <Router basename="/app">
     {/* <Router> */}
       <StylesProvider injectFirst>
         <div className="App">

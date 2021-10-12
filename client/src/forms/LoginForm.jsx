@@ -19,7 +19,6 @@ import {
 
 import { useStyles } from '../styles/login'
 import { TRY_LOGIN, LOGOUT } from '../graphql/usuario'
-//import { getAccessToken, setAccessToken } from '../access-token'
 import { AppContext } from '../contexts/app-context'
 
 const LoginForm = () => {
@@ -107,7 +106,6 @@ const LoginForm = () => {
               label="Usuário"
               variant="outlined"
               size="small"
-              placeholder="usuario"
               value={fields.nome}
               onChange={handleChange}
             />
@@ -119,7 +117,6 @@ const LoginForm = () => {
               label="Senha"
               variant="outlined"
               size="small"
-              placeholder="usuario"
               value={fields.senha}
               onChange={handleChange}
             />

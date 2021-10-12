@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom'
 import {
   CssBaseline,
@@ -16,6 +16,7 @@ import {
 
 import PacienteEdit from './PacienteEdit'
 import ConsultaList from './ConsultaList'
+import ConsultaEdit from './ConsultaEdit'
 
 const useStyles = makeStyles({
   appBar: {
@@ -33,10 +34,10 @@ const PacienteProntuario = () => {
   const classes = useStyles()
   const { path, url } = useRouteMatch()
 
-  const routes = [
+  /* const routes = [
     `${path}`,
     `${path}/consultas`
-  ]
+  ] */
 
   let history = useHistory()
 
@@ -68,8 +69,11 @@ const PacienteProntuario = () => {
       </Tabs>
     </AppBar>
     <Switch>
-      <Route exact path={routes[0]} component={PacienteEdit} />
-      <Route exact path={routes[1]} component={ConsultaList} />
+      {/* <Route exact path={routes[0]} component={PacienteEdit} /> */}
+      {/* <Route exact path={routes[1]} component={ConsultaList} /> */}
+      <Route exact path="/pacientes/:id" component={PacienteEdit} />
+      <Route path="/pacientes/:id/consultas" component={ConsultaList} />
+      {/* <Route exact path={`${path}/:pacienteId/consultas/criar`} component={ConsultaEdit} /> */}
     </Switch>
     </div>
   )

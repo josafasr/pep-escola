@@ -20,11 +20,11 @@ const UsuarioView = () => {
     <div>
       <CssBaseline />
       <Switch>
+        <Route exact path={`${path}/`} component={UsuarioList} />
         <Route path={`${path}/criar`} component={UsuarioEdit} />
-        <Route path={`${path}/:userId`} component={UsuarioEdit} />
+        <Route exact path={`${path}/:userId`} component={UsuarioEdit} />
         <Route path={`${path}/:userId/editar`} component={UsuarioEdit} />
         <Route path={`${path}/:userId/alterar-senha`} component={UsuarioEdit} />
-        <Route exact path={`${path}/`} component={UsuarioList} />
       </Switch>
     </div>
   )

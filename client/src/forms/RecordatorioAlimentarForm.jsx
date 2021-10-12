@@ -11,7 +11,6 @@ import ConsultaContext from '../contexts/ConsultaContext'
 
 const RecordatorioAlimentarForm = (props) => {
 
-  //const { disabled } = props
   const [inputValue, setInputValue] = React.useState({})
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
@@ -150,56 +149,61 @@ const RecordatorioAlimentarForm = (props) => {
   ) : error ? (
     <p>Erro: error.message</p>
   ) : data && data.tiposRefeicao && <div style={{width: '100%'}}>
-    {/* <h4 style={{marginBottom: 0}}>Recordatório Alimentar</h4> */}
-      {data.tiposRefeicao.map(tipoRefeicao =>
-        <React.Fragment key={tipoRefeicao.id}>
-          <Autocomplete
-            multiple={true}
-            freeSolo={true}
-            clearOnBlur={true}
-            id={`${tipoRefeicao.id}-recordatorio-alimentar`}
-            style={{
-              margin: '11px 10px 0 0',
-              padding: '0 10px 0 0'
-            }}
-            fullWidth
-            open={targetId === `${tipoRefeicao.id}-recordatorio-alimentar`}
-            onOpen={() => {
-              setOpen(true)
-            }}
-            onClose={() => {
-              setOpen(false)
-            }}
-            loading={isLoading}
-            loadingText="Carregando..."
-            value={consulta.recordatorioAlimentar?.filter(item => item.tipoRefeicao.id === tipoRefeicao.id) || []}
-            onChange={handleChange}
-            inputValue={inputValue[`tipo-refeicao-${tipoRefeicao.id}`] || ''}
-            onInputChange={handleInputChange}
-            options={options}
-            getOptionLabel={option => option.alimento.nome}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  color="primary"
-                  label={`${option.alimento.nome} ${!([0, undefined, null].includes(option.quantidade)) ? '('+option.quantidade+')' : ''}`}
-                  {...getTagProps({ index })}
+    
+      {data.tiposRefeicao.map(tipoRefeicao => {
+        const readOnly = !!consulta.id
+        return (
+          <React.Fragment key={tipoRefeicao.id}>
+            <Autocomplete
+              multiple={true}
+              freeSolo={true}
+              clearOnBlur={true}
+              id={`${tipoRefeicao.id}-recordatorio-alimentar`}
+              style={{
+                margin: '11px 10px 0 0',
+                padding: '0 10px 0 0'
+              }}
+              fullWidth
+              open={targetId === `${tipoRefeicao.id}-recordatorio-alimentar`}
+              onOpen={() => {
+                setOpen(true)
+              }}
+              onClose={() => {
+                setOpen(false)
+              }}
+              loading={isLoading}
+              loadingText="Carregando..."
+              value={consulta.recordatorioAlimentar?.filter(item =>
+                item.tipoRefeicao.id === tipoRefeicao.id) || []
+              }
+              onChange={!readOnly ? handleChange : undefined}
+              inputValue={inputValue[`tipo-refeicao-${tipoRefeicao.id}`] || ''}
+              onInputChange={handleInputChange}
+              options={options}
+              getOptionLabel={option => option.alimento.nome}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    color="primary"
+                    label={`${option.alimento.nome} ${!([0, undefined, null].includes(option.quantidade)) ? '('+option.quantidade+')' : ''}`}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name={`tipo-refeicao-${tipoRefeicao.id}`}
+                  variant="filled"
+                  label={tipoRefeicao.nome}
+                  placeholder="Digite para carregar"
+                  disabled={readOnly}
                 />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                name={`tipo-refeicao-${tipoRefeicao.id}`}
-                variant="filled"
-                label={tipoRefeicao.nome}
-                placeholder="Digite para carregar"
-                //size="small"
-              />
-            )}
-          />
-        </React.Fragment>
-      )}
+              )}
+            />
+          </React.Fragment>
+        )
+      })}
   </div>
 }
 

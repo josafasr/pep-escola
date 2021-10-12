@@ -1,13 +1,21 @@
 /**
- * @file Descritores GraphQL para as operações sobre a tabela de grupos
- * @module schemas/grupo
- * @author Josafá Santos
+ * @description Descritores GraphQL para as operações sobre a tabela de grupos
+ * @module src/schemas/grupo
+ * @author Josafá Santos dos Reis
  */
 export default `
   type Grupo {
     id: ID
     nome: String
-    usuarios: [Grupo]
+    descricao: String
+    usuarios: [Usuario]
+    permissoes: [Permissao]
+  }
+
+  type GrupoResponse {
+    ok: Boolean
+    grupo: Grupo
+    errors: [Error]
   }
 
   type Query {
@@ -16,8 +24,8 @@ export default `
   }
 
   type Mutation {
-    createGrupo(nome: String): Grupo
-    updateGrupo(id: ID!, nome: String): Grupo
+    createGrupo(nome: String, descricao: String): GrupoResponse
+    updateGrupo(id: ID!, nome: String, descricao: String, permissoes: [ID]): GrupoResponse
     deleteGrupo(id: ID!): Int
   }
 `

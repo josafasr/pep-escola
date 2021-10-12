@@ -16,8 +16,7 @@ export default (sequelize, DataTypes) => {
       field: 'tipo_antecedente_id'
     }
   }, {
-    schema: 'ceuas',
-    tableName: 'antecedente_atributo',
+    tableName: 'ceuas_antecedente_atributo',
     timestamps: false
   })
 

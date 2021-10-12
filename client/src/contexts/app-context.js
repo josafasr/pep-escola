@@ -12,11 +12,16 @@ import decode from 'jwt-decode'
 let accessToken = ''
 
 export const AppContext = createContext({
-  appState: { isLoggedIn: false },
+  appState: {
+    isLoggedIn: false,
+    currentUser: undefined
+  },
   setAccessToken: (token) => {},
   getAccessToken: () => {},
   setLoging: (token) => {},
-  setLogout: () => {}
+  setLogout: () => {},
+  setCurrentUser: (user) => {},
+  getCurrentUser: () => {}
 })
 
 export const AppProvider = ({ children }) => {
@@ -38,7 +43,15 @@ export const AppProvider = ({ children }) => {
 
   const setLogout = () => {
     setAccessToken('')
-    setAppState({ ...appState, isLoggedIn: false })
+    setAppState({
+      ...appState,
+      isLoggedIn: false,
+      currentUser: undefined
+    })
+  }
+
+  const setCurrentUser = (user) => {
+    setAppState({ ...appState, currentUser: user })
   }
 
   const decodeToken = (token) => {
@@ -146,7 +159,7 @@ export const AppProvider = ({ children }) => {
   })
 
   return (
-    <AppContext.Provider value={{ appState, setLoging, setLogout, setAccessToken, getAccessToken }}>
+    <AppContext.Provider value={{ appState, setLoging, setLogout, setAccessToken, getAccessToken, setCurrentUser }}>
       <ApolloProvider client={client}>
         {children}
       </ApolloProvider>

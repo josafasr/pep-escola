@@ -12,6 +12,7 @@ import PacienteList from './PacienteList'
 import PacienteEdit from './PacienteEdit'
 import ConsultaEdit from './ConsultaEdit'
 import PacienteProntuario from './PacienteProntuario'
+import ConsultaList from './ConsultaList'
 
 function PacienteView() {
   const { path } = useRouteMatch()
@@ -20,13 +21,12 @@ function PacienteView() {
     <div>
     <CssBaseline />
     <Switch>
-      <Route exact path={`${path}/`} component={PacienteList} />
-      <Route path={`${path}/criar`} component={PacienteEdit} />
-      <Route exact path={`${path}/:id`} component={PacienteEdit} />
-      <Route path={`${path}/:id/editar`} component={PacienteEdit} />
-      <Route path={`${path}/:id/prontuario`} component={PacienteProntuario} />
-      <Route exact path={`${path}/:pacienteId/consultas/criar`} component={ConsultaEdit} />
-      <Route exact path={`${path}/:pacienteId/consultas/:consultaId`} component={ConsultaEdit} />
+      <Route exact path="/pacientes" component={PacienteList} />
+      <Route path="/pacientes/criar" component={PacienteEdit} />
+      <Route path={`/pacientes/:pacienteId/consultas/criar`} component={ConsultaEdit} />
+      <Route path="/pacientes/:id/editar" component={PacienteEdit} />
+      <Route path={`/pacientes/:pacienteId/consultas/:consultaId`} component={ConsultaEdit} />
+      <Route path="/pacientes/:id" component={PacienteProntuario} />
     </Switch>
     </div>
   )

@@ -1,53 +1,82 @@
 version: "3"
 
 services:
-  db:
+  postgres:
     image: postgres
-    container_name: db
+    container_name: postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: mesbd1tra
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: prontuario_ceuas
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "4321:5432"
+      - "5432:5432"
     volumes:
-      - ./postgres-vol:/var/lib/postgresql/data
+      - ./database:/var/lib/postgresql/data
+    networks:
+     - app-network
 
   nodejs:
-    image: node:14
+    # build:
+    #   context: ./server
+    #   dockerfile: Dockerfile
+    image: nodejs:1.0.0
     container_name: nodejs
     hostname: nodejs
+    restart: unless-stopped
     ports:
       - "4000:4000"
     depends_on:
-      - db
-    volumes:
-      - graphql:/home/node
-    working_dir: /home/node
-    command: npm run serve:docker
+      - postgres
+    networks:
+      - app-network
 
   nginx:
-    image: nginx:alpine
+    image: nginx:1.21.1
     container_name: nginx
     hostname: nginx
+    restart: unless-stopped
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     volumes:
       - web-root:/var/www/html
       - ./nginx:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - dhparam:/etc/ssl/certs
     depends_on:
       - nodejs
+    networks:
+      - app-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email josafa@uesb.edu.br --agree-tos --no-eff-email --force-renewal -d ceuas.uesb.br
 
 volumes:
+  certbot-etc:
+  certbot-var:
   web-root:
     driver: local
     driver_opts:
       type: none
-      device: /home/josafa/Desenvolvimento/Projetos/Uesb/pme-uesb/client/build/
+      device: /usr/src/prontuario/client/
       o: bind
-  graphql:
+  dhparam:
     driver: local
     driver_opts:
       type: none
-      device: /home/josafa/Desenvolvimento/Projetos/Uesb/pme-uesb/server/
+      device: /usr/src/prontuario/dhparam/
       o: bind
+
+networks:
+   app-network:
+     driver: bridge
