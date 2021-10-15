@@ -81,8 +81,8 @@ const PacienteEdit = () => {
   const { id } = useParams()
   const { path } = useRouteMatch()
   const editar = path === '/pacientes/:id/editar'
-  const isProntuario = path === '/pacientes/:id/prontuario'
-  const showProntuarioButton = (!!id && !editar && !isProntuario)
+  // const isProntuario = path === '/pacientes/:id/prontuario'
+  // const showProntuarioButton = (!!id && !editar && !isProntuario)
   const showEditarButton = (!id || editar)
 
   const [pessoa, setPessoa] = React.useState({})
@@ -314,7 +314,7 @@ const PacienteEdit = () => {
           {showEditarButton ? 'Salvar' : 'Editar'}
         </Button>
 
-        {showProntuarioButton && <Button
+        {/* {showProntuarioButton && <Button
           className={classes.button}
           variant="contained"
           color="primary"
@@ -322,7 +322,7 @@ const PacienteEdit = () => {
           onClick={goToProntuario}
         >
           Prontuário
-        </Button>}
+        </Button>} */}
       </div>
     </div>
   )
