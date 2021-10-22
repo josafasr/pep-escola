@@ -260,6 +260,7 @@ const ConsultaEdit = () => {
         queixas,
         complementosQueixas: consulta.complementosQueixas,
         recordatorioAlimentar,
+        complementoRecordatorioAlimentar: consulta.complementoRecordatorioAlimentar,
         indicadoresExameFisico: consulta.indicadoresExameFisico,
         exameFisico,
         complementosExameFisico,
@@ -313,28 +314,63 @@ const ConsultaEdit = () => {
     setActiveTab(parseInt(event.currentTarget.dataset.tab))
   }
 
+  const previousTab = () => {
+    setActiveTab((prevActiveTab) => prevActiveTab - 1)
+  }
+
+  const nextTab = () => {
+    setActiveTab((prevActiveTab) => prevActiveTab + 1)
+  }
+
+  const handleClickNext = () => {
+    if (activeTab === 0) {
+      nextTab()
+      //handleStep(0)
+    }
+    
+    if (activeTab === 1 && activeStep === 5) {
+      handleNext()
+    } else {
+      handleNext()
+    }
+  }
+
+  const handleClickPrevious = () => {
+    if (activeTab === 2) {
+      previousTab()
+      handleStep(5)
+    } else {
+      handleBack()
+    }
+
+    if (activeTab === 1 && activeStep === 0) {
+      previousTab()
+    }
+  }
+
   const buttons = (
     <div>
-      <Button
+      {activeTab !== 0 && <Button
         //disabled={activeStep === 0}
         variant="contained"
         color="primary"
-        onClick={activeStep === 0 ? () => setActiveTab(0) : handleBack}
+        onClick={handleClickPrevious}
         className={classes.button}
         size="small"
       >
         Voltar
-      </Button>
-      <Button
+      </Button>}
+
+      {activeTab !== 2 && <Button
         //disabled={activeStep === 5}
         variant="contained"
         color="primary"
-        onClick={activeStep === 5 ? () => setActiveTab(2) : handleNext}
+        onClick={handleClickNext}
         className={classes.button}
         size="small"
       >
         Avançar
-      </Button>
+      </Button>}
     </div>
   )
 
@@ -445,6 +481,7 @@ const ConsultaEdit = () => {
                   }}
                 /> */}
               </Paper>}
+              {activeTab === 0 && buttons}
             {/* </Accordion> */}
 
             
@@ -603,6 +640,7 @@ const ConsultaEdit = () => {
                   disabled={!!consultaId}
                 />
               </Paper>}
+              {activeTab === 2 && buttons}
             {/* </Accordion> */}
  
       </ConsultaContext.Provider>

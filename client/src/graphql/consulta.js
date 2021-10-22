@@ -144,6 +144,9 @@ export const GET_WITH_INCLUDES = gql`
           nome
         }
       }
+      complementoRecordatorioAlimentar {
+        id complemento
+      }
       indicadoresExameFisico {
         id
         peso
@@ -260,6 +263,7 @@ export const CREATE_CONSULTA = gql`
     $queixas: [ID],
     $complementosQueixas: [ComplementoConsultaTipoQueixaInput],
     $recordatorioAlimentar: [RecordatorioAlimentarInput],
+    $complementoRecordatorioAlimentar: ComplementoRecordatorioAlimentarInput,
     $indicadoresExameFisico: IndicadoresExameFisicoInput,
     $exameFisico: [ID],
     $complementosExameFisico: [ComplementoConsultaExameFisicoInput]
@@ -277,6 +281,7 @@ export const CREATE_CONSULTA = gql`
       queixaPrincipalObs: $queixaPrincipalObs,
       historiaDoencaAtual: $historiaDoencaAtual,
       recordatorioAlimentar: $recordatorioAlimentar,
+      complementoRecordatorioAlimentar: $complementoRecordatorioAlimentar,
       queixaPrincipalId: $queixaPrincipalId
       queixas: $queixas,
       complementosQueixas: $complementosQueixas
@@ -315,6 +320,9 @@ export const CREATE_CONSULTA = gql`
             id
             nome
           }
+        }
+        complementoRecordatorioAlimentar {
+          id complemento
         }
         suspeitasDiagnosticas
         planoConduta

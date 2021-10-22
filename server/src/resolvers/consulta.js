@@ -143,6 +143,9 @@ export default {
               }
             ]
           }, {
+            association: 'complementoRecordatorioAlimentar',
+            attributes: ['id', 'complemento'],
+          }, {
             association: 'exameFisico',
             attributes: ['id', 'nome'],
             include: {
@@ -302,6 +305,8 @@ export default {
                 include: {
                   association: 'alimento'
                 } /* [{"quantidade": x, "tipoRefeicaoId": y, "alimentoId": z}] */
+              }, {
+                association: 'complementoRecordatorioAlimentar'
               }, {
                 association: 'indicadoresExameFisico'
               }, /* {

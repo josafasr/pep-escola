@@ -1,6 +1,7 @@
 import React from 'react'
 import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import {
+  makeStyles,
   Chip,
   TextField
 } from '@material-ui/core'
@@ -9,8 +10,15 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TIPOS_REFEICAO, ALIMENTOS_BY_TEXT } from '../graphql/recordatorio-alimentar'
 import ConsultaContext from '../contexts/ConsultaContext'
 
-const RecordatorioAlimentarForm = (props) => {
+const useStyles = makeStyles((theme) => ({
+  textArea: {
+    width: '99%',
+    margin: '10px 10px 0 0'
+  }
+}))
 
+const RecordatorioAlimentarForm = (props) => {
+  const classes = useStyles()
   const [inputValue, setInputValue] = React.useState({})
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
@@ -128,6 +136,16 @@ const RecordatorioAlimentarForm = (props) => {
     }
   }
 
+  const handleChangeComplemento = event => {
+    setConsulta({
+      ...consulta,
+      complementoRecordatorioAlimentar: {
+        ...consulta.complementoRecordatorioAlimentar,
+        complemento: event.target.value
+      }
+    })
+  }
+
   React.useEffect(() => {
     if (reason === 'input') {
       if (text && text.length > 2) {
@@ -204,6 +222,21 @@ const RecordatorioAlimentarForm = (props) => {
           </React.Fragment>
         )
       })}
+
+      <TextField
+        className={classes.textArea}
+        name="complementoRecordatorioAlimentar"
+        defaultValue={consulta.complementoRecordatorioAlimentar?.complemento || ''}
+        onBlur={handleChangeComplemento}
+        multiline
+        //fullWidth
+        minrows={2}
+        variant="filled"
+        label="Observações"
+        inputProps={{
+          readOnly: !!consulta.id
+        }}
+      />
   </div>
 }
 

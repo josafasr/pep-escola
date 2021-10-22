@@ -17,6 +17,7 @@ export default gql`
     queixaPrincipalObs: String  ########## excluir
     historiaDoencaAtual: String
     recordatorioAlimentar: [RecordatorioAlimentar]
+    complementoRecordatorioAlimentar: ComplementoRecordatorioAlimentar
     queixaPrincipal: Queixa
     queixas: [Queixa]
     complementosQueixas: [ComplementoConsultaTipoQueixa]
@@ -58,6 +59,7 @@ export default gql`
       queixas: [ID],
       complementosQueixas: [ComplementoConsultaTipoQueixaInput],
       recordatorioAlimentar: [RecordatorioAlimentarInput],
+      complementoRecordatorioAlimentar: ComplementoRecordatorioAlimentarInput,
       exameFisico: [ID],
       complementosExameFisico: [ComplementoConsultaExameFisicoInput]
       antecedentesAtributos: [ConsultaAntecedenteAtributoInput]

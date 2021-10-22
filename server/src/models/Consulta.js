@@ -75,6 +75,15 @@ export default (sequelize, DataTypes) => {
     }),
 
     /**
+     * Relacionamento com a tabela de complemento do recordatórrio alimentar
+     * @see module:src/models/ComplementoRecordatorioAlimentar
+     */
+     Consulta.hasOne(models.ComplementoRecordatorioAlimentar, {
+      as: 'complementoRecordatorioAlimentar',
+      foreignKey: 'consultaId'
+    }),
+
+    /**
      * Relacionamento com a tabela de queixas
      * @see module:src/models/Queixa
      */
