@@ -23,6 +23,7 @@ export default function QueixaAutocomplete(props) {
   const { disabled } = props
   const [open, setOpen] = React.useState(false)
   const [options, setOptions] = React.useState([])
+  // eslint-disable-next-line no-unused-vars
   const [_, setValue] = React.useState({})
 
   const [inputValue, setInputValue] = React.useState('')
@@ -121,7 +122,7 @@ export default function QueixaAutocomplete(props) {
 
     if (active && (reason === 'input')) {
       if (inputValue && inputValue.length > 2) {
-        const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1))
+        const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1).toLowerCase())
         handleQueixas({
           variables: {
             text: text
@@ -195,7 +196,7 @@ export default function QueixaAutocomplete(props) {
           <TextField
             {...params}
             label="Queixa principal"
-            placeholder="Digite para carregar"
+            placeholder="Pesquisar..."
             size="small"
             InputProps={{
               ...params.InputProps,

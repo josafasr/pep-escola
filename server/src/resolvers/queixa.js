@@ -1,7 +1,7 @@
 /**
- * @title Operações sobre a tabela de apresentações de queixa
+ * @description Operações sobre a tabela de apresentações de queixa
  * @module src/resolvers/queixa
- * @author Marcos Porto 
+ * @author Marcos Porto, Josafá Santos dos Reis
  */
 
 import { Op } from 'sequelize'
@@ -12,13 +12,17 @@ export default {
   Query: {
 
     // retorna todas as queixas
-    queixas: (parents, args, { models }) => models.Queixa.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: {
-        association: 'tipoQueixa',
-        attributes: ['id', 'nome']
-      }
-    }),
+    queixas: async (_, __, { models }) => {
+      const queixas = await models.Queixa.findAll({
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: {
+          association: 'tipoQueixa',
+          attributes: ['id', 'nome']
+        },
+        order: [ 'id' ]
+      })
+      return queixas
+    },
 
     /**
      * Busca queixas por partes do nome
@@ -35,12 +39,12 @@ export default {
     },
 
      // busca queixa pelo código
-    queixa: (parent, { id }, { models }) => models.Queixa.findByPk(id)
+    queixa: (_, { id }, { models }) => models.Queixa.findByPk(id)
   },
 
     Mutation: {
         // cria uma nova Queixa
-        createQueixa: async (parent, args, { models }) => {
+        createQueixa: async (_, args, { models }) => {
             try {
               const queixa = await models.Queixa.create(args) // ({
                 

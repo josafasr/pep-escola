@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery } from '@apollo/react-hooks'
 import {
-  TextField,
-  CircularProgress
+  TextField
 } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
@@ -35,9 +34,10 @@ const GenericAutocomplete = (props) => {
   useEffect(() => {
     if (reason === 'input') {
       if (inputValue && inputValue.length > 2) {
+        const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1).toLowerCase())
         handleFatch({
           variables: {
-            text: inputValue
+            text: text
           }
         })
       }

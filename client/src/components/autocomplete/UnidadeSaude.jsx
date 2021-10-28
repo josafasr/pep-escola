@@ -96,7 +96,7 @@ const UnidadeSaudeAutocomplete = (props) => {
     let active = true
 
     if (active && (reason === 'input')) {
-      const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1))
+      const text = inputValue.substring(0, 1).toUpperCase().concat(inputValue.substring(1).toLowerCase())
       if (inputValue && inputValue.length > 2) {
         handleUnidadesSaude({
           variables: {
