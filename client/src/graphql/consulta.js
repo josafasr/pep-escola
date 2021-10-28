@@ -30,7 +30,7 @@ export const GET_WITH_INCLUDES = gql`
       id
       createdAt
       primeira
-      encaminhadoPor
+      fonteEncaminhamento
       paciente {
         id
         pessoa {
@@ -67,7 +67,6 @@ export const GET_WITH_INCLUDES = gql`
         cartaoFamilia
         cns
         agenteComunitario
-        # encaminhadoPor
         unidadeSaude {
           id
           nome
@@ -211,10 +210,10 @@ export const GET_WITH_INCLUDES = gql`
       }
       suspeitasDiagnosticas
       planoConduta
-      #responsaveis {
-      #  id
-      #  responsaveis
-      #}
+      responsaveis {
+        id
+        nomes
+      }
     }
   }
 `
@@ -254,9 +253,9 @@ export const CREATE_CONSULTA = gql`
   mutation CreateConsulta(
     $pacienteId: ID!,
     $primeira: Boolean,
-    #$responsaveis: ResponsavelConsultaInput,
+    $responsaveis: ResponsavelConsultaInput,
     $acompanhante: String,
-    $encaminhadoPor: String,
+    $fonteEncaminhamento: String,
     $queixaPrincipalObs: String,
     $historiaDoencaAtual: String,
     $queixaPrincipalId: ID,
@@ -275,9 +274,9 @@ export const CREATE_CONSULTA = gql`
     createConsulta(
       pacienteId: $pacienteId,
       primeira: $primeira,
-      #responsaveis: $responsaveis,
+      responsaveis: $responsaveis,
       acompanhante: $acompanhante,
-      encaminhadoPor: $encaminhadoPor,
+      fonteEncaminhamento: $fonteEncaminhamento,
       queixaPrincipalObs: $queixaPrincipalObs,
       historiaDoencaAtual: $historiaDoencaAtual,
       recordatorioAlimentar: $recordatorioAlimentar,
@@ -297,8 +296,10 @@ export const CREATE_CONSULTA = gql`
       consulta {
         id
         acompanhante
-        #responsaveis
-        encaminhadoPor
+        responsaveis {
+          id nomes
+        }
+        fonteEncaminhamento
         queixaPrincipalObs
         historiaDoencaAtual
         queixaPrincipal {

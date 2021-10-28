@@ -57,10 +57,10 @@ export default {
       const consulta = await models.Consulta.findByPk(id, {
         attributes: { exclude: ['updatedAt'] },
         include: [
-          /* {
+          {
             association: 'responsaveis',
-            attributes: ['id', 'responsaveis']
-          },  */{
+            attributes: ['id', 'nomes']
+          }, {
             association: 'paciente',
             attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [
@@ -309,9 +309,9 @@ export default {
                 association: 'complementoRecordatorioAlimentar'
               }, {
                 association: 'indicadoresExameFisico'
-              }, /* {
+              }, {
                 association: 'responsaveis'
-              }, */ {
+              }, {
                 association: 'complementosQueixas'
               }, {
                 association: 'complementosExameFisico'
@@ -352,7 +352,7 @@ export default {
         id,
         queixas,
         recordatorioAlimentar,
-        responsaveis,
+        // responsaveis,
         ...otherArgs
       }, { sequelize, models }) => {
       try {
@@ -373,9 +373,9 @@ export default {
             await consulta.addQueixas(queixas)
           }
 
-          if(responsaveis && responsaveis.length > 0) {
+          /* if(responsaveis && responsaveis.length > 0) {
             await consulta.addResponsaveis(responsaveis)
-          }
+          } */
 
           return consulta
         })

@@ -134,7 +134,7 @@ function ConsultaForm(props, ref) {
         value={consulta.historiaDoencaAtual || ''}
         onChange={handleChange}
         multiline
-        rows={2}
+        minRows={2}
         variant="filled"
         //label="História da Doença Atual"
         inputProps={{

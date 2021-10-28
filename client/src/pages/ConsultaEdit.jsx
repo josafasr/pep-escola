@@ -20,14 +20,14 @@ import {
   TextField,
   Divider,
   LinearProgress,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  // Accordion,
+  // AccordionSummary,
+  // AccordionDetails,
   AppBar,
   Tabs,
   Tab,
  } from '@material-ui/core'
- import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+//  import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
  import clsx from 'clsx'
 // import PersonIcon from '@material-ui/icons/Person'
 // import ContactPhoneIcon from '@material-ui/icons/ContactPhone'
@@ -48,7 +48,7 @@ import RecordatorioAlimentarForm from '../forms/RecordatorioAlimentarForm'
 import IndicadoresExameFisicoForm from '../forms/IndicadoresExameFisicoForm'
 import ExameFisicoForm from '../forms/ExameFisicoForm'
 import DiagnosticoForm from '../forms/DiagnosticoForm'
-import ResponsavelConsultaForm from '../forms/ResponsavelConsultaForm'
+// import ResponsavelConsultaForm from '../forms/ResponsavelConsultaForm'
 // import AntecedentesPatologicosForm from '../forms/AntecedentesPatologicosForm'
 import AntecedentesForm from '../forms/AntecedentesForm'
 
@@ -251,9 +251,9 @@ const ConsultaEdit = () => {
       variables: {
         primeira: consulta.primeira,
         pacienteId: pacienteId,
-        //responsaveis: consulta.responsaveis,
+        responsaveis: consulta.responsaveis,
         acompanhante: consulta.acompanhante,
-        encaminhadoPor: consulta.encaminhadoPor,
+        fonteEncaminhamento: consulta.fonteEncaminhamento,
         queixaPrincipalObs: consulta.queixaPrincipalObs,
         historiaDoencaAtual: consulta.historiaDoencaAtual,
         queixaPrincipalId: parseInt(consulta.queixaPrincipal?.id),
@@ -300,7 +300,7 @@ const ConsultaEdit = () => {
     if (name === 'responsaveis') {
       setConsulta({
         ...consulta,
-        responsaveis: { ...consulta.responsaveis, responsaveis: value }
+        responsaveis: { ...consulta.responsaveis, nomes: value }
       })
     } else {
       setConsulta({
@@ -314,15 +314,15 @@ const ConsultaEdit = () => {
     setActiveTab(parseInt(event.currentTarget.dataset.tab))
   }
 
-  const previousTab = () => {
+  /* const previousTab = () => {
     setActiveTab((prevActiveTab) => prevActiveTab - 1)
   }
 
   const nextTab = () => {
     setActiveTab((prevActiveTab) => prevActiveTab + 1)
-  }
+  } */
 
-  const handleClickNext = () => {
+  /* const handleClickNext = () => {
     if (activeTab === 0) {
       nextTab()
       //handleStep(0)
@@ -346,31 +346,33 @@ const ConsultaEdit = () => {
     if (activeTab === 1 && activeStep === 0) {
       previousTab()
     }
-  }
+  } */
 
   const buttons = (
     <div>
-      {activeTab !== 0 && <Button
-        //disabled={activeStep === 0}
+      <Button
+        disabled={activeStep === 0}
         variant="contained"
         color="primary"
-        onClick={handleClickPrevious}
+        onClick={handleBack}
+        //onClick={handleClickPrevious}
         className={classes.button}
         size="small"
       >
         Voltar
-      </Button>}
+      </Button>
 
-      {activeTab !== 2 && <Button
-        //disabled={activeStep === 5}
+      <Button
+        disabled={activeStep === 5}
         variant="contained"
         color="primary"
-        onClick={handleClickNext}
+        onClick={handleNext}
+        //onClick={handleClickNext}
         className={classes.button}
         size="small"
       >
         Avançar
-      </Button>}
+      </Button>
     </div>
   )
 
@@ -457,31 +459,32 @@ const ConsultaEdit = () => {
 
                 <TextField
                   className={clsx(classes.fields, classes.fieldGrow)}
-                  name="encaminhadoPor"
-                  value={consulta.encaminhadoPor || ''}
+                  name="fonteEncaminhamento"
+                  value={consulta.fonteEncaminhamento || ''}
                   onChange={handleChange}
-                  label="Encaminhado por"
+                  label="Fonte do Encaminhamento"
                   inputProps={{
                     readOnly: !!consultaId
                   }}
                   variant="filled"
                 />
 
-                {/* <TextField
+                <TextField
                   className={classes.textArea}
                   name="responsaveis"
-                  value={consulta.responsaveis?.responsaveis || ''}
+                  value={consulta.responsaveis?.nomes || ''}
                   onChange={handleChange}
                   multiline
                   fullWidth
+                  minRows={2}
                   variant="filled"
                   label="Responsáveis pela consulta"
                   inputProps={{
                     readOnly: !!consultaId
                   }}
-                /> */}
+                />
               </Paper>}
-              {activeTab === 0 && buttons}
+              {/* {activeTab === 0 && buttons} */}
             {/* </Accordion> */}
 
             
@@ -611,7 +614,7 @@ const ConsultaEdit = () => {
                           onChange={event => setConsulta({ ...consulta, queixaPrincipalObs: event.target.value})}
                           multiline
                           fullWidth
-                          rows={4}
+                          minRows={4}
                           variant="filled"
                           //label="Outras Observações"
                           inputProps={{
@@ -640,7 +643,7 @@ const ConsultaEdit = () => {
                   disabled={!!consultaId}
                 />
               </Paper>}
-              {activeTab === 2 && buttons}
+              {/* {activeTab === 2 && buttons} */}
             {/* </Accordion> */}
  
       </ConsultaContext.Provider>

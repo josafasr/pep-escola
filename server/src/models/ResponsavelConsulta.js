@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       field: 'consulta_id'
     },
-    responsaveis: DataTypes.TEXT
+    nomes: DataTypes.TEXT
   }, {
     tableName: 'ceuas_responsavel_consulta',
     timestamps: false

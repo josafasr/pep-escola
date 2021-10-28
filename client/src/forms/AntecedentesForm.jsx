@@ -138,6 +138,7 @@ const AntecedentesForm = () => {
         primeira: true
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, readOnly])
 
   return (
@@ -158,7 +159,7 @@ const AntecedentesForm = () => {
             defaultValue={complementoAntecedente?.complemento || ''}
             onBlur={changeComplemento}
             multiline
-            rows="2"
+            minRows={2}
             label={tipo.nome}
             variant="filled"
             inputProps={{

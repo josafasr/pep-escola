@@ -14,9 +14,9 @@ export default (sequelize, DataTypes) => {
     },
     primeira: DataTypes.BOOLEAN,
     acompanhante: DataTypes.STRING,
-    encaminhadoPor: {
+    fonteEncaminhamento: {
       type: DataTypes.STRING,
-      field: 'encaminhado_por'
+      field: 'fonte_encaminhamento'
     },
     queixaPrincipalObs: {
       type: DataTypes.TEXT,
@@ -183,10 +183,10 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de resnposaveis pela consulta
      * @see {@link src/models/ResponsavelConsulta}
      */
-     /* Consulta.hasOne(models.ResponsavelConsulta, {
+     Consulta.hasOne(models.ResponsavelConsulta, {
       as: 'responsaveis',
       foreignKey: 'consultaId'
-    }) */
+    })
   }
 
   return Consulta

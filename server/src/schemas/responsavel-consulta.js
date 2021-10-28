@@ -7,11 +7,11 @@ export default `
 
   type ResponsavelConsulta {
     id: ID
-    responsaveis: String
+    nomes: String
   }
 
   input ResponsavelConsultaInput {
-    responsaveis: String
+    nomes: String
   }
 
   type ResponsavelConsultaResponse {
@@ -26,17 +26,13 @@ export default `
   }
 
   type Mutation {
-    createResponsavelConsultaBkp(
-      responsaveis: String
-    ): ResponsavelConsulta
-
     createResponsavelConsulta(
-      responsaveis: String
+      nomes: String
     ): ResponsavelConsultaResponse
 
     updateResponsavelConsulta(
       id: ID!,
-      responsaveis: String
+      nomes: String
     ): ResponsavelConsulta
 
     deleteResponsavelConsulta(id: ID!): Boolean

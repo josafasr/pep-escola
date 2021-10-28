@@ -40,9 +40,9 @@ export default {
   findWithAssociations: async () => {
     try {
       const tiposAntecedentes = await db.TipoAntecedente.findAll({
-        where: {
+        /* where: {
           id: { [Op.in]: [1, 6, 7, 8] }
-        },
+        }, */
         order: [
           ['id'],
           ['antecedentes', 'id'],

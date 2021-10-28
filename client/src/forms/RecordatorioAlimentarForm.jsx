@@ -230,7 +230,7 @@ const RecordatorioAlimentarForm = (props) => {
         onBlur={handleChangeComplemento}
         multiline
         //fullWidth
-        minrows={2}
+        minRows={2}
         variant="filled"
         label="Observações"
         inputProps={{
