@@ -10,7 +10,6 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   makeStyles,
   CssBaseline,
-  CircularProgress,
   Box,
   Typography,
   Paper,
@@ -98,7 +97,7 @@ const PacienteEdit = () => {
 
   const [handleCreatePaciente] = useMutation(CREATE_WITH_INCLUDES, {
     variables: {
-      prontuario: paciente.prontuario,
+      // prontuario: paciente.prontuario,
       rg: paciente.rg,
       cpf: paciente.cpf,
       cartaoFamilia: paciente.cartaoFamilia,
@@ -216,9 +215,9 @@ const PacienteEdit = () => {
     history.push(`/pacientes/${id}/editar`)
   }
 
-  const goToProntuario = () => {
+  /* const goToProntuario = () => {
     history.push(`/pacientes/${id}/prontuario`)
-  }
+  } */
 
   const handleReset = () => {
     pessoaRef.current.handleReset()
@@ -237,6 +236,7 @@ const PacienteEdit = () => {
   useEffect(() => {
     if (id)
       refetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, refetch])
 
   if (loading) return <LinearProgress color="secondary" />

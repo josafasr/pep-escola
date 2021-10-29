@@ -6,6 +6,9 @@
 
 import { v4 as uuid } from 'uuid'
 
+import db from '.'
+import { generateProntuaryNumber } from '../utils'
+
 export default (sequelize, DataTypes) => {
   const Paciente = sequelize.define('Paciente', {
     id: {
@@ -80,6 +83,11 @@ export default (sequelize, DataTypes) => {
         if (!paciente.id) {
           const id = await Promise.resolve(uuid())
           paciente.id = id
+        }
+
+        if (!paciente.prontuario) {
+          const numProntuario = await generateProntuaryNumber(db)
+          paciente.prontuario = numProntuario
         }
       }
     }

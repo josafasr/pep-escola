@@ -69,7 +69,6 @@ const PacienteForm = (props, ref) => {
       cartaoFamilia: '',
       cns: '',
       agenteComunitario: '',
-      // encaminhadoPor: '',
       unidadeSaude: {},
       nacionalidade: '',
       naturalidade: {},
@@ -120,16 +119,16 @@ const PacienteForm = (props, ref) => {
 
   return (
     <div className={classes.fields}>
-      <TextField
+      {disabled && <TextField
         className={classes.formFields}
         name="prontuario"
         defaultValue={paciente?.prontuario || ''}
-        onBlur={handleChange}
+        //onBlur={handleChange}
         label="Nº Prontuário"
         inputProps={{
-          readOnly: disabled
+          readOnly: true
         }}
-      />
+      />}
 
       <TextField
         className={classes.formFields}
