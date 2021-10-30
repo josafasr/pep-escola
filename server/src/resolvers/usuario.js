@@ -12,6 +12,7 @@ import { formatErrors } from '../format-errors'
 import { tryLogin } from '../auth'
 import { createAccessToken, createRefreshToken, verifyRefreshToken } from '../access'
 import { sendRefreshToken } from '../send-refresh-token'
+import { USER_LOGGED } from '../channels/usuario'
 
 export default {
 
@@ -129,8 +130,12 @@ export default {
       }
     },
 
-    login: async (_, { nome, senha }, { models, res }) => {
-      return await tryLogin(nome, senha, models, res)
+    login: async (_, { nome, senha }, { models, res, pubsub }) => {
+      const loginData = await tryLogin(nome, senha, models, res)
+      pubsub.publish(USER_LOGGED, {
+        userLogged: loginData
+      })
+      return loginData
     },
 
     refreshToken: async (_, __, { models, req, res }) => {
@@ -336,6 +341,14 @@ export default {
           ok: false,
           errors: formatErrors(err, models)
         }
+      }
+    }
+  },
+
+  Subscription: {
+    userLogged: {
+      subscribe: (_, __, { pubsub }) => {
+        return pubsub.asyncIterator(USER_LOGGED)
       }
     }
   }

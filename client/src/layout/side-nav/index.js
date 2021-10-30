@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 //import { useApolloClient } from 'react-apollo'
 //import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
 import { Link, NavLink, Switch, Route, useHistory, useRouteMatch } from 'react-router-dom'
 import clsx from 'clsx'
 import {
@@ -21,7 +21,8 @@ import {
   Typography,
   Avatar,
   Menu,
-  MenuItem
+  MenuItem,
+  Snackbar
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import GroupIcon from '@material-ui/icons/Group'
@@ -30,6 +31,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import FolderIcon from '@material-ui/icons/Folder'
 // import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import CloseIcon from '@material-ui/icons/Close'
 // import { deepPurple } from '@material-ui/core/colors'
 import decode from 'jwt-decode'
 
@@ -37,7 +39,7 @@ import decode from 'jwt-decode'
 import UsuarioView from '../../pages/UsuarioView'
 import PacienteView from '../../pages/PacienteView'
 // import ConsultaEdit from '../../pages/ConsultaEdit'
-import { GET_BY_ID } from '../../graphql/usuario'
+import { GET_BY_ID, USER_LOGGED } from '../../graphql/usuario'
 import { AppContext } from '../../contexts/app-context'
 
 const drawerWidth = 240
@@ -159,12 +161,34 @@ export default function SideNav(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null)
 
+  const [openSnack, setOpenSnack] = React.useState(false)
+
+  /* const handleClickSnack = () => {
+    setOpenSnack(true)
+  } */
+
+  const handleCloseSnack = (_, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenSnack(false);
+  }
+
   const { loading } = useQuery(GET_BY_ID, {
     variables: { id: decodedId },
     onCompleted: data => {
       setCurrentUser(data.usuario)
     },
     skip: appState.currentUser !== undefined
+  })
+
+  useSubscription(USER_LOGGED, {
+    //onSubscriptionData: ({ subscriptionData }) => {
+    onSubscriptionData: () => {
+      //console.log('SubscriptionData:', subscriptionData.data.userLogged)
+      setOpenSnack(true)
+    }
   })
 
   const isAdmin = appState.currentUser?.grupos?.some(grupo =>
@@ -206,6 +230,22 @@ export default function SideNav(props) {
       lastAction @client
     }`
   ) */
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  )
 
   const drawer = (
     <div>
@@ -394,6 +434,16 @@ export default function SideNav(props) {
           <Route path="/usuarios" component={UsuarioView} />
         </Switch>
       </main>
+
+      <div>
+        <Snackbar
+          open={openSnack}
+          autoHideDuration={5000}
+          onClose={handleCloseSnack}
+          message="Note archived"
+          action={action}
+        />
+      </div>
     </div>
   )
 }

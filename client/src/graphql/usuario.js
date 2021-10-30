@@ -196,3 +196,14 @@ export const CHANEG_PASSWORD = gql`
     }
   }
 `
+
+export const USER_LOGGED = gql`
+  subscription UserLogged {
+    userLogged {
+      ok token
+      errors {
+        path message
+      }
+    }
+  }
+`

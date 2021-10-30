@@ -34,6 +34,7 @@
     "superagent": "^6.1.0"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^8.3.1",
     "apollo-server-express": "^2.21.0",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^4.0.1",
@@ -43,6 +44,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.7.0",
+    "graphql-subscriptions": "^1.2.1",
     "graphql-tools": "^4.0.8",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -50,6 +52,7 @@
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.22.3",
+    "subscriptions-transport-ws": "^0.9.19",
     "uuid": "^8.3.2"
   }
 }

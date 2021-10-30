@@ -80,4 +80,8 @@ export default gql`
 
     changePassword(id: ID!, previousPassword: String!, newPassword: String!): UpdateResponse
   }
+
+  type Subscription {
+    userLogged:  LoginResponse
+  }
 `
