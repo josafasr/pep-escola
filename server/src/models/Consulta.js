@@ -26,14 +26,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       field: 'historia_doenca_atual'
     },
-    pacienteId: {
-      type: DataTypes.UUID,
-      field: 'paciente_id'
-    },
-    queixaPrincipalId: {
-      type: DataTypes.INTEGER,
-      field: 'queixa_principal_id'
-    },
     suspeitasDiagnosticas: {
       type: DataTypes.TEXT,
       field: 'suspeitas_diagnosticas'
@@ -41,6 +33,14 @@ export default (sequelize, DataTypes) => {
     planoConduta: {
       type: DataTypes.TEXT,
       fields: 'plano_conduta'
+    },
+    pacienteId: {
+      type: DataTypes.UUID,
+      field: 'paciente_id'
+    },
+    queixaPrincipalId: {
+      type: DataTypes.INTEGER,
+      field: 'queixa_principal_id'
     }
   }, {
     tableName: 'ceuas_consulta',

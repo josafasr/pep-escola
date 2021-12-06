@@ -140,7 +140,9 @@ const PacienteEdit = () => {
       setPessoa({
         ...data.paciente.pessoa,
         //dataNascimento: new Date(`${data.paciente.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", {dateStyle: "short"})
-        dataNascimento: new Date(`${data.paciente.pessoa.dataNascimento}T03:00:00Z`).toLocaleDateString("pt-BR")
+        dataNascimento: data.paciente.pessoa.dataNascimento !== null ?
+          new Date(`${data.paciente.pessoa.dataNascimento}T03:00:00Z`).toLocaleDateString("pt-BR") :
+          null
       })
       contatoDispatch(loadData(data.paciente.pessoa.contato))
       setEndereco(data.paciente.pessoa.enderecos[0])

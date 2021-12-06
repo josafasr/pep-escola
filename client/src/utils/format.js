@@ -5,7 +5,7 @@
  */
 
 export const toDatabaseDate = (datePtBr) => {
-  if (!datePtBr) { return }
+  if (!datePtBr) { return null }
   const dateArray = datePtBr.split('/').reverse()
   const databaseDate = dateArray.join('-')
   return databaseDate

@@ -4,7 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
-import React, { useContext } from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
@@ -15,7 +15,7 @@ import {
   Button,
   LinearProgress
 } from '@material-ui/core'
-import decode from 'jwt-decode'
+//import decode from 'jwt-decode'
 
 import { useStyles } from '../styles/usuario'
 import { toDatabaseDate } from '../utils/format'
@@ -32,7 +32,7 @@ import PessoaForm from '../forms/PessoaForm'
 import ContatoForm from '../forms/ContatoForm'
 import UsuarioForm from '../forms/UsuarioForm'
 import ChangePasswordForm from '../forms/ChangePasswordForm'
-import { AppContext } from '../contexts/app-context'
+//import { AppContext } from '../contexts/app-context'
 
 const UsuarioEdit = () => {
   const classes = useStyles()
@@ -43,8 +43,8 @@ const UsuarioEdit = () => {
   const [usuario, setUsuario] = React.useState({})
   const [pessoa, setPessoa] = React.useState({})
   const [contatoState, contatoDispatch] = React.useReducer(contatoReducer)
-  const { getAccessToken } = useContext(AppContext)
-  const { userId: decodedId } = decode(getAccessToken(), { algorithms: ['RS512'] })
+  //const { getAccessToken } = useContext(AppContext)
+  //const { userId: decodedId } = decode(getAccessToken(), { algorithms: ['RS512'] })
   //const canEdit = userId === decodedId
   //const [endereco, setEndereco] = React.useState({})
 
@@ -58,18 +58,21 @@ const UsuarioEdit = () => {
    * @param userId userId do usuário
    * @return {object} data: objeto com os dados do usuário
    */
-  const usuarioData = useQuery(GET_WITH_INCLUDES, {
+  const { loading, refetch } = useQuery(GET_WITH_INCLUDES, {
     variables: { id: userId },
     onCompleted: (data) => {
       setUsuario(data.usuario)
       setPessoa({
         ...data.usuario.pessoa,
-        dataNascimento: new Date(`${data.usuario.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", { dateStyle: "short" })
+        dataNascimento: data.usuario.pessoa.dataNascimento !== null ?
+          new Date(`${data.usuario.pessoa.dataNascimento}T03:00:00Z`).toLocaleString("pt-BR", { dateStyle: "short" }) :
+          null
       })
       //setContato(data.usuario.pessoa.contato)
       contatoDispatch(loadData(data.usuario.pessoa.contato))
       //setEndereco(data.usuario.pessoa.enderecos[0])
     },
+    notifyOnNetworkStatusChange: true,
     skip: !userId
   })
 
@@ -157,7 +160,13 @@ const UsuarioEdit = () => {
     history.push(`/usuarios/${userId}/alterar-senha`)
   }
 
-  if (usuarioData.loading) { return <LinearProgress color="secondary" /> }
+  useEffect(() => {
+    if (userId)
+      refetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, refetch])
+
+  if (loading) { return <LinearProgress color="secondary" /> }
 
   if (changePassword) {
     return (
