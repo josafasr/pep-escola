@@ -50,7 +50,8 @@ export const useStyles = makeStyles((theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'column',
-    height: 'auto'
+    height: 'auto',
+    textAlign: 'center'
   },
 
   typoTitle: {

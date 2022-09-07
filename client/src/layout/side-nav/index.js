@@ -355,7 +355,10 @@ export default function SideNav(props) {
 
             <Link to="/" className={classes.link}>
               <Typography className={classes.titleBar} variant="h6" title="Início" noWrap>
-                Prontuário Eletrônico CEUAS
+                Prontuário Eletrônico do Paciente
+              </Typography>
+              <Typography className={classes.titleBar} title="Início" noWrap>
+                Centro Universitário de Atenção à Saúde - CEUAS
               </Typography>
             </Link>
 

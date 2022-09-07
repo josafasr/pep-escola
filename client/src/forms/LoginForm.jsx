@@ -82,7 +82,7 @@ const LoginForm = () => {
           className={classes.header}
           title={
             <Typography className={classes.typoTitle} variant="h6">
-              Prontuário Eletrônico
+              Prontuário Eletrônico do Paciente
             </Typography>
           }
           subheader="Centro Universitário de Atenção à Saúde"
@@ -138,7 +138,7 @@ const LoginForm = () => {
           </CardActions> */}
         </CardContent>
       </Card>
-      <div className={classes.copy}>© 2020 - Universidade Estadual do Sudoeste da Bahia</div>
+      <div className={classes.copy}>© 2022 - Universidade Estadual do Sudoeste da Bahia</div>
     </div>
   )
 }
