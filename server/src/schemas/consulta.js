@@ -34,7 +34,7 @@ export default gql`
 
   type Query {
     consultas: [Consulta]
-    consulta(id: ID!): Consulta
+    consulta(id: ID!, pacienteId: ID!): Consulta
     consultasByPaciente(pacienteId: ID!): [Consulta]
     primeiraConsultaOfPaciente(pacienteId: ID!): Consulta
     queixaPrincipal(id: ID!): Queixa

@@ -183,7 +183,7 @@ const ConsultaEdit = () => {
   })
 
   const { loading } = useQuery(GET_WITH_INCLUDES, {
-    variables: { id: consultaId },
+    variables: { id: consultaId, pacienteId },
     onCompleted: (data) => {
       setPessoa({
         ...data.consulta.paciente.pessoa,

@@ -4,6 +4,7 @@
  * @author Josafá Santos dos Reis
  */
 
+import { createHmac } from 'crypto'
 import { Op } from 'sequelize'
 import { formatErrors } from '../format-errors';
 
@@ -53,66 +54,13 @@ export default {
     /**
      * restorna um registro de consulta pelo id
      */
-    consulta: async (_, { id }, { models }) => {
+    consulta: async (_, { id, pacienteId }, { models }) => {
       const consulta = await models.Consulta.findByPk(id, {
         attributes: { exclude: ['updatedAt'] },
         include: [
           {
             association: 'responsaveis',
             attributes: ['id', 'nomes']
-          }, {
-            association: 'paciente',
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
-            include: [
-              {
-                association: 'pessoa',
-                attributes: { exclude: ['createdAt', 'updatedAt'] },
-                include: [{
-                  association: 'contato',
-                  attributes: { exclude: ['createdAt', 'updatedAt'] }
-                }, {
-                  association: 'enderecos',
-                  attributes: { exclude: ['createdAt', 'updatedAt'] },
-                  include: [{
-                    association: 'tipoLogradouro',
-                    attributes: ['id', 'nome']
-                  }, {
-                    association: 'cidade',
-                    attributes: ['id', 'nome']
-                  }]
-                }]
-              }, {
-                association: 'unidadeSaude',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'nacionalidade',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'naturalidade',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'estadoCivil',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'religiao',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'corPele',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'escolaridade',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'profissao',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'situacaoProfissional',
-                attributes: ['id', 'nome']
-              }, {
-                association: 'especialidades',
-                attributes: ['id', 'nome']
-              }
-            ]
           }, {
             association: 'queixaPrincipal',
             attributes: ['id', 'nome']
@@ -191,10 +139,79 @@ export default {
           }
         ]
       })
-      return consulta
+
+      const paciente = await models.Paciente.findByPk(pacienteId, {
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          {
+            association: 'pessoa',
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [{
+              association: 'contato',
+              attributes: { exclude: ['createdAt', 'updatedAt'] }
+            }, {
+              association: 'enderecos',
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+              include: [{
+                association: 'tipoLogradouro',
+                attributes: ['id', 'nome']
+              }, {
+                association: 'cidade',
+                attributes: ['id', 'nome']
+              }]
+            }]
+          }, {
+            association: 'unidadeSaude',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'nacionalidade',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'naturalidade',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'estadoCivil',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'religiao',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'corPele',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'escolaridade',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'profissao',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'situacaoProfissional',
+            attributes: ['id', 'nome']
+          }, {
+            association: 'especialidades',
+            attributes: ['id', 'nome']
+          }
+        ]
+      })
+
+      return {
+        id: consulta.id,
+        createdAt: consulta.createdAt,
+        primeira: consulta.primeira,
+        acompanhante: consulta.acompanhante,
+        fonteEncaminhamento: consulta.fonteEncaminhamento,
+        historiaDoencaAtual: consulta.historiaDoencaAtual,
+        queixaPrincipalObs: consulta.queixaPrincipalObs,
+        suspeitasDiagnosticas: consulta.suspeitasDiagnosticas,
+        planoConduta: consulta.planoConduta,
+        ...consulta,
+        paciente
+      }
     },
 
     consultasByPaciente: async (_, { pacienteId }, { models }) => {
+      const hashedPacientId = createHmac('sha256', process.env.HASH_PASSWORD)
+        .update(pacienteId).digest('hex')
       const consultas = await models.Consulta.findAll({
         include: [
           {
@@ -205,13 +222,16 @@ export default {
             attributes: ['id', 'nome']
           }
         ],
-        where: { pacienteId }
+        // where: { pacienteId }
+        where: { pacienteId: hashedPacientId }
       })
       return consultas
     },
 
     primeiraConsultaOfPaciente: async (_, { pacienteId }, { models }) => {
       try {
+        const hashedPacientId = await createHmac('sha256', process.env.HASH_PASSWORD)
+          .update(pacienteId).digest('hex')
         const consulta = await models.Consulta.findOne({
           include: [
             {
@@ -235,7 +255,8 @@ export default {
             }
           ],
           where: {
-            [Op.and]: [{ pacienteId }, { primeira: true }]
+            // [Op.and]: [{ pacienteId }, { primeira: true }]
+            [Op.and]: [{ pacienteId: hashedPacientId }, { primeira: true }]
           }
         })
 
@@ -252,6 +273,7 @@ export default {
      * cria um novo registro de consulta
      */
     createConsulta: async (_, {
+      pacienteId,
       queixas,
       recordatorioAlimentar,
       complementosQueixas,
@@ -259,6 +281,9 @@ export default {
       ...ohterArgs
     }, { sequelize, models }) => {
       try {
+        const hashedPacientId = createHmac('sha256', process.env.HASH_PASSWORD)
+          .update(pacienteId).digest('hex')
+        
         const recordatorio = (recordatorioAlimentar && recordatorioAlimentar.length > 0)
           ? recordatorioAlimentar.map(item => {
               const { alimento } = item
@@ -296,6 +321,7 @@ export default {
         const result = await sequelize.transaction(async (tx) => {
           const consulta = await models.Consulta.create({
             ...ohterArgs,
+            pacienteId: hashedPacientId,
             recordatorioAlimentar: recordatorio,
             complementosQueixas: complementos
           }, {

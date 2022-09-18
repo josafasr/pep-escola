@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => {
       fields: 'plano_conduta'
     },
     pacienteId: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       field: 'paciente_id'
     },
     queixaPrincipalId: {
@@ -60,10 +60,10 @@ export default (sequelize, DataTypes) => {
      * Relacionamento com a tabela de pacientes
      * @see module:src/models/Paciente
      */
-    Consulta.belongsTo(models.Paciente, {
+    /* Consulta.belongsTo(models.Paciente, {
       as: 'paciente',
       foreignKey: 'pacienteId'
-    }),
+    }), */
 
     /**
      * Relacionamento com a tabela de recordatórrio alimentar

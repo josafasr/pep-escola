@@ -25,8 +25,8 @@ export const GET_BY_PACIENTE = gql`
   }`
 
 export const GET_WITH_INCLUDES = gql`
-  query GetWithIncludes($id: ID!) {
-    consulta(id: $id) {
+  query GetWithIncludes($id: ID!, $pacienteId: ID!) {
+    consulta(id: $id, pacienteId: $pacienteId) {
       id
       createdAt
       primeira
