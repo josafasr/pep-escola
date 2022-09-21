@@ -15,4 +15,6 @@
 
 *.bkp
 
-*docker.compose-local.yml
+docker/postgres-vol
+
+docker/docker-compose.yml
