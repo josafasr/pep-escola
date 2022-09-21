@@ -1,4 +1,4 @@
-## Potótipo de Prontuário Eletrônico do Paciente (PEP) para ambientes de ensino.  
+## Protótipo de Prontuário Eletrônico do Paciente (PEP) para ambientes de ensino.  
 
 ## License
 
