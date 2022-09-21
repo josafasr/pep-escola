@@ -6,8 +6,8 @@ services:
     container_name: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: prontuario_ceuas
+      POSTGRES_PASSWORD: pepescola
+      POSTGRES_DB: pepescola
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"

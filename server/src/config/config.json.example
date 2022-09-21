@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "password",
-    "database": "database_development",
+    "username": "pepescola",
+    "password": "pepescola",
+    "database": "pepescola",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "define": {
